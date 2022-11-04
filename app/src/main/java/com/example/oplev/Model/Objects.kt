@@ -3,21 +3,21 @@ package com.example.oplev.Model
 import java.util.Date
 
 data class Idea(
-    val title: String,
-    val description: String,
-    val link: String?,
-    val image: String?)
+    var title: String,
+    var description: String,
+    var link: String?,
+    var image: String?)
 
 data class Folder(
-    val idea: Idea,
-    val folder: Folder?,
-    val title: String)
+    var idea: Idea,
+    var folder: Folder?,
+    var title: String)
 
 data class Journey(
-    val tag: String,
-    val image: String?,
-    val date: Date?,
-    val description: String,
-    val title: String,
-    val folder: Folder?
+    var tag: String,
+    var image: String?,
+    var date: Date?,
+    var description: String,
+    var title: String,
+    var folder: Folder?
 )
