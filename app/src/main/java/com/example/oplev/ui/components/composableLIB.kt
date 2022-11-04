@@ -154,39 +154,6 @@ fun HorizontalScroll( ){
     }
 }
 
-
-@Composable
-fun FrontPage() {
-    //Skal hentes fra firebase på et tidspunkt
-    val images = listOf(
-        R.drawable.img_denmark, R.drawable.img_finland,
-        R.drawable.img_norway, R.drawable.img_japan
-    )
-
-
-    val imagesIterator = images.iterator()
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-    ) {
-        Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-            while (imagesIterator.hasNext())
-                Image(painterResource(id = imagesIterator.next()), "cd")
-
-        }
-        Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-            while (imagesIterator.hasNext())
-                Image(painterResource(id = imagesIterator.next()), "cd")
-
-        }
-        Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-            while (imagesIterator.hasNext())
-                Image(painterResource(id = imagesIterator.next()), "cd")
-
-        }
-    }
-}
-
 //Den her virker ikke helt som jeg vil ha den til endnu, men tror der er en bedre guide på m3
 @Composable
 fun ExposedDropdownMenu(){
