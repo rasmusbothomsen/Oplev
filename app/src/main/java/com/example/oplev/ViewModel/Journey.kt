@@ -7,7 +7,7 @@ import com.example.oplev.Data.JourneyData
 import java.util.Date
 
 class Journey {
-    private val save = JourneyData()
+    private var save = JourneyData()
 
     fun createIdea(title: String, description: String, link: String?, image: String?){
         var idea = Idea(title, description, link, image)
