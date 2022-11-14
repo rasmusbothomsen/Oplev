@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.core.graphics.toColorInt
 import com.example.oplev.R
+import com.example.oplev.ViewModel.JourneyViewModel
 
 
 @Composable
@@ -50,10 +51,8 @@ fun Button(text: String,  width: Int, height: Int, hexCode: String){
 //"tekst knap"
 
 @Composable
-fun Button(text: String, width: Int, height: Int){
-    Button(onClick = {
-        TODO()
-    },
+fun Button(text: String, width: Int, height: Int, onClick: () -> Unit){
+    Button(onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = Color.Transparent,
             contentColor = Color.Black), modifier = Modifier
