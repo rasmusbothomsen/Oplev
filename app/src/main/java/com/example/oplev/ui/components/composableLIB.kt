@@ -1,5 +1,6 @@
 package com.example.oplev.ui.components
 
+import android.service.autofill.OnClickAction
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -24,15 +25,36 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.core.graphics.toColorInt
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.oplev.R
+import com.example.oplev.Screen
 import com.example.oplev.ViewModel.JourneyViewModel
-
+import com.example.oplev.sites.FrontPageScreen
+import com.example.oplev.sites.SignUpScreen
 
 @Composable
-fun Button(text: String,  width: Int, height: Int, hexCode: String){
+fun NavController() {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = Screen.FrontPageScreen.route) {
+        composable(route = Screen.FrontPageScreen.route){
+            FrontPageScreen (navController)
+        }
+        composable(route = Screen.SignUpScreen.route){
+            SignUpScreen (navController)
+        }
+    }
+
+
+}
+
+@Composable
+fun Button(text: String, width: Int, height: Int, hexCode: String, onClick: Unit ){
     Button(
         onClick = {
-            TODO()
+            onClick
         },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color(hexCode.toColorInt()), contentColor = Color.White),
         modifier = Modifier
