@@ -3,6 +3,8 @@ package com.example.oplev.ui.components
 import android.service.autofill.OnClickAction
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -12,8 +14,10 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -21,6 +25,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
@@ -39,11 +44,11 @@ fun NavController() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Screen.FrontPageScreen.route) {
-        composable(route = Screen.FrontPageScreen.route){
-            FrontPageScreen (navController)
+        composable(route = Screen.FrontPageScreen.route) {
+            FrontPageScreen(navController)
         }
-        composable(route = Screen.SignUpScreen.route){
-            SignUpScreen (navController)
+        composable(route = Screen.SignUpScreen.route) {
+            SignUpScreen(navController)
         }
     }
 
@@ -67,6 +72,34 @@ fun Button(text: String, width: Int, height: Int, hexCode: String, onClick: Unit
     {
         Text(text = text)
     }
+}
+
+@Preview
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun IdeaGrid() {
+    LazyVerticalGrid(
+        //Beslut mellem .Adaptive/.Fixed - kun nødvendigt hvis appen skal kunne ses horisontalt
+        cells = GridCells.Adaptive(100.dp),
+        content = {
+            items(100) { i ->
+                Box(
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .aspectRatio(1f)
+                        .clip(RoundedCornerShape(30.dp))
+                        .background(Color.Blue),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Idea $i")
+                }
+
+            }
+        })
+}
+
+@Composable
+fun FolderGrid() {
 }
 
 
