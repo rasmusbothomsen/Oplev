@@ -154,40 +154,7 @@ fun TextFieldString (text: String, width: Int, height: Int) {
     )
 }
 
-@Composable
-fun TopBar(title: String) {
-    TopAppBar(
-        title = { Text(title) },
 
-        navigationIcon = {
-            IconButton(onClick = {
-                TODO()
-            })
-            {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = "Localized description",
-                    tint = Color.White
-                )
-            }
-        },
-        actions = {
-            IconButton(onClick = {
-
-                TODO() }
-            )
-
-            {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = "Localized description",
-                    tint = Color.White
-                )
-            }
-        },
-        backgroundColor = Color.LightGray
-    )
-}
 
 @Composable
 fun VerticalScroll( ){
