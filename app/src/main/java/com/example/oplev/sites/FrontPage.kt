@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,8 +69,8 @@ fun BottomBarTest() {
     Scaffold(bottomBar = {
         BottomAppBar(
             modifier = Modifier
-                .height(65.dp),
-            cutoutShape = CircleShape,
+                .height(65.dp)
+            //cutoutShape = CircleShape,
         ) {
             BottomNavigation() {
                 BottomNavigationItem(
@@ -115,7 +116,7 @@ fun BottomBarTest() {
     fun JourneyCard(/*journey: Journey*/) {
         Card(modifier = Modifier
             .clickable { }
-            .padding(5.dp, 5.dp, 5.5.dp, 20.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
+            .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
             //Nedenunder er padding = størrelse på card.
             Column(modifier = Modifier.padding(0.dp)) {
                 Box(modifier = Modifier.padding(0.dp)) {
@@ -125,13 +126,15 @@ fun BottomBarTest() {
                     )
                     Box(
                         modifier = Modifier
-                            .size(width = 185.dp, height = 20.dp)
+                            .size(width = 185.dp, height = 23.dp)
                             .align(Alignment.BottomCenter)
                             .background(Color.Black.copy(alpha = 0.6f))
                     ) {
                         Text(
+                            fontSize = 18.sp,
                             text = "Danmark"/*journey.title*/,
                             modifier = Modifier.align(Alignment.BottomCenter),
+
                             color = Color.White
                         )
                     }
@@ -147,7 +150,7 @@ fun BottomBarTest() {
     @Composable
     fun CategoryRow(title: String) {
 
-        Text(text = title, fontSize = 20.sp, fontFamily = FontFamily.SansSerif)
+        Text(text = title, fontSize = 20.sp, fontFamily = FontFamily.Default, fontWeight = FontWeight.Medium, modifier = Modifier.padding(5.dp, 0.dp, 0.dp, 0.dp))
 
         Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
             JourneyCard()
@@ -169,6 +172,7 @@ fun BottomBarTest() {
     fun FrontPageColumn() {
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(15.dp))
+
             CategoryRow("Seneste Ture")
             //Spacer(modifier = Modifier.height(5.dp))
             CategoryRow("Favoritter")
@@ -213,7 +217,7 @@ fun BottomBarTest() {
 
 @Composable
 fun BottomBar(){
-    BottomAppBar(modifier = Modifier.height(65.dp), cutoutShape = CircleShape,) {
+    BottomAppBar(modifier = Modifier.height(65.dp), /*cutoutShape = CircleShape,*/) {
         BottomNavigation() {
             BottomNavigationItem(
                 icon = { Icon(imageVector = Icons.Default.Menu, "") },
@@ -231,8 +235,8 @@ fun BottomBar(){
 
 @Composable
 fun Fab(){
-    FloatingActionButton(shape = CircleShape, onClick = { TODO() }) {
-        Icon(imageVector = Icons.Filled.Add, contentDescription = "")
+    FloatingActionButton(shape = CircleShape, modifier = Modifier.size(width = 75.dp, height = 75.dp), onClick = { TODO() }) {
+        Icon(imageVector = Icons.Filled.Add, contentDescription = "", modifier = Modifier.size(38.dp), tint = Color.White)
 
     }
 }
@@ -241,9 +245,7 @@ fun Fab(){
 fun BottomBarTest2() {
     Scaffold(
         topBar = { TopBar("Velkommen") },
-
         content = { FrontPageColumn() },
-
         bottomBar = { BottomBar()},
         floatingActionButtonPosition = FabPosition.Center, isFloatingActionButtonDocked = true,
         floatingActionButton = { Fab() }
@@ -264,9 +266,6 @@ fun BottomBarTest2() {
 
 
     }
-
-        //floatingActionButtonPosition = FabPosition.Center, isFloatingActionButtonDocked = true,
-       // floatingActionButton = { Fab() }
 
 
 
