@@ -27,7 +27,14 @@ fun JournyScreen(journyViewModel: JourneyViewModel, modifier: Modifier = Modifie
     ){
         Column(modifier = Modifier.padding(32.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Image(painter = painterResource(id = R.drawable.img_norway), contentDescription = null)
-            Text(journyViewModel.journeyImage())
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ){
+                Text(journyViewModel.journeyImage())
+                
+
+            }
         }
     }
 }
