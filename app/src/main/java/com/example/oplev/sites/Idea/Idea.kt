@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.oplev.Model.Idea
 import com.example.oplev.ViewModel.IdeaViewModel
 import com.example.oplev.ui.components.IdeaGrid
-import com.example.oplev.ui.components.TopBar
+//import com.example.oplev.ui.components.TopBar
 
 @Composable
 fun IdeaScreen(ideaViewModel: IdeaViewModel, modifier: Modifier = Modifier) {

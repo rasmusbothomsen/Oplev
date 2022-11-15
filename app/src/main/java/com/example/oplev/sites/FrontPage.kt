@@ -2,6 +2,7 @@ package com.example.oplev.sites
 
 import android.graphics.Paint.Align
 import android.graphics.Paint.CURSOR_AT_OR_AFTER
+import android.widget.Space
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
@@ -15,16 +16,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ui.components.Button
 import com.example.oplev.ui.components.TextFieldString
+
+@Preview
+@Composable
+fun FrontPagePrev() {
+    BottomBarTest2()
+}
+
+
+
 
 @Composable
 fun FrontPageScreen(navController: NavController) {
@@ -49,12 +63,6 @@ fun FrontPageScreen(navController: NavController) {
 }
 
 
-@Preview
-@Composable
-fun FrontPagePrev() {
-    BottomBarTest()
-}
-
 @Composable
 fun BottomBarTest() {
     Scaffold(bottomBar = {
@@ -77,8 +85,8 @@ fun BottomBarTest() {
                     onClick = {})
 
                 BottomNavigationItem(
-                    icon = { Icon(imageVector = Icons.Default.Star, "") },
-                    label = { Text(text = "Ideer") },
+                    icon = { Icon(imageVector = Icons.Default.List, "") },
+                    label = { Text(text = "Idéer") },
                     selected = false,
                     onClick = {})
 
@@ -105,10 +113,12 @@ fun BottomBarTest() {
 
     @Composable
     fun JourneyCard(/*journey: Journey*/) {
-        Card(modifier = Modifier.clickable { }, backgroundColor = Color.Yellow) {
+        Card(modifier = Modifier
+            .clickable { }
+            .padding(5.dp, 5.dp, 5.5.dp, 20.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
             //Nedenunder er padding = størrelse på card.
-            Column(modifier = Modifier.padding(5.dp)) {
-                Box(modifier = Modifier.padding(5.dp)) {
+            Column(modifier = Modifier.padding(0.dp)) {
+                Box(modifier = Modifier.padding(0.dp)) {
                     Image(
                         painter = painterResource(id =  /* Her vil vi gerne have journey.GetIMG */R.drawable.img_denmark),
                         contentDescription = "Image Denmark"
@@ -135,19 +145,21 @@ fun BottomBarTest() {
     }
 
     @Composable
-    fun CategoryRow() {
-        Text(text = "Seneste Ture")
+    fun CategoryRow(title: String) {
+
+        Text(text = title, fontSize = 20.sp, fontFamily = FontFamily.SansSerif)
+
         Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
             JourneyCard()
-            Spacer(modifier = Modifier.width(5.dp))
+
             JourneyCard()
-            Spacer(modifier = Modifier.width(5.dp))
+
             JourneyCard()
-            Spacer(modifier = Modifier.width(5.dp))
+
             JourneyCard()
-            Spacer(modifier = Modifier.width(5.dp))
+
             JourneyCard()
-            Spacer(modifier = Modifier.width(5.dp))
+
             JourneyCard()
         }
 
@@ -156,45 +168,28 @@ fun BottomBarTest() {
     @Composable
     fun FrontPageColumn() {
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            Spacer(modifier = Modifier.height(60.dp))
-            CategoryRow()
-            Spacer(modifier = Modifier.height(5.dp))
-            CategoryRow()
-            Spacer(modifier = Modifier.height(5.dp))
-            CategoryRow()
-            Spacer(modifier = Modifier.height(5.dp))
-            CategoryRow()
-            Spacer(modifier = Modifier.height(5.dp))
-            CategoryRow()
-            Spacer(modifier = Modifier.height(5.dp))
-            CategoryRow()
-            Spacer(modifier = Modifier.height(5.dp))
-            CategoryRow()
-            Spacer(modifier = Modifier.height(5.dp))
-            CategoryRow()
+            Spacer(modifier = Modifier.height(15.dp))
+            CategoryRow("Seneste Ture")
+            //Spacer(modifier = Modifier.height(5.dp))
+            CategoryRow("Favoritter")
+            //Spacer(modifier = Modifier.height(5.dp))
+            CategoryRow("Asien")
+            //Spacer(modifier = Modifier.height(5.dp))
+            CategoryRow("Afrika")
+            //Spacer(modifier = Modifier.height(5.dp))
+            CategoryRow("Europa")
+            //Spacer(modifier = Modifier.height(5.dp))
+            CategoryRow("")
+            //Spacer(modifier = Modifier.height(5.dp))
+            CategoryRow("")
+            //Spacer(modifier = Modifier.height(5.dp))
+            CategoryRow("")
         }
-        TopAppBar(
-            title = { Text("Velkommen, Freddy") },
-
-            navigationIcon = {
-                IconButton(onClick = {
-                    TODO()
-                })
-                {
-                    Icon(
-                        painter = painterResource(id = R.drawable.oplev72dpi),
-                        contentDescription = ""
-                    )
-                }
-            },
-            backgroundColor = Color.LightGray
-        )
     }
 
     @Composable
     fun TopBar(title: String) {
-        Scaffold(modifier = Modifier.padding(0.dp), topBar = {
-            TopAppBar(
+            TopAppBar( modifier = Modifier.height(65.dp),
                 title = { Text(title) },
 
                 navigationIcon = {
@@ -214,8 +209,66 @@ fun BottomBarTest() {
 
                 backgroundColor = Color.LightGray
             )
-        }) {
+        }
 
+@Composable
+fun BottomBar(){
+    BottomAppBar(modifier = Modifier.height(65.dp), cutoutShape = CircleShape,) {
+        BottomNavigation() {
+            BottomNavigationItem(
+                icon = { Icon(imageVector = Icons.Default.Menu, "") },
+                label = { Text(text = "Menu") },
+                selected = false,
+                onClick = {})
+            BottomNavigationItem(
+                icon = { Icon(imageVector = Icons.Default.Search, "") },
+                label = { Text(text = "Søg") },
+                selected = false,
+                onClick = {})
         }
     }
+}
+
+@Composable
+fun Fab(){
+    FloatingActionButton(shape = CircleShape, onClick = { TODO() }) {
+        Icon(imageVector = Icons.Filled.Add, contentDescription = "")
+
+    }
+}
+
+@Composable
+fun BottomBarTest2() {
+    Scaffold(
+        topBar = { TopBar("Velkommen") },
+
+        content = { FrontPageColumn() },
+
+        bottomBar = { BottomBar()},
+        floatingActionButtonPosition = FabPosition.Center, isFloatingActionButtonDocked = true,
+        floatingActionButton = { Fab() }
+
+
+
+
+
+
+    )
+
+
+
+
+
+
+
+
+
+    }
+
+        //floatingActionButtonPosition = FabPosition.Center, isFloatingActionButtonDocked = true,
+       // floatingActionButton = { Fab() }
+
+
+
+
 
