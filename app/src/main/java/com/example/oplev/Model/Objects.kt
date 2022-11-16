@@ -13,6 +13,11 @@ data class Folder(
     var folder: Folder?,
     var title: String)
 
+data class Category(
+    var title: String,
+    var journeys : List<Journey>
+)
+
 data class Journey(
     var tag: String,
     var image: String?,
