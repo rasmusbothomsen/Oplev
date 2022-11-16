@@ -1,5 +1,6 @@
 package com.example.oplev.ViewModel;
 
+import androidx.compose.runtime.Composable;
 import androidx.lifecycle.ViewModel;
 
 import com.example.oplev.Data.JourneyData;
@@ -15,5 +16,17 @@ public class JourneyViewModel extends ViewModel {
 
     public String journeyImage(){
         return journey.getImage().equals(null) ? "DefualtImage" : journey.getImage() ;
+    }
+
+    public String journeyTitle(){
+        return journey.getTitle() ;
+    }
+
+    public Object getIdeas(){
+        return null;
+    }
+
+    public Object getFolders(){
+        return null;
     }
 }

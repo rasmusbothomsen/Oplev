@@ -1,8 +1,6 @@
 package com.example.oplev.Data
 
-import com.example.oplev.Model.Journey
-import com.example.oplev.Model.Folder
-import com.example.oplev.Model.Idea
+import com.example.oplev.Model.*
 
  class JourneyData {
     var ideas = mutableListOf<Idea>()
