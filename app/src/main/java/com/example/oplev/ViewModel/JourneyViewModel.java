@@ -10,6 +10,7 @@ public class JourneyViewModel extends ViewModel {
     private Journey journey;
     private JourneyData journeyData;
 
+
     public JourneyViewModel(Journey journey) {
         this.journey = journey;
     }
@@ -29,4 +30,5 @@ public class JourneyViewModel extends ViewModel {
     public Object getFolders(){
         return null;
     }
+
 }

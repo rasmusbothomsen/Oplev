@@ -1,12 +1,11 @@
 package com.example.oplev.sites.Journy
 
 import android.media.Image
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import android.util.Log
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -25,45 +24,131 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
+import androidx.compose.material.Text
 import com.example.oplev.sites.*
 
 import com.example.oplev.ViewModel.JourneyViewModel
+import com.example.oplev.ui.theme.OplevTheme
+
+// make an alias
+typealias ComposableFun = @Composable () -> Unit
 
 
 @Composable
-fun JourneyScreen(journeyViewModel: JourneyViewModel, modifier: Modifier = Modifier) {
+fun JourneyScreen(journeyViewModel: JourneyViewModel, modifier: Modifier = Modifier, ) {
 
     Scaffold(
         topBar = {TopBar(title = "Velkommen {User}")},
         content = {
+            Column(modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth()
+            ) {
                 imageAndText(text = journeyViewModel.journeyTitle(), image = null, journeyViewModel = journeyViewModel)
+                gridLazytest()
+            }
                 /* HER SKAL LAVES MATRIX AF ROW/COLUMN TIL IDEAS*/
 
                   },
         bottomBar = { BottomBar()} )
 }
 
+fun createItemsForColumn(): List<ComposableFun>{
+
+
+    return emptyList();
+}
+
 @Composable
 fun imageAndText(
     text: String,
     image: Image?,
-    journeyViewModel: JourneyViewModel){
-    Column(modifier = Modifier.height(200.dp).fillMaxWidth().verticalScroll(rememberScrollState()))
+    journeyViewModel: JourneyViewModel) {
+    Box(modifier = Modifier.height(180.dp)){
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth()
+    )
     {
-        Spacer(modifier = Modifier.padding(5.dp))
-        Row(modifier = Modifier.height(150.dp)){
-            Image(
-                painter = painterResource(id = R.drawable.img_denmark),
-                contentDescription = "Placerholder image",
-                modifier = Modifier.fillMaxHeight().fillMaxWidth()
+        Image(
+            painter = painterResource(id = R.drawable.img_denmark),
+            contentDescription = "Placerholder image",
+            modifier = Modifier
+                .height(150.dp)
+                .fillMaxWidth(),
+            contentScale = ContentScale.Crop
+        )
+        Box(
+            modifier = Modifier
+                .align(alignment = Alignment.CenterHorizontally)
+                .background(Color.Yellow)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = journeyViewModel.journeyTitle(),
+                fontSize = 17.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
-        }
-        Row(modifier = Modifier.height(50.dp)){
-            Text(text = journeyViewModel.journeyTitle(), fontSize = 17.sp, textAlign = TextAlign.Center)
+         }
         }
     }
 }
 
+
+@Composable
+fun dynamicColumn(itemsInColumn: List<ComposableFun>){
+
+    LazyColumn(contentPadding = PaddingValues(horizontal = 8.dp)) {
+
+        item {
+            for (x in 0 until (itemsInColumn.size)){
+                Spacer(modifier = Modifier.height(5.dp))
+                itemsInColumn[x]()
+            }
+        }
+
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun gridLazytest(){
+    val test: ComposableFun = {
+        Box(modifier = Modifier
+            .size(100.dp)
+            .background(Color.Black)) {
+            Button(onClick = { Log.d("HIHIH","HOHOOH")}) {
+                
+            }
+
+        }
+    }
+    val itemsInColumn = listOf(test,test,test,test,test,test,test,test,test, test)
+
+    LazyVerticalGrid(cells = GridCells.Fixed(3),horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(24.dp)){
+
+        itemsInColumn.forEachIndexed{
+            index, function ->  item { boxCreator(color = Color.Yellow) }
+        }
+
+
+    }
+}
+@Composable
+fun boxCreator(color: Color) {
+    Box(modifier = Modifier
+        .size(100.dp)
+        .background(color)) {
+        Button(onClick = { Log.d("HIHIH", "HOHOOH") }) {
+
+        }
+    }
+
+}
 @Composable
 fun folders(journeyViewModel: JourneyViewModel){
 
