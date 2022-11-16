@@ -34,23 +34,14 @@ fun FrontPagePrev() {
 
     var seneste = Category("Seneste", journeys)
     var favoritter = Category("Favoritter", journeys)
-    var asien = Category("Asien", journeys)
-    var europa = Category("Europa", journeys)
-    var afrika = Category("Afrika", journeys)
-    var seneste2 = Category("Seneste2", journeys)
-    var favoritter2 = Category("Favoritter2", journeys)
-    var asien2 = Category("Asien2", journeys)
-    var europa2 = Category("Europa2", journeys)
-    var afrika2 = Category("Afrika2", journeys)
 
-    var categories = listOf(seneste,favoritter,asien,europa,afrika,seneste2,
-    favoritter2, asien2, europa2, afrika2)
+
+    var categories = listOf(seneste,favoritter)
 
     val frontpageViewModel = FrontpageViewModel(categories)
 
     TotalView(frontpageViewModel = frontpageViewModel)
 }
-
 
 /**@Composable
 fun MenuDrawer(){
@@ -83,49 +74,27 @@ fun TotalView(frontpageViewModel: FrontpageViewModel) {
 @Composable
 fun FrontPageColumn(categories : List<Category>) {
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        Spacer(modifier = Modifier.height(15.dp))
+        var max = categories.size-1
 
-        /*
-        for (category : Category in categories) {
-             CategoryRow(categories[0].title)
-         }
-         */
+        for (i in 0..max) {
+            Spacer(modifier = Modifier.height(15.dp))
+            CategoryRow(categories[i])
+        }
 
-        CategoryRow(categories[0])
-        //Spacer(modifier = Modifier.height(5.dp))
-        CategoryRow(categories[1])
-        //Spacer(modifier = Modifier.height(5.dp))
-        CategoryRow(categories[2])
-        //Spacer(modifier = Modifier.height(5.dp))
-        CategoryRow(categories[3])
-        //Spacer(modifier = Modifier.height(5.dp))
-        CategoryRow(categories[4])
-        //Spacer(modifier = Modifier.height(5.dp))
-        CategoryRow(categories[5])
-        //Spacer(modifier = Modifier.height(5.dp))
-        CategoryRow(categories[6])
-        //Spacer(modifier = Modifier.height(5.dp))
-        CategoryRow(categories[7])
     }
 }
 
 @Composable
 fun CategoryRow(category: Category) {
+    var max = category.journeys.size-1
 
     Text(text = category.title, fontSize = 20.sp, fontFamily = FontFamily.Default, fontWeight = FontWeight.Medium, modifier = Modifier.padding(5.dp, 0.dp, 0.dp, 0.dp))
 
     Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-        JourneyCard(category.journeys[0])
 
-        JourneyCard(category.journeys[1])
-
-        JourneyCard(category.journeys[2])
-
-        JourneyCard(category.journeys[3])
-
-        JourneyCard(category.journeys[0])
-
-        JourneyCard(category.journeys[1])
+        for (i in 0..max) {
+            JourneyCard(category.journeys[i])
+        }
     }
 
 }
