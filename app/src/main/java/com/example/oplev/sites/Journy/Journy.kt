@@ -6,6 +6,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -25,6 +26,9 @@ import androidx.compose.ui.unit.sp
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import androidx.compose.material.Text
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.layout
+import com.example.oplev.Model.Idea
 import com.example.oplev.sites.*
 
 import com.example.oplev.ViewModel.JourneyViewModel
@@ -120,24 +124,82 @@ fun gridLazytest(){
             .size(100.dp)
             .background(Color.Black)) {
             Button(onClick = { Log.d("HIHIH","HOHOOH")}) {
-                
+
             }
 
         }
     }
-    val itemsInColumn = listOf(test,test,test,test,test,test,test,test,test, test)
+    val itemsInColumn = listOf(test,test)
 
     LazyVerticalGrid(cells = GridCells.Fixed(3),horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(24.dp)){
 
         itemsInColumn.forEachIndexed{
-            index, function ->  item { boxCreator(color = Color.Yellow) }
+            index, function ->  item { folderCreator(ideas = null) }
         }
 
 
     }
 }
+
+@Composable
+fun folderCreator(ideas: List<Idea>?){
+    Box(modifier = Modifier
+        .size(100.dp)
+        .clip(RoundedCornerShape(20.dp))
+        .background(Color.LightGray)){
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .align(Alignment.Center)){
+            Row(modifier = Modifier.align(Alignment.CenterHorizontally)){
+                Image(
+                    painter = painterResource(id = R.drawable.img_denmark),
+                    modifier = Modifier
+                        .size(50.dp)
+                        .padding(5.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+                    alignment = Alignment.TopStart,
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.img_denmark),
+                    modifier = Modifier
+                        .size(50.dp)
+                        .padding(5.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+                    alignment = Alignment.TopEnd,
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop
+                )
+            }
+            Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                Image(
+                    painter = painterResource(id = R.drawable.img_denmark),
+                    modifier = Modifier
+                        .size(50.dp)
+                        .padding(5.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+                    alignment = Alignment.BottomStart,
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.img_denmark),
+                    modifier = Modifier
+                        .size(50.dp)
+                        .padding(5.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+                    alignment = Alignment.BottomEnd,
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop
+                )
+            }
+        }
+    }
+}
+
 @Composable
 fun boxCreator(color: Color) {
     Box(modifier = Modifier
