@@ -2,8 +2,10 @@ package com.example.oplev.sites
 
 import android.graphics.Paint.Align
 import android.graphics.Paint.CURSOR_AT_OR_AFTER
+import android.media.MediaDrm.OnEventListener
 import android.widget.Space
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.DraggableState
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -25,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.motion.utils.MonotonicCurveFit
 import androidx.navigation.NavController
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
@@ -35,8 +38,22 @@ import com.example.oplev.ui.components.TextFieldString
 @Preview
 @Composable
 fun FrontPagePrev() {
-    BottomBarTest2()
+    TotalView()
 }
+
+/**@Composable
+fun MenuDrawer(){
+    val drawerState = rememberDrawerState(DrawerValue.Open /*Skal selvfølgelig være lukket til at starte med */)
+    ModalDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            Box(modifier = Modifier.size(360.dp, 180.dp)) {
+                Text(text = "Hello")
+            }
+        })
+}
+**/
+
 
 
 
@@ -223,7 +240,7 @@ fun BottomBar(){
                 icon = { Icon(imageVector = Icons.Default.Menu, "") },
                 label = { Text(text = "Menu") },
                 selected = false,
-                onClick = {})
+                onClick = { })
             BottomNavigationItem(
                 icon = { Icon(imageVector = Icons.Default.Search, "") },
                 label = { Text(text = "Søg") },
@@ -242,13 +259,20 @@ fun Fab(){
 }
 
 @Composable
-fun BottomBarTest2() {
+fun TotalView() {
     Scaffold(
+
+        drawerContent = {
+
+        },
+        drawerGesturesEnabled = true,
         topBar = { TopBar("Velkommen") },
         content = { FrontPageColumn() },
         bottomBar = { BottomBar()},
         floatingActionButtonPosition = FabPosition.Center, isFloatingActionButtonDocked = true,
-        floatingActionButton = { Fab() }
+        floatingActionButton = { Fab() },
+
+
 
 
 
