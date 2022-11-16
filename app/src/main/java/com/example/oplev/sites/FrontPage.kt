@@ -1,15 +1,17 @@
 package com.example.oplev.sites
 
+import android.content.res.Resources
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -26,17 +28,15 @@ import com.example.oplev.ViewModel.FrontpageViewModel
 @Preview
 @Composable
 fun FrontPagePrev() {
-    var journey1 = Journey("e","Testing",null,"","Danmark",null)
-    var journey2 = Journey("e","Testing",null,"","Norge",null)
-    var journey3 = Journey("e","Testing",null,"","Finland",null)
-    var journey4 = Journey("e","Testing",null,"","Tyrkiet",null)
-    var journeys = listOf(journey1, journey2, journey3, journey4)
+    val journey1 = Journey("e","img_denmark",null,"","Danmark", null)
+    val journey2 = Journey("e","img_norway",null,"","Norge",null)
+    val journey3 = Journey("e","img_finland",null,"","Finland",null)
+    val journey4 = Journey("e","img_turkey",null,"","Tyrkiet",null)
+    val journeys = listOf(journey1, journey2, journey3, journey4)
 
-    var seneste = Category("Seneste", journeys)
-    var favoritter = Category("Favoritter", journeys)
-
-
-    var categories = listOf(seneste,favoritter)
+    val seneste = Category("Seneste", journeys)
+    val favoritter = Category("Favoritter", journeys)
+    val categories = listOf(seneste,favoritter)
 
     val frontpageViewModel = FrontpageViewModel(categories)
 
@@ -74,7 +74,7 @@ fun TotalView(frontpageViewModel: FrontpageViewModel) {
 @Composable
 fun FrontPageColumn(categories : List<Category>) {
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        var max = categories.size-1
+        val max = categories.size-1
 
         for (i in 0..max) {
             Spacer(modifier = Modifier.height(15.dp))
@@ -86,7 +86,7 @@ fun FrontPageColumn(categories : List<Category>) {
 
 @Composable
 fun CategoryRow(category: Category) {
-    var max = category.journeys.size-1
+    val max = category.journeys.size-1
 
     Text(text = category.title, fontSize = 20.sp, fontFamily = FontFamily.Default, fontWeight = FontWeight.Medium, modifier = Modifier.padding(5.dp, 0.dp, 0.dp, 0.dp))
 
@@ -101,6 +101,16 @@ fun CategoryRow(category: Category) {
 
 @Composable
 fun JourneyCard(journey: Journey) {
+    val img = journey.image
+    val context = LocalContext.current
+    val drawableId = remember(img) {
+        context.resources.getIdentifier(
+            img,
+            "drawable",
+            context.packageName
+        )
+    }
+
         Card(modifier = Modifier
             .clickable { }
             .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
@@ -108,7 +118,7 @@ fun JourneyCard(journey: Journey) {
             Column(modifier = Modifier.padding(0.dp)) {
                 Box(modifier = Modifier.padding(0.dp)) {
                     Image(
-                        painter = painterResource(id =  /* Her vil vi gerne have journey.GetIMG */R.drawable.img_denmark),
+                        painter = painterResource(id = drawableId),
                         contentDescription = "Image Denmark"
                     )
                     Box(
@@ -160,8 +170,8 @@ fun TopBar(title: String) {
 
 @Composable
 fun BottomBar(){
-    BottomAppBar(modifier = Modifier.height(65.dp), /*cutoutShape = CircleShape,*/) {
-        BottomNavigation() {
+    BottomAppBar(modifier = Modifier.height(65.dp) /*cutoutShape = CircleShape,*/) {
+        BottomNavigation {
             BottomNavigationItem(
                 icon = { Icon(imageVector = Icons.Default.Menu, "") },
                 label = { Text(text = "Menu") },
@@ -188,16 +198,10 @@ fun Fab(){
 fun FrontPageScreen(navController: NavController) {
     //Skal hentes fra firebase på et tidspunkt
 
-    val images = listOf(
-        R.drawable.img_denmark, R.drawable.img_finland,
-        R.drawable.img_norway, R.drawable.img_japan
-    )
-
-    val imagesIterator = images.iterator()
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
-        androidx.compose.material.Button(onClick = {
+        Button(onClick = {
             navController.navigate(Screen.SignUpScreen.route)
         }) {
             Text(text = "DU ER PÅ FORSIDEN")
