@@ -1,15 +1,17 @@
 package com.example.oplev.sites
 
-import android.content.res.Resources
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -18,11 +20,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
-import com.example.oplev.Screen
 import com.example.oplev.ViewModel.FrontpageViewModel
 
 @Preview
@@ -59,44 +59,164 @@ fun MenuDrawer(){
 @Composable
 fun TotalView(frontpageViewModel: FrontpageViewModel) {
     Scaffold(
-        drawerContent = {
+            drawerContent = {
+                Row(Modifier.padding(20.dp, 30.dp, 0.dp, 0.dp)) {
+                    Image(
+                        painter = painterResource(id = R.drawable.oplev300dpi),
+                        contentDescription = "Bare et logo",
+                        modifier = Modifier
+                            .size(85.dp, 85.dp)
+                            .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                    )
+                    Text(
+                        text = "OPLEV Menu",
+                        modifier = Modifier.padding(0.dp, 25.dp, 0.dp, 0.dp),
+                        fontSize = 20.sp
+                    )
+                    /*IconButton(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.padding(40.dp, 15.dp, 0.dp, 0.dp)
+                    )
+                    {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
 
+                    }
+        */
+                }
+                Row(Modifier.padding(20.dp, 20.dp, 0.dp, 0.dp)) {
+                    Icon(
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(45.dp, 45.dp)
+                            .padding(0.dp, 5.dp, 0.dp, 0.dp)
+                        , tint = Color.Cyan
+                    )
+
+                    TextButton(onClick = { /*TODO*/ }) {
+                        Text(text = "Profil",
+                            fontSize = 18.sp,
+                            modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp))
+
+
+
+                    }
+
+
+                }
+                Row(Modifier.padding(20.dp, 20.dp, 0.dp, 0.dp)) {
+                    Icon(
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(45.dp, 45.dp)
+                            .padding(0.dp, 5.dp, 0.dp, 0.dp), tint = Color.Cyan
+                    )
+
+                    TextButton(onClick = { /*TODO*/ }) {
+                        Text(
+                            text = "Inviter Venner",
+                            fontSize = 18.sp,
+                            modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)
+                        )
+                    }
+                }
+
+                Row(Modifier.padding(20.dp, 20.dp, 0.dp, 0.dp)) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(45.dp, 45.dp)
+                            .padding(0.dp, 5.dp, 0.dp, 0.dp), tint = Color.Cyan
+                    )
+
+                    TextButton(onClick = { /*TODO*/ }) {
+                        Text(
+                            text = "Indstillinger",
+                            fontSize = 18.sp,
+                            modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)
+                        )
+                    }
+                }
+                Row(Modifier.padding(20.dp, 20.dp, 0.dp, 0.dp)) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(45.dp, 45.dp)
+                            .padding(0.dp, 5.dp, 0.dp, 0.dp)
+                            .rotate(90f),
+                        tint = Color.Cyan
+                    )
+                    TextButton(onClick = { /*TODO*/ }) {
+                        Text(
+                            text = "Mere",
+                            fontSize = 18.sp,
+                            modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)
+                        )
+                    }
+                }
+                Row(verticalAlignment = Alignment.Bottom, modifier = Modifier.padding(50.dp, 360.dp, 0.dp, 0.dp)) {
+                    Button(
+                        onClick = { /*TODO*/ },
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color.Unspecified,
+                            contentColor = Color.Black
+                        ),
+                        modifier = Modifier.size(240.dp, 40.dp),
+                        shape = RoundedCornerShape(50)
+                    ) {
+                        Text(
+                            text = "Luk", fontSize = 20.sp
+                        )
+
+                    }
+                }
         },
         drawerGesturesEnabled = true,
         topBar = { TopBar("Velkommen") },
         content = { FrontPageColumn(frontpageViewModel.categories) },
-        bottomBar = { BottomBar()},
-        floatingActionButtonPosition = FabPosition.Center, isFloatingActionButtonDocked = true,
+        bottomBar = { BottomBar() },
+        floatingActionButtonPosition = FabPosition.Center,
+        isFloatingActionButtonDocked = true,
         floatingActionButton = { Fab() },
     )
 }
 
 @Composable
 fun FrontPageColumn(categories : List<Category>) {
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+    Column(modifier = Modifier
+        .verticalScroll(rememberScrollState())
+    )
+    {
         val max = categories.size-1
-
         for (i in 0..max) {
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier
+                .height(15.dp))
             CategoryRow(categories[i])
         }
-
     }
 }
 
 @Composable
 fun CategoryRow(category: Category) {
     val max = category.journeys.size-1
-
-    Text(text = category.title, fontSize = 20.sp, fontFamily = FontFamily.Default, fontWeight = FontWeight.Medium, modifier = Modifier.padding(5.dp, 0.dp, 0.dp, 0.dp))
-
-    Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-
+    Text(
+        text = category.title,
+        fontSize = 20.sp,
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Medium,
+        modifier = Modifier
+            .padding(5.dp, 0.dp, 0.dp, 0.dp)
+    )
+    Row(modifier = Modifier
+        .horizontalScroll(rememberScrollState()), verticalAlignment = Alignment.Bottom
+    ) {
         for (i in 0..max) {
             JourneyCard(category.journeys[i])
         }
     }
-
 }
 
 @Composable
@@ -105,12 +225,9 @@ fun JourneyCard(journey: Journey) {
     val context = LocalContext.current
     val drawableId = remember(img) {
         context.resources.getIdentifier(
-            img,
-            "drawable",
-            context.packageName
+            img, "drawable", context.packageName
         )
     }
-
         Card(modifier = Modifier
             .clickable { }
             .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
@@ -146,39 +263,43 @@ fun JourneyCard(journey: Journey) {
 
 @Composable
 fun TopBar(title: String) {
-            TopAppBar( modifier = Modifier.height(65.dp),
-                title = { Text(title) },
-
-                navigationIcon = {
-                    IconButton(onClick = {
-                        TODO()
-                    })
-                    {
-                        Icon(
-                            painter = painterResource(id = R.drawable.oplev72dpi),
-                            contentDescription = ""
-                        )
-
-
-                    }
-                },
-
-
+    TopAppBar( modifier = Modifier.height(65.dp),
+        title = { Text(title) },
+        navigationIcon = {
+            IconButton(
+                onClick = { TODO() }
+            )
+            {
+                Icon(
+                    painter = painterResource(id = R.drawable.oplev72dpi),
+                    contentDescription = ""
+                )
+            }
+                         },
                 backgroundColor = Color.LightGray
             )
-        }
+}
 
 @Composable
 fun BottomBar(){
-    BottomAppBar(modifier = Modifier.height(65.dp) /*cutoutShape = CircleShape,*/) {
+    BottomAppBar(modifier = Modifier
+        .height(65.dp) /*cutoutShape = CircleShape,*/) {
         BottomNavigation {
             BottomNavigationItem(
-                icon = { Icon(imageVector = Icons.Default.Menu, "") },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        "")
+                       },
                 label = { Text(text = "Menu") },
                 selected = false,
                 onClick = { })
             BottomNavigationItem(
-                icon = { Icon(imageVector = Icons.Default.Search, "") },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        "")
+                       },
                 label = { Text(text = "Søg") },
                 selected = false,
                 onClick = {})
@@ -189,27 +310,15 @@ fun BottomBar(){
 @Composable
 fun Fab(){
     FloatingActionButton(shape = CircleShape, modifier = Modifier.size(width = 75.dp, height = 75.dp), onClick = { TODO() }) {
-        Icon(imageVector = Icons.Filled.Add, contentDescription = "", modifier = Modifier.size(38.dp), tint = Color.White)
-
+        Icon(
+            imageVector = Icons.Filled.Add,
+            contentDescription = "",
+            modifier = Modifier
+                .size(38.dp),
+            tint = Color.White
+        )
     }
 }
-
-@Composable
-fun FrontPageScreen(navController: NavController) {
-    //Skal hentes fra firebase på et tidspunkt
-
-    Column(
-        modifier = Modifier.verticalScroll(rememberScrollState())
-    ) {
-        Button(onClick = {
-            navController.navigate(Screen.SignUpScreen.route)
-        }) {
-            Text(text = "DU ER PÅ FORSIDEN")
-        }
-    }
-
-}
-
 
 
 
