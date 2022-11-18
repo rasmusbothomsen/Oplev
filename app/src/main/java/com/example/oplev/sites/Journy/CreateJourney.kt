@@ -1,8 +1,7 @@
 package com.example.oplev.sites.Journy
 
 import android.content.Context
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -34,7 +33,9 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, modifier: 
         topBar = { TopBar(title = "Velkommen {USER}")},
         content = {
             //Nedenstående skal i en composable
-                  Column(modifier = Modifier.fillMaxSize()) {
+                  Column(modifier = Modifier
+                      .fillMaxSize()
+                      .verticalScroll(rememberScrollState())) {
                       Box(modifier = Modifier.height(120.dp)){
                           Column(
                               modifier = Modifier
@@ -81,8 +82,8 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, modifier: 
                           Spacer(modifier = Modifier.width(20.dp))
                           /* Skal være en "time picker"*/ inputFieldNoRow("Til kl.",80, imageVector = Icons.Filled.Warning)
                       }
-                      inputTextfield("Beskriv oplevelsen",height = 100,imageVector = Icons.Filled.Menu)
-                      Row(modifier = Modifier.padding(30.dp,20.dp,0.dp,0.dp)) {
+                      inputTextfield("Beskriv oplevelsen",height = 150,imageVector = Icons.Filled.Menu)
+                      Row(modifier = Modifier.padding(60.dp,20.dp,0.dp,80.dp)) {
                           //Nedenstående buttons skal være composables
                           Button(
                               onClick = { /*TODO*/ },
@@ -98,7 +99,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, modifier: 
                               )
 
                           }
-                          Spacer(modifier = Modifier.width(60.dp))
+                          Spacer(modifier = Modifier.width(40.dp))
                           Button(
                               onClick = { /*TODO*/ },
                               colors = ButtonDefaults.buttonColors(
@@ -134,6 +135,7 @@ fun inputTextfield(label: String, height: Int, imageVector: ImageVector){
         OutlinedTextField(
             value = input,
             label = { Text(text = label) },
+            modifier = Modifier.height(height.dp).fillMaxWidth(),
             onValueChange = {
                 input = it
             }

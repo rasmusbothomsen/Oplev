@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,6 +25,7 @@ import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import com.example.oplev.ViewModel.FrontpageViewModel
+import com.example.oplev.ui.components.NavController
 
 @Preview
 @Composable
@@ -36,7 +38,8 @@ fun FrontPagePrev() {
 
     val seneste = Category("Seneste", journeys)
     val favoritter = Category("Favoritter", journeys)
-    val categories = listOf(seneste,favoritter)
+    val mumsesteg = Category("mumsesteg", journeys)
+    val categories = listOf(seneste,favoritter, mumsesteg)
 
     val frontpageViewModel = FrontpageViewModel(categories)
 
@@ -157,7 +160,7 @@ fun TotalView(frontpageViewModel: FrontpageViewModel) {
                         )
                     }
                 }
-                Row(verticalAlignment = Alignment.Bottom, modifier = Modifier.padding(50.dp, 360.dp, 0.dp, 0.dp)) {
+                Row(verticalAlignment = Alignment.Bottom, modifier = Modifier.padding(55.dp, 200.dp, 0.dp, 0.dp)) {
                     Button(
                         onClick = { /*TODO*/ },
                         colors = ButtonDefaults.buttonColors(
@@ -225,9 +228,12 @@ fun JourneyCard(journey: Journey) {
     val context = LocalContext.current
     val drawableId = remember(img) {
         context.resources.getIdentifier(
-            img, "drawable", context.packageName
+            img,
+            "drawable",
+            context.packageName
         )
     }
+
         Card(modifier = Modifier
             .clickable { }
             .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
@@ -264,7 +270,9 @@ fun JourneyCard(journey: Journey) {
 @Composable
 fun TopBar(title: String) {
     TopAppBar( modifier = Modifier.height(65.dp),
-        title = { Text(title) },
+        title = { Text(title,
+        //modifier = Modifier.padding(60.dp, 0.dp, 0.dp, 0.dp)
+        ) },
         navigationIcon = {
             IconButton(
                 onClick = { TODO() }
@@ -309,7 +317,7 @@ fun BottomBar(){
 
 @Composable
 fun Fab(){
-    FloatingActionButton(shape = CircleShape, modifier = Modifier.size(width = 75.dp, height = 75.dp), onClick = { TODO() }) {
+    FloatingActionButton(shape = CircleShape, modifier = Modifier.size(width = 75.dp, height = 75.dp), onClick = { }) {
         Icon(
             imageVector = Icons.Filled.Add,
             contentDescription = "",
