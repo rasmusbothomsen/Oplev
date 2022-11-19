@@ -36,8 +36,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.JourneyViewModel
-import com.example.oplev.sites.FrontPageScreen
+import com.example.oplev.sites.*
 import com.example.oplev.sites.SignUpScreen
+
 
 @Composable
 fun NavController() {
@@ -45,7 +46,7 @@ fun NavController() {
 
     NavHost(navController = navController, startDestination = Screen.FrontPageScreen.route) {
         composable(route = Screen.FrontPageScreen.route) {
-            FrontPageScreen(navController)
+            Screen.FrontPageScreen(navController)
         }
         composable(route = Screen.SignUpScreen.route) {
             SignUpScreen(navController)
@@ -54,6 +55,8 @@ fun NavController() {
 
 
 }
+
+
 
 @Composable
 fun Button(text: String, width: Int, height: Int, hexCode: String, onClick: Unit ){

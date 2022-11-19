@@ -11,7 +11,14 @@ data class Idea(
 data class Folder(
     var idea: Idea,
     var folder: Folder?,
-    var title: String)
+    var title: String,
+    var ideas: MutableList<Idea>? = mutableListOf<Idea>()
+    )
+
+data class Category(
+    var title: String,
+    var journeys : List<Journey>
+)
 
 data class Journey(
     var tag: String,
@@ -19,5 +26,6 @@ data class Journey(
     var date: Date?,
     var description: String,
     var title: String,
-    var folder: Folder?
-)
+    var folder: MutableList<Folder>? = mutableListOf<Folder>(),
+    var ideas: MutableList<Idea>? = mutableListOf<Idea>()
+    )
