@@ -43,7 +43,7 @@ fun FrontPagePrev() {
 
     val frontpageViewModel = FrontpageViewModel(categories)
 
-    TotalView(frontpageViewModel = frontpageViewModel)
+    //TotalView(frontpageViewModel = frontpageViewModel)
 }
 
 /**@Composable
@@ -60,7 +60,7 @@ fun MenuDrawer(){
 **/
 
 @Composable
-fun TotalView(frontpageViewModel: FrontpageViewModel) {
+fun TotalView(frontpageViewModel: FrontpageViewModel, nav : ()->Unit) {
     Scaffold(
             drawerContent = {
                 Row(Modifier.padding(20.dp, 30.dp, 0.dp, 0.dp)) {
@@ -183,7 +183,20 @@ fun TotalView(frontpageViewModel: FrontpageViewModel) {
         bottomBar = { BottomBar() },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
-        floatingActionButton = { Fab() },
+        floatingActionButton = {
+            FloatingActionButton(shape = CircleShape, modifier = Modifier.size(width = 75.dp, height = 75.dp),
+                onClick = {
+                    nav()
+                }) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .size(38.dp),
+                    tint = Color.White
+                )
+            }
+        },
     )
 }
 
@@ -315,18 +328,6 @@ fun BottomBar(){
     }
 }
 
-@Composable
-fun Fab(){
-    FloatingActionButton(shape = CircleShape, modifier = Modifier.size(width = 75.dp, height = 75.dp), onClick = { }) {
-        Icon(
-            imageVector = Icons.Filled.Add,
-            contentDescription = "",
-            modifier = Modifier
-                .size(38.dp),
-            tint = Color.White
-        )
-    }
-}
 
 
 

@@ -23,7 +23,7 @@ import com.example.oplev.R
 import com.example.oplev.ViewModel.CreateJourneyViewModel
 
 @Composable
-fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, modifier: Modifier = Modifier){
+fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, nav : ()-> Unit){
     var destination by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("") }
     var beskrivelse by remember { mutableStateOf("") }
@@ -255,7 +255,7 @@ fun createJourneyPreview(){
 
     createJourneyViewModel.category.categorys.add(favoritter)
     createJourneyViewModel.category.categorys.add(seneste)
-    createJourneyComp(createJourneyViewModel)
+    //createJourneyComp(createJourneyViewModel)
 
 
 

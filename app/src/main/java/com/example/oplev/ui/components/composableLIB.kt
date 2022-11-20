@@ -33,23 +33,50 @@ import androidx.core.graphics.toColorInt
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.oplev.Model.Category
+import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import com.example.oplev.Screen
+import com.example.oplev.ViewModel.CreateJourneyViewModel
+import com.example.oplev.ViewModel.FrontpageViewModel
 import com.example.oplev.ViewModel.JourneyViewModel
 import com.example.oplev.sites.*
+import com.example.oplev.sites.Journy.createJourneyComp
 import com.example.oplev.sites.SignUpScreen
 
 
 @Composable
 fun NavController() {
     val navController = rememberNavController()
+    val journey1 = Journey("e","img_denmark",null,"","Danmark", null)
+    val journey2 = Journey("e","img_norway",null,"","Norge",null)
+    val journey3 = Journey("e","img_finland",null,"","Finland",null)
+    val journey4 = Journey("e","img_turkey",null,"","Tyrkiet",null)
+    val journeys = listOf(journey1, journey2, journey3, journey4)
 
-    NavHost(navController = navController, startDestination = Screen.FrontPageScreen.route) {
-        composable(route = Screen.FrontPageScreen.route) {
-            //Screen.FrontPageScreen(navController)
+    val seneste = Category("Seneste", journeys)
+    val favoritter = Category("Favoritter", journeys)
+    val mumsesteg = Category("mumsesteg", journeys)
+    val categories = listOf(seneste,favoritter, mumsesteg)
+    val frontpage = "frontpage"
+    val createJourneyPage = "create"
+
+
+    val frontpageViewModel = FrontpageViewModel(categories)
+
+    val createJourneyViewModel = CreateJourneyViewModel()
+
+    createJourneyViewModel.category.categorys.add(favoritter)
+    createJourneyViewModel.category.categorys.add(seneste)
+
+
+
+    NavHost(navController = navController, startDestination = frontpage) {
+        composable(route = frontpage) {
+            TotalView(frontpageViewModel = frontpageViewModel, nav = {navController.navigate(createJourneyPage)})
         }
-        composable(route = Screen.SignUpScreen.route) {
-            SignUpScreen(navController)
+        composable(route = createJourneyPage) {
+            createJourneyComp(createJourneyViewModel = createJourneyViewModel, nav = {navController.navigate(frontpage)} )
         }
     }
 
