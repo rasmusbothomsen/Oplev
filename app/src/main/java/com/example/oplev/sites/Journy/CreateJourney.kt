@@ -95,7 +95,9 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, nav : ()->
                       Row(modifier = Modifier.padding(60.dp,20.dp,0.dp,80.dp)) {
                           //Nedenstående buttons skal være composables
                           Button(
-                              onClick = { /*TODO*/ },
+                              onClick = {
+                                        nav()
+                                        },
                               colors = ButtonDefaults.buttonColors(
                                   backgroundColor = Color.Transparent,
                                   contentColor = Color.Black
@@ -110,7 +112,9 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, nav : ()->
                           }
                           Spacer(modifier = Modifier.width(40.dp))
                           Button(
-                              onClick = { createJourneyViewModel.createNewJourney(destination,category,beskrivelse) },
+                              onClick = { createJourneyViewModel.createNewJourney(destination,category,beskrivelse)
+                                        nav()
+                                        },
                               colors = ButtonDefaults.buttonColors(
                                   backgroundColor = Color.Blue,
                                   contentColor = Color.Black

@@ -1,6 +1,5 @@
 package com.example.oplev.ui.components
 
-import android.service.autofill.OnClickAction
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -11,8 +10,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,13 +33,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
-import com.example.oplev.Screen
 import com.example.oplev.ViewModel.CreateJourneyViewModel
 import com.example.oplev.ViewModel.FrontpageViewModel
 import com.example.oplev.ViewModel.JourneyViewModel
 import com.example.oplev.sites.*
+import com.example.oplev.sites.Journy.JourneyScreen
 import com.example.oplev.sites.Journy.createJourneyComp
-import com.example.oplev.sites.SignUpScreen
 
 
 @Composable
@@ -60,6 +56,9 @@ fun NavController() {
     val categories = listOf(seneste,favoritter, mumsesteg)
     val frontpage = "frontpage"
     val createJourneyPage = "create"
+    val journeyPage = "journeypage"
+
+    var testJourney = Journey(tag = "test", image = null, date = null, description = "This is a test", title = "Danmark", folder = null, ideas = null)
 
 
     val frontpageViewModel = FrontpageViewModel(categories)
@@ -73,10 +72,18 @@ fun NavController() {
 
     NavHost(navController = navController, startDestination = frontpage) {
         composable(route = frontpage) {
-            TotalView(frontpageViewModel = frontpageViewModel, nav = {navController.navigate(createJourneyPage)})
+            TotalView(frontpageViewModel = frontpageViewModel, fabNav = {
+                navController.navigate(createJourneyPage)
+            }, journeyNav = {
+                navController.navigate(journeyPage)
+            }
+            )
         }
         composable(route = createJourneyPage) {
             createJourneyComp(createJourneyViewModel = createJourneyViewModel, nav = {navController.navigate(frontpage)} )
+        }
+        composable(route = journeyPage){
+            JourneyScreen(journeyViewModel = JourneyViewModel(testJourney))
         }
     }
 
