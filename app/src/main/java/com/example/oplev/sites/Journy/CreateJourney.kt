@@ -10,18 +10,13 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.toSize
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
@@ -29,6 +24,10 @@ import com.example.oplev.ViewModel.CreateJourneyViewModel
 
 @Composable
 fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, modifier: Modifier = Modifier){
+    var destination by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf("") }
+    var beskrivelse by remember { mutableStateOf("") }
+
     Scaffold(
         topBar = { TopBar(title = "Velkommen {USER}")},
         content = {
@@ -59,10 +58,18 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, modifier: 
                               )
                           }
                           }
-                      inputTextfield("Destination",80,imageVector = Icons.Filled.LocationOn)
+                      inputTextfield("Destination",80,imageVector = Icons.Filled.LocationOn, onValueChange = {
+                          destination = it
+                      },destination)
                      //Nedenstående skal være dropdown
-                      ExposedDropdownMenu(list = createJourneyViewModel.categories, imageVector = Icons.Filled.Warning)
-                          inputTextfield("Inviter Venner",80, imageVector = Icons.Filled.Warning)
+                      ExposedDropdownMenu(list = createJourneyViewModel.getCategories().toList(), imageVector = Icons.Filled.Warning, category, upDateValue = {
+                          category = it.title
+                      })
+
+
+                          inputTextfield("Inviter Venner",80, imageVector = Icons.Filled.Warning, onValueChange = {
+                              /*TODO*/
+                          },"")
                       //Nedenstående rows skal i en composable
                       Row(modifier = Modifier
                           .fillMaxWidth()
@@ -82,7 +89,9 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, modifier: 
                           Spacer(modifier = Modifier.width(20.dp))
                           /* Skal være en "time picker"*/ inputFieldNoRow("Til kl.",80, imageVector = Icons.Filled.Warning)
                       }
-                      inputTextfield("Beskriv oplevelsen",height = 150,imageVector = Icons.Filled.Menu)
+                      inputTextfield("Beskriv oplevelsen",height = 150,imageVector = Icons.Filled.Menu, onValueChange = {
+                          beskrivelse = it
+                      },beskrivelse)
                       Row(modifier = Modifier.padding(60.dp,20.dp,0.dp,80.dp)) {
                           //Nedenstående buttons skal være composables
                           Button(
@@ -101,7 +110,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, modifier: 
                           }
                           Spacer(modifier = Modifier.width(40.dp))
                           Button(
-                              onClick = { /*TODO*/ },
+                              onClick = { createJourneyViewModel.createNewJourney(destination,category,beskrivelse) },
                               colors = ButtonDefaults.buttonColors(
                                   backgroundColor = Color.Blue,
                                   contentColor = Color.Black
@@ -122,8 +131,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, modifier: 
 }
 
 @Composable
-fun inputTextfield(label: String, height: Int, imageVector: ImageVector){
-    var input by remember { mutableStateOf("") }
+fun inputTextfield(label: String, height: Int, imageVector: ImageVector, onValueChange: (String) -> Unit, input: String){
     Row(modifier = Modifier
         .fillMaxWidth()
         .height(height.dp)
@@ -135,10 +143,10 @@ fun inputTextfield(label: String, height: Int, imageVector: ImageVector){
         OutlinedTextField(
             value = input,
             label = { Text(text = label) },
-            modifier = Modifier.height(height.dp).fillMaxWidth(),
-            onValueChange = {
-                input = it
-            }
+            modifier = Modifier
+                .height(height.dp)
+                .fillMaxWidth(),
+            onValueChange = onValueChange
         )
     }
 }
@@ -166,19 +174,14 @@ fun DatePickerTest(context : Context) {
     val day : Int
 }
 
+
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ExposedDropdownMenu(list : List<Category>, imageVector: ImageVector){
-    var expanded by remember { mutableStateOf(false)
+fun ExposedDropdownMenu(list : List<Category>, imageVector: ImageVector,selectedOption:String, upDateValue: (Category) -> Unit){
+    var expanded by remember { mutableStateOf(false) }
+    var selectedOptionlocal by remember {
+        mutableStateOf(selectedOption)
     }
-    var listOfTitles = listOf<String>("")
-
-    for (category : Category in list){
-        listOfTitles = listOf<String>(category.title)
-    }
-
-    val list = listOfTitles
-    var selectedItem by remember { mutableStateOf("") }
-    var textFilledSize by remember { mutableStateOf(Size.Zero) }
     val icon = if (!expanded)
     {
         Icons.Filled.KeyboardArrowUp
@@ -187,47 +190,55 @@ fun ExposedDropdownMenu(list : List<Category>, imageVector: ImageVector){
     {
         Icons.Filled.KeyboardArrowDown
     }
-
-        Row() {
-            Icon(
-                imageVector = imageVector,
-                contentDescription = "",
-                modifier = Modifier.padding(20.dp, 15.dp, 15.dp, 20.dp)
-            )
-
+    Row() {
+        Icon(
+            imageVector = imageVector,
+            contentDescription = "",
+            modifier = Modifier.padding(20.dp, 15.dp, 15.dp, 20.dp)
+        )
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            }
+        ) {
             OutlinedTextField(
-                value = selectedItem,
-                onValueChange = { selectedItem = it },
+                value = selectedOptionlocal,
+                readOnly = true,
+                onValueChange = {selectedOptionlocal = it},
                 modifier = Modifier
-                    .width(280.dp)
+                    .fillMaxWidth()
                     .padding(0.dp, 0.dp, 0.dp, 20.dp),
                 label = { Text(text = "Kategori") },
                 trailingIcon = {
                     Icon(icon, "", Modifier.clickable { expanded = !expanded })
                 }
             )
-            DropdownMenu(
+            ExposedDropdownMenu(
                 expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier
-                    .width(with(LocalDensity.current) { textFilledSize.width.toDp() })
+                onDismissRequest = {
+                    expanded = false
+                }
             ) {
-                for (title: String in list) {
-                    DropdownMenuItem(onClick = {
-                        selectedItem = title
-                        expanded = false
-                    }) {
-                        Text(text = title)
-
+                list.forEach { selectionOption ->
+                    DropdownMenuItem(
+                        onClick = {
+                            upDateValue.invoke(selectionOption)
+                            selectedOptionlocal = selectionOption.title
+                            expanded = false
+                        }
+                    ) {
+                        Text(text = selectionOption.title)
                     }
                 }
-
             }
         }
+    }
 }
 
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview(showBackground = true)
 @Composable
 fun createJourneyPreview(){
@@ -240,7 +251,13 @@ fun createJourneyPreview(){
     val seneste = Category("Seneste", journeys)
     val favoritter = Category("Favoritter", journeys)
     val categories = listOf(seneste,favoritter)
-    val createJourneyViewModel = CreateJourneyViewModel(categories)
+    val createJourneyViewModel = CreateJourneyViewModel()
+
+    createJourneyViewModel.category.categorys.add(favoritter)
+    createJourneyViewModel.category.categorys.add(seneste)
     createJourneyComp(createJourneyViewModel)
+
+
+
     }
 

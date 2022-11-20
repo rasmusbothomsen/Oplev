@@ -46,7 +46,7 @@ fun NavController() {
 
     NavHost(navController = navController, startDestination = Screen.FrontPageScreen.route) {
         composable(route = Screen.FrontPageScreen.route) {
-            Screen.FrontPageScreen(navController)
+            //Screen.FrontPageScreen(navController)
         }
         composable(route = Screen.SignUpScreen.route) {
             SignUpScreen(navController)
