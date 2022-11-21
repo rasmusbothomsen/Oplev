@@ -1,6 +1,8 @@
 package com.example.oplev
 
 sealed class Screen(val route: String) {
-    object FrontPageScreen : Screen("FrontPageScreen")
-    object SignUpScreen : Screen ("SignUpScreen")
+    object FrontPageScreen : Screen("frontpage")
+    object SignUpScreen : Screen ("signup")
+    object CreateJourneyScreen : Screen ("create journey")
+    object JourneyScreen : Screen("journey")
 }

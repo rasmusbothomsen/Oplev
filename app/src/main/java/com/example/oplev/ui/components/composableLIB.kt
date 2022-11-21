@@ -33,6 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
+import com.example.oplev.Screen
 import com.example.oplev.ViewModel.CreateJourneyViewModel
 import com.example.oplev.ViewModel.FrontpageViewModel
 import com.example.oplev.ViewModel.JourneyViewModel
@@ -54,9 +55,6 @@ fun NavController() {
     val favoritter = Category("Favoritter", journeys)
     val mumsesteg = Category("mumsesteg", journeys)
     val categories = listOf(seneste,favoritter, mumsesteg)
-    val frontpage = "frontpage"
-    val createJourneyPage = "create"
-    val journeyPage = "journeypage"
 
     var testJourney = Journey(tag = "test", image = null, date = null, description = "This is a test", title = "Danmark", folder = null, ideas = null)
 
@@ -70,19 +68,14 @@ fun NavController() {
 
 
 
-    NavHost(navController = navController, startDestination = frontpage) {
-        composable(route = frontpage) {
-            TotalView(frontpageViewModel = frontpageViewModel, fabNav = {
-                navController.navigate(createJourneyPage)
-            }, journeyNav = {
-                navController.navigate(journeyPage)
-            }
-            )
+    NavHost(navController = navController, startDestination = Screen.FrontPageScreen.route) {
+        composable(route = Screen.FrontPageScreen.route) {
+            TotalView(frontpageViewModel = frontpageViewModel, navController)
         }
-        composable(route = createJourneyPage) {
-            createJourneyComp(createJourneyViewModel = createJourneyViewModel, nav = {navController.navigate(frontpage)} )
+        composable(route = Screen.CreateJourneyScreen.route) {
+            createJourneyComp(createJourneyViewModel = createJourneyViewModel, navController )
         }
-        composable(route = journeyPage){
+        composable(route = Screen.JourneyScreen.route){
             JourneyScreen(journeyViewModel = JourneyViewModel(testJourney))
         }
     }

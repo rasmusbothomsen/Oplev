@@ -17,13 +17,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
+import com.example.oplev.Screen
 import com.example.oplev.ViewModel.CreateJourneyViewModel
 
 @Composable
-fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, nav : ()-> Unit){
+fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navController: NavController){
     var destination by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("") }
     var beskrivelse by remember { mutableStateOf("") }
@@ -96,7 +98,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, nav : ()->
                           //Nedenstående buttons skal være composables
                           Button(
                               onClick = {
-                                        nav()
+                                        navController.navigate(Screen.FrontPageScreen.route)
                                         },
                               colors = ButtonDefaults.buttonColors(
                                   backgroundColor = Color.Transparent,
@@ -113,7 +115,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, nav : ()->
                           Spacer(modifier = Modifier.width(40.dp))
                           Button(
                               onClick = { createJourneyViewModel.createNewJourney(destination,category,beskrivelse)
-                                        nav()
+                                  navController.navigate(Screen.FrontPageScreen.route)
                                         },
                               colors = ButtonDefaults.buttonColors(
                                   backgroundColor = Color.Blue,
