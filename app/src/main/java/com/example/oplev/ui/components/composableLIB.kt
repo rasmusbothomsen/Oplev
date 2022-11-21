@@ -1,5 +1,6 @@
 package com.example.oplev.ui.components
 
+import android.service.autofill.OnClickAction
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -111,18 +112,19 @@ fun Button(text: String, width: Int, height: Int, hexCode: String, onClick: Unit
     }
 }
 
+/*
 @Preview
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun IdeaGrid() {
+fun IdeaGridd(padding: Int) {
     LazyVerticalGrid(
         //Beslut mellem .Adaptive/.Fixed - kun nødvendigt hvis appen skal kunne ses horisontalt
         cells = GridCells.Adaptive(100.dp),
         content = {
-            items(100) { i ->
+            items(10) { i ->
                 Box(
                     modifier = Modifier
-                        .padding(4.dp)
+                        .padding(padding.dp)
                         .aspectRatio(1f)
                         .clip(RoundedCornerShape(30.dp))
                         .background(Color.Blue),
@@ -134,6 +136,8 @@ fun IdeaGrid() {
             }
         })
 }
+
+ */
 
 @Composable
 fun FolderGrid() {

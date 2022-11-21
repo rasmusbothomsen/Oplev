@@ -31,7 +31,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, nav : ()->
     Scaffold(
         topBar = { TopBar(title = "Velkommen {USER}")},
         content = {
-            //Nedenstående skal i en composable
+            //Nedenstående skal i en c  omposable
                   Column(modifier = Modifier
                       .fillMaxSize()
                       .verticalScroll(rememberScrollState())) {

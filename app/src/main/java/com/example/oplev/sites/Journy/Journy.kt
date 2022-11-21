@@ -29,9 +29,11 @@ import androidx.compose.material.Text
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.layout
 import com.example.oplev.Model.Idea
+import com.example.oplev.ViewModel.IdeaViewModel
 import com.example.oplev.sites.*
 
 import com.example.oplev.ViewModel.JourneyViewModel
+import com.example.oplev.sites.Idea.IdeaGridItem
 import com.example.oplev.ui.theme.OplevTheme
 
 // make an alias
@@ -129,7 +131,8 @@ fun gridLazytest(){
 
         }
     }
-    val itemsInColumn = listOf(test,test)
+
+    val itemsInColumn = listOf(test,test,test)
 
     LazyVerticalGrid(cells = GridCells.Fixed(3),horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -140,8 +143,14 @@ fun gridLazytest(){
         }
 
 
+        itemsInColumn.forEachIndexed{
+            index, function -> item { IdeaGridItem(viewModel = IdeaViewModel()) }
+        }
+        }
+
+
     }
-}
+
 
 @Composable
 fun folderCreator(ideas: List<Idea>?){
@@ -217,7 +226,7 @@ fun folders(journeyViewModel: JourneyViewModel){
 }
 
 @Composable
-fun ideas(journeyViewModel: JourneyViewModel){
+fun ideas(journeyViewModel: JourneyViewModel) {
 
 }
 
