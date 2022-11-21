@@ -1,5 +1,6 @@
 package com.example.oplev.sites
 
+import androidx.annotation.RestrictTo.Scope
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -9,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -24,6 +26,8 @@ import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import com.example.oplev.ViewModel.FrontpageViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Preview
 @Composable
@@ -59,8 +63,12 @@ fun MenuDrawer(){
 
 @Composable
 fun TotalView(frontpageViewModel: FrontpageViewModel, fabNav : ()->Unit, journeyNav : ()-> Unit) {
+    val scaffoldstate = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
     Scaffold(
+        scaffoldState = scaffoldstate,
             drawerContent = {
+
                 Row(Modifier.padding(20.dp, 30.dp, 0.dp, 0.dp)) {
                     Image(
                         painter = painterResource(id = R.drawable.oplev300dpi),
@@ -160,7 +168,10 @@ fun TotalView(frontpageViewModel: FrontpageViewModel, fabNav : ()->Unit, journey
                 }
                 Row(verticalAlignment = Alignment.Bottom, modifier = Modifier.padding(55.dp, 200.dp, 0.dp, 0.dp)) {
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            scope.launch{
+                                scaffoldstate.drawerState.close()}
+                        },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color.Unspecified,
                             contentColor = Color.Black
@@ -178,7 +189,7 @@ fun TotalView(frontpageViewModel: FrontpageViewModel, fabNav : ()->Unit, journey
         drawerGesturesEnabled = true,
         topBar = { TopBar("Velkommen") },
         content = { FrontPageColumn(frontpageViewModel.categories, journeyNav) },
-        bottomBar = { BottomBar() },
+        bottomBar = { BottomBar(scope,scaffoldstate) },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
         floatingActionButton = {
@@ -302,15 +313,18 @@ fun TopBar(title: String) {
 }
 
 @Composable
-fun BottomBar(){
+fun BottomBar(scope: CoroutineScope, scaffoldState: ScaffoldState){
     BottomAppBar(modifier = Modifier
         .height(65.dp) /*cutoutShape = CircleShape,*/) {
         BottomNavigation {
             BottomNavigationItem(
                 icon = {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        "")
+                    IconButton(
+                        onClick = {scope.launch{
+                            scaffoldState.drawerState.open()
+                        }}
+                    ) {
+                        Icon(imageVector = Icons.Default.Menu, contentDescription = "" )}
                        },
                 label = { Text(text = "Menu") },
                 selected = false,
