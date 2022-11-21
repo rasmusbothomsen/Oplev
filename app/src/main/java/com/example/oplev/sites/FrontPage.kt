@@ -22,9 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
+import com.example.oplev.Screen
 import com.example.oplev.ViewModel.FrontpageViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -62,7 +64,7 @@ fun MenuDrawer(){
 **/
 
 @Composable
-fun TotalView(frontpageViewModel: FrontpageViewModel, fabNav : ()->Unit, journeyNav : ()-> Unit) {
+fun TotalView(frontpageViewModel: FrontpageViewModel, navController: NavController) {
     val scaffoldstate = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -188,14 +190,14 @@ fun TotalView(frontpageViewModel: FrontpageViewModel, fabNav : ()->Unit, journey
         },
         drawerGesturesEnabled = true,
         topBar = { TopBar("Velkommen") },
-        content = { FrontPageColumn(frontpageViewModel.categories, journeyNav) },
+        content = { FrontPageColumn(frontpageViewModel.categories, navController) },
         bottomBar = { BottomBar(scope,scaffoldstate) },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
         floatingActionButton = {
             FloatingActionButton(shape = CircleShape, modifier = Modifier.size(width = 75.dp, height = 75.dp),
                 onClick = {
-                    fabNav()
+                    navController.navigate(Screen.CreateJourneyScreen.route)
                 }) {
                 Icon(
                     imageVector = Icons.Filled.Add,
@@ -210,7 +212,7 @@ fun TotalView(frontpageViewModel: FrontpageViewModel, fabNav : ()->Unit, journey
 }
 
 @Composable
-fun FrontPageColumn(categories: List<Category>, journeyNav: () -> Unit) {
+fun FrontPageColumn(categories: List<Category>, navController: NavController) {
     Column(modifier = Modifier
         .verticalScroll(rememberScrollState())
     )
@@ -219,13 +221,13 @@ fun FrontPageColumn(categories: List<Category>, journeyNav: () -> Unit) {
         for (i in 0..max) {
             Spacer(modifier = Modifier
                 .height(15.dp))
-            CategoryRow(categories[i], journeyNav)
+            CategoryRow(categories[i], navController = navController)
         }
     }
 }
 
 @Composable
-fun CategoryRow(category: Category, journeyNav: () -> Unit) {
+fun CategoryRow(category: Category, navController: NavController) {
     val max = category.journeys.size-1
     Text(
         text = category.title,
@@ -239,13 +241,13 @@ fun CategoryRow(category: Category, journeyNav: () -> Unit) {
         .horizontalScroll(rememberScrollState()), verticalAlignment = Alignment.Bottom
     ) {
         for (i in 0..max) {
-            JourneyCard(category.journeys[i], journeyNav)
+            JourneyCard(category.journeys[i], navController = navController)
         }
     }
 }
 
 @Composable
-fun JourneyCard(journey: Journey, journeyNav: () -> Unit) {
+fun JourneyCard(journey: Journey, navController: NavController) {
     val img = journey.image
     val context = LocalContext.current
     val drawableId = remember(img) {
@@ -258,7 +260,7 @@ fun JourneyCard(journey: Journey, journeyNav: () -> Unit) {
 
         Card(modifier = Modifier
             .clickable {
-                journeyNav()
+                navController.navigate(Screen.JourneyScreen.route)
             }
             .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
             //Nedenunder er padding = størrelse på card.
