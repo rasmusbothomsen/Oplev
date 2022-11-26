@@ -252,15 +252,18 @@ fun createJourneyPreview(){
     val journey2 = Journey("e","img_norway",null,"","Norge",null)
     val journey3 = Journey("e","img_finland",null,"","Finland",null)
     val journey4 = Journey("e","img_turkey",null,"","Tyrkiet",null)
-    val journeys = listOf(journey1, journey2, journey3, journey4)
+    val journeys = mutableListOf<Journey>(journey1, journey2, journey3, journey4)
 
     val seneste = Category("Seneste", journeys)
     val favoritter = Category("Favoritter", journeys)
     val categories = listOf(seneste,favoritter)
+    /*
     val createJourneyViewModel = CreateJourneyViewModel()
 
     createJourneyViewModel.category.categorys.add(favoritter)
     createJourneyViewModel.category.categorys.add(seneste)
+
+     */
     //createJourneyComp(createJourneyViewModel)
 
 

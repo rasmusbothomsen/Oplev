@@ -4,18 +4,18 @@ import com.example.oplev.Model.*
 import com.example.oplev.Data.*
 
 
-class CreateJourneyViewModel {
-    var journey = JourneyData()
-    var category = CategoryData()
+class CreateJourneyViewModel(var journey: JourneyData, var categoryData: CategoryData) {
+
 
 
     fun createNewJourney(destination : String, category: String, beskrivelse: String){
         Log.d("beskrivelse",beskrivelse)
         Log.d("destination",destination)
         Log.d("category",category)
-        journey.journeys.add(Journey("","",null, beskrivelse,"",null,null))
+        var tempJourney = Journey("e","img_finland",null, beskrivelse,destination,null,null)
+        journey.journeys.add(tempJourney)
     }
     fun getCategories():MutableList<Category> {
-        return category.categorys
+        return categoryData.categorys
     }
 }

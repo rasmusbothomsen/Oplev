@@ -1,6 +1,5 @@
 package com.example.oplev.sites
 
-import androidx.annotation.RestrictTo.Scope
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -23,11 +22,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.oplev.Data.CategoryData
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import com.example.oplev.Screen
-import com.example.oplev.ViewModel.FrontpageViewModel
+import com.example.oplev.ViewModel.FrontPageViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -38,14 +38,15 @@ fun FrontPagePrev() {
     val journey2 = Journey("e","img_norway",null,"","Norge",null)
     val journey3 = Journey("e","img_finland",null,"","Finland",null)
     val journey4 = Journey("e","img_turkey",null,"","Tyrkiet",null)
-    val journeys = listOf(journey1, journey2, journey3, journey4)
+    val journeys = mutableListOf<Journey>(journey1, journey2, journey3, journey4)
 
     val seneste = Category("Seneste", journeys)
     val favoritter = Category("Favoritter", journeys)
     val mumsesteg = Category("mumsesteg", journeys)
     val categories = listOf(seneste,favoritter, mumsesteg)
-
-    val frontpageViewModel = FrontpageViewModel(categories)
+    var categoryData = CategoryData()
+    categoryData.categorys= categories.toMutableList()
+    val frontpageViewModel = FrontPageViewModel(categoryData)
 
     //TotalView(frontpageViewModel = frontpageViewModel)
 }
@@ -64,7 +65,7 @@ fun MenuDrawer(){
 **/
 
 @Composable
-fun TotalView(frontpageViewModel: FrontpageViewModel, navController: NavController) {
+fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavController) {
     val scaffoldstate = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -190,7 +191,7 @@ fun TotalView(frontpageViewModel: FrontpageViewModel, navController: NavControll
         },
         drawerGesturesEnabled = true,
         topBar = { TopBar("Velkommen") },
-        content = { FrontPageColumn(frontpageViewModel.categories, navController) },
+        content = { FrontPageColumn(frontpageViewModel.categoryData.categorys, navController) },
         bottomBar = { BottomBar(scope,scaffoldstate) },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,

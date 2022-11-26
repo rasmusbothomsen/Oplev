@@ -17,7 +17,7 @@ data class Folder(
 
 data class Category(
     var title: String,
-    var journeys : List<Journey>
+    var journeys : MutableList<Journey>
 )
 
 data class Journey(
