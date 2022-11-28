@@ -31,7 +31,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
     var beskrivelse by remember { mutableStateOf("") }
 
     Scaffold(
-        topBar = { TopBar(title = "Velkommen {USER}")},
+        topBar = { TopBar(title = "Velkommen" /** + profile.userName **/ )},
         content = {
             //Nedenstående skal i en c  omposable
                   Column(modifier = Modifier
@@ -42,6 +42,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                               modifier = Modifier
                                   .fillMaxHeight()
                                   .fillMaxWidth()
+
                           )
                           {
                               Image(

@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -42,13 +43,13 @@ fun FrontPagePrev() {
 
     val seneste = Category("Seneste", journeys)
     val favoritter = Category("Favoritter", journeys)
-    val mumsesteg = Category("mumsesteg", journeys)
+    val mumsesteg = Category("Another", journeys)
     val categories = listOf(seneste,favoritter, mumsesteg)
     var categoryData = CategoryData()
     categoryData.categorys= categories.toMutableList()
     val frontpageViewModel = FrontPageViewModel(categoryData)
 
-    //TotalView(frontpageViewModel = frontpageViewModel)
+
 }
 
 /**@Composable
@@ -263,17 +264,19 @@ fun JourneyCard(journey: Journey, navController: NavController) {
             .clickable {
                 navController.navigate(Screen.JourneyScreen.route)
             }
+            /** Tror at nedstående skal ændres. Vi vil gerne have default paddings på hele projektet. */
             .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
-            //Nedenunder er padding = størrelse på card.
-            Column(modifier = Modifier.padding(0.dp)) {
-                Box(modifier = Modifier.padding(0.dp)) {
+
+            Column() {
+                Box(modifier = Modifier.padding().fillMaxSize()) {
                     Image(
                         painter = painterResource(id = drawableId),
-                        contentDescription = "Image Denmark"
+                        contentDescription = "Image Denmark",
+                        contentScale = ContentScale.FillBounds
                     )
                     Box(
                         modifier = Modifier
-                            .size(width = 185.dp, height = 23.dp)
+                            //.fillMaxWidth().height(23.dp)
                             .align(Alignment.BottomCenter)
                             .background(Color.Black.copy(alpha = 0.6f))
                     ) {
