@@ -138,6 +138,10 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
 }
 
 @Composable
+fun testinggg(){
+    Scaffold(content = { Text(text = "")})
+}
+@Composable
 fun inputTextfield(label: String, height: Int, imageVector: ImageVector, onValueChange: (String) -> Unit, input: String){
     Row(modifier = Modifier
         .fillMaxWidth()

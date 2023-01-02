@@ -2,7 +2,12 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
 }
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
+kapt {
+    generateStubs = true
+}
 android {
     namespace 'com.example.oplev'
     compileSdk 32
@@ -61,6 +66,17 @@ dependencies {
     implementation 'androidx.navigation:navigation-runtime-ktx:2.4.1'
     def nav_version = "2.5.3"
     implementation "androidx.navigation:navigation-compose:$nav_version"
+
+    def room_version = "2.2.5"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+
+
+
+
+
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

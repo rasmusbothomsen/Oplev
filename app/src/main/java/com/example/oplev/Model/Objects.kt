@@ -1,5 +1,7 @@
 package com.example.oplev.Model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.util.Date
 
 data class Idea(
@@ -29,3 +31,9 @@ data class Journey(
     var folder: MutableList<Folder>? = mutableListOf<Folder>(),
     var ideas: MutableList<Idea>? = mutableListOf<Idea>()
     )
+@Entity
+data class testRoom(
+    @PrimaryKey val id: Int,
+    val name:String,
+    val age: Int
+)
