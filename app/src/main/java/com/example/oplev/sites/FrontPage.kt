@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.oplev.Data.CategoryData
+import com.example.oplev.data.dto.CategoryDto
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
@@ -45,7 +45,7 @@ fun FrontPagePrev() {
     val favoritter = Category("Favoritter", journeys)
     val mumsesteg = Category("Another", journeys)
     val categories = listOf(seneste,favoritter, mumsesteg)
-    var categoryData = CategoryData()
+    var categoryData = CategoryDto()
     categoryData.categorys= categories.toMutableList()
     val frontpageViewModel = FrontPageViewModel(categoryData)
 

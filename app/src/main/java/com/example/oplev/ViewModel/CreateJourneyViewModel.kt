@@ -1,10 +1,12 @@
 package com.example.oplev.ViewModel
 import android.util.Log
 import com.example.oplev.Model.*
-import com.example.oplev.Data.*
+import com.example.oplev.data.*
+import com.example.oplev.data.dto.CategoryDto
+import com.example.oplev.data.dto.JourneyDto
 
 
-class CreateJourneyViewModel(var journey: JourneyData, var categoryData: CategoryData) {
+class CreateJourneyViewModel(var journey: JourneyDto, var categoryData: CategoryDto) {
 
 
 

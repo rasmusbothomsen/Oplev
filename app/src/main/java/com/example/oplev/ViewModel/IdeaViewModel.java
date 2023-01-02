@@ -2,16 +2,15 @@ package com.example.oplev.ViewModel;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.oplev.Data.JourneyData;
+import com.example.oplev.data.dto.JourneyDto;
 import com.example.oplev.Model.Idea;
-import com.example.oplev.Model.Journey;
 
 //Opdater til Kotlin class, hvor der tages udgangspunkt i createJOruneyViewModel
 // Get og set metoder til idéer
 
 public class IdeaViewModel extends ViewModel {
     private Idea idea;
-    private JourneyData journeyData;
+    private JourneyDto journeyData;
 
     public IdeaViewModel() {
     }

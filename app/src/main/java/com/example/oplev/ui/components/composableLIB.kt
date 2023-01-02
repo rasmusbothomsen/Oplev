@@ -26,6 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.oplev.DependencyController
+import com.example.oplev.MainActivity
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import com.example.oplev.Screen
@@ -35,6 +36,7 @@ import com.example.oplev.ViewModel.JourneyViewModel
 import com.example.oplev.sites.*
 import com.example.oplev.sites.Journy.JourneyScreen
 import com.example.oplev.sites.Journy.createJourneyComp
+import kotlinx.coroutines.MainScope
 
 
 @Composable
@@ -42,7 +44,6 @@ fun NavController() {
     val navController = rememberNavController()
     var dependencyController = DependencyController()
     dependencyController.initializeData()
-
 
     val frontpageViewModel = FrontPageViewModel(dependencyController.categoryData)
 

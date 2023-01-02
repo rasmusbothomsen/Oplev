@@ -1,14 +1,13 @@
 package com.example.oplev.ViewModel;
 
-import androidx.compose.runtime.Composable;
 import androidx.lifecycle.ViewModel;
 
-import com.example.oplev.Data.JourneyData;
+import com.example.oplev.data.dto.JourneyDto;
 import com.example.oplev.Model.Journey;
 
 public class JourneyViewModel extends ViewModel {
     private Journey journey;
-    private JourneyData journeyData;
+    private JourneyDto journeyData;
 
 
     public JourneyViewModel(Journey journey) {

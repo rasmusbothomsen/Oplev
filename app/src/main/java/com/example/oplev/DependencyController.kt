@@ -1,13 +1,13 @@
 package com.example.oplev
 
-import com.example.oplev.Data.CategoryData
-import com.example.oplev.Data.JourneyData
+import com.example.oplev.data.dto.CategoryDto
+import com.example.oplev.data.dto.JourneyDto
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
 
 class DependencyController {
-     var categoryData = CategoryData()
-     var journeyData = JourneyData()
+     var categoryData = CategoryDto()
+     var journeyData = JourneyDto()
 
     fun initializeData(){
         /* TODO */
@@ -16,10 +16,10 @@ class DependencyController {
         initializeCategorydata()
     }
 
-    fun getCategoryDataDependency():CategoryData{
+    fun getCategoryDataDependency(): CategoryDto {
         return categoryData
     }
-    fun getJourneyDataDependency():JourneyData{
+    fun getJourneyDataDependency(): JourneyDto {
         return journeyData
     }
 

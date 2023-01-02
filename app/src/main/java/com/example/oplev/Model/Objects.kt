@@ -1,6 +1,7 @@
 package com.example.oplev.Model
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.util.Date
 
@@ -14,26 +15,23 @@ data class Folder(
     var idea: Idea,
     var folder: Folder?,
     var title: String,
-    var ideas: MutableList<Idea>? = mutableListOf<Idea>()
     )
 
+@Entity
 data class Category(
+    @PrimaryKey val id: Int,
     var title: String,
-    var journeys : MutableList<Journey>
 )
-
+@Entity
 data class Journey(
     var tag: String,
+    @ForeignKey (entity = Category::class, parentColumns = ["id"],
+        childColumns = ["categoryID"],
+        onDelete = ForeignKey.SET_NULL)
     var image: String?,
+    val categoryID: Int,
     var date: Date?,
     var description: String,
     var title: String,
-    var folder: MutableList<Folder>? = mutableListOf<Folder>(),
-    var ideas: MutableList<Idea>? = mutableListOf<Idea>()
+
     )
-@Entity
-data class testRoom(
-    @PrimaryKey val id: Int,
-    val name:String,
-    val age: Int
-)
