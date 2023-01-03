@@ -26,17 +26,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.oplev.DependencyController
-import com.example.oplev.MainActivity
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import com.example.oplev.Screen
+import com.example.oplev.ViewModel.AuthViewModel
 import com.example.oplev.ViewModel.CreateJourneyViewModel
 import com.example.oplev.ViewModel.FrontPageViewModel
 import com.example.oplev.ViewModel.JourneyViewModel
 import com.example.oplev.sites.*
 import com.example.oplev.sites.Journy.JourneyScreen
 import com.example.oplev.sites.Journy.createJourneyComp
-import kotlinx.coroutines.MainScope
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 
 @Composable
@@ -45,18 +46,15 @@ fun NavController() {
     var dependencyController = DependencyController()
     dependencyController.initializeData()
 
-    val frontpageViewModel = FrontPageViewModel(dependencyController.categoryData)
+    val frontpageViewModel = FrontPageViewModel(dependencyController.frontpageData)
 
-    val createJourneyViewModel = CreateJourneyViewModel(dependencyController.journeyData,dependencyController.categoryData)
+    val createJourneyViewModel = CreateJourneyViewModel(dependencyController.journeyData,dependencyController.categoryData, dependencyController.frontpageData)
 
-    var testJourney = Journey(tag = "test", image = null, date = null, description = "This is a test", title = "Danmark", folder = null, ideas = null)
+    val authViewModel = AuthViewModel()
 
+    var testJourney = Journey(tag = "test", image = null, date = null, description = "This is a test", title = "Danmark", categoryID = 1)
 
-
-
-
-
-    NavHost(navController = navController, startDestination = Screen.FrontPageScreen.route) {
+    NavHost(navController = navController, startDestination = Screen.SignUpScreen.route) {
         composable(route = Screen.FrontPageScreen.route) {
             TotalView(frontpageViewModel = frontpageViewModel, navController)
         }
@@ -65,6 +63,9 @@ fun NavController() {
         }
         composable(route = Screen.JourneyScreen.route){
             JourneyScreen(journeyViewModel = JourneyViewModel(testJourney))
+        }
+        composable(route = Screen.SignUpScreen.route){
+            CreateUserView(authViewModel = authViewModel , navController = navController)
         }
     }
 

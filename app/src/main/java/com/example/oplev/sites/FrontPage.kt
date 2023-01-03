@@ -35,19 +35,7 @@ import kotlinx.coroutines.launch
 @Preview
 @Composable
 fun FrontPagePrev() {
-    val journey1 = Journey("e","img_denmark",null,"","Danmark", null)
-    val journey2 = Journey("e","img_norway",null,"","Norge",null)
-    val journey3 = Journey("e","img_finland",null,"","Finland",null)
-    val journey4 = Journey("e","img_turkey",null,"","Tyrkiet",null)
-    val journeys = mutableListOf<Journey>(journey1, journey2, journey3, journey4)
 
-    val seneste = Category("Seneste", journeys)
-    val favoritter = Category("Favoritter", journeys)
-    val mumsesteg = Category("Another", journeys)
-    val categories = listOf(seneste,favoritter, mumsesteg)
-    var categoryData = CategoryDto()
-    categoryData.categorys= categories.toMutableList()
-    val frontpageViewModel = FrontPageViewModel(categoryData)
 
 
 }
@@ -192,7 +180,7 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
         },
         drawerGesturesEnabled = true,
         topBar = { TopBar("Velkommen") },
-        content = { FrontPageColumn(frontpageViewModel.categoryData.categorys, navController) },
+        content = { FrontPageColumn(frontpageViewModel.frontpageDto.categories, navController) },
         bottomBar = { BottomBar(scope,scaffoldstate) },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
