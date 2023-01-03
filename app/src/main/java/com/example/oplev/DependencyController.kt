@@ -4,7 +4,7 @@ import com.example.oplev.data.dto.CategoryDto
 import com.example.oplev.data.dto.JourneyDto
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
-
+/*
 class DependencyController {
      var categoryData = CategoryDto()
      var journeyData = JourneyDto()
@@ -51,3 +51,5 @@ class DependencyController {
         }
     }
 }
+
+ */

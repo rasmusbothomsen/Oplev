@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 
+/*
 @Dao
 interface BaseDao<T> {
 
@@ -19,3 +20,5 @@ interface BaseDao<T> {
         @Delete
         suspend fun delete(item: T)
     }
+
+ */

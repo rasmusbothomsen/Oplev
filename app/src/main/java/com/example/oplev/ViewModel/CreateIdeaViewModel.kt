@@ -7,7 +7,7 @@ class CreateIdeaViewModel(var journeyData: JourneyDto) {
 
     fun createNewIdea(titel: String, beskrivelse: String, link: String){
 
-        var tempIdea = Idea(titel, beskrivelse, link, null)
-        journeyData.ideas.add(tempIdea)
+        // var tempIdea = Idea(titel, beskrivelse, link, null)
+        // journeyData.ideas.add(tempIdea)
     }
 }
