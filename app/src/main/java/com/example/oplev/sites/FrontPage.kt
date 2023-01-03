@@ -1,5 +1,6 @@
 package com.example.oplev.sites
 
+import android.app.Activity
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -29,8 +30,11 @@ import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.FrontPageViewModel
+import com.google.firebase.auth.ktx.auth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+
 
 @Preview
 @Composable
@@ -57,6 +61,10 @@ fun MenuDrawer(){
 fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavController) {
     val scaffoldstate = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val activity = LocalContext.current as Activity
+
+
     Scaffold(
         scaffoldState = scaffoldstate,
             drawerContent = {
@@ -74,15 +82,15 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         modifier = Modifier.padding(0.dp, 25.dp, 0.dp, 0.dp),
                         fontSize = 20.sp
                     )
-                    /*IconButton(
-                        onClick = { /*TODO*/ },
+                    IconButton(
+                        onClick = { },
                         modifier = Modifier.padding(40.dp, 15.dp, 0.dp, 0.dp)
                     )
                     {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
 
                     }
-        */
+
                 }
                 Row(Modifier.padding(20.dp, 20.dp, 0.dp, 0.dp)) {
                     Icon(
@@ -179,7 +187,13 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                 }
         },
         drawerGesturesEnabled = true,
-        topBar = { TopBar("Velkommen") },
+        topBar = {
+            var userName = ""
+            runBlocking {
+                userName = frontpageViewModel.getUserName(activity, context)
+            }
+            TopBar("Velkommen $userName")
+        },
         content = { FrontPageColumn(frontpageViewModel.frontpageDto.categories, navController) },
         bottomBar = { BottomBar(scope,scaffoldstate) },
         floatingActionButtonPosition = FabPosition.Center,

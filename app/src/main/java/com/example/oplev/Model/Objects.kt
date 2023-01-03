@@ -42,6 +42,10 @@ data class Journey(
 
     )
 
+data class User(
+    val firstname: String
+)
+
 data class States(
     var signInSuccessful : Boolean = false,
     var user : FirebaseUser? = null

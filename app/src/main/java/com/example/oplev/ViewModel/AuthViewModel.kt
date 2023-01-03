@@ -38,7 +38,6 @@ class AuthViewModel() : ViewModel() {
                     updateUI(user, true)
 
                     add["firstname"] = firstname
-                    add["lastname"] = lastname
 
                     db.collection("users")
                         .document(Firebase.auth.currentUser?.uid.toString())
@@ -108,7 +107,7 @@ class AuthViewModel() : ViewModel() {
     }
 
     companion object {
-        private const val TAG = "EmailPassword"
+        internal const val TAG = "EmailPassword"
     }
 
 }
