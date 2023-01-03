@@ -54,7 +54,7 @@ fun NavController() {
 
     var testJourney = Journey(tag = "test", image = null, date = null, description = "This is a test", title = "Danmark", categoryID = 1)
 
-    NavHost(navController = navController, startDestination = Screen.SignUpScreen.route) {
+    NavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
         composable(route = Screen.FrontPageScreen.route) {
             TotalView(frontpageViewModel = frontpageViewModel, navController)
         }
@@ -66,6 +66,9 @@ fun NavController() {
         }
         composable(route = Screen.SignUpScreen.route){
             CreateUserView(authViewModel = authViewModel , navController = navController)
+        }
+        composable(route = Screen.LoginScreen.route){
+            LoginView(authViewModel = authViewModel, navController = navController)
         }
     }
 

@@ -1,7 +1,6 @@
 package com.example.oplev.Model
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.google.firebase.auth.FirebaseUser
 import java.util.Date
@@ -22,7 +21,7 @@ data class Folder(
 data class Category(
     @PrimaryKey val id: Int,
     var title: String,
-    var journeys: MutableList<Journey>
+    var journeys: MutableList<Journey> = mutableListOf()
 )
 
 @Entity

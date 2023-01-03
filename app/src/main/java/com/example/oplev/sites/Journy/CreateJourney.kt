@@ -1,5 +1,6 @@
 package com.example.oplev.sites.Journy
 
+import android.app.Activity
 import android.content.Context
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -114,8 +116,11 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
 
                           }
                           Spacer(modifier = Modifier.width(40.dp))
+                          val context = LocalContext.current
+                          val activity = LocalContext.current as Activity
                           Button(
                               onClick = { createJourneyViewModel.createNewJourney(destination,category,beskrivelse)
+                                  createJourneyViewModel.createJourneyInDB(destination,category,beskrivelse, activity, context)
                                   navController.navigate(Screen.FrontPageScreen.route)
                                         },
                               colors = ButtonDefaults.buttonColors(
