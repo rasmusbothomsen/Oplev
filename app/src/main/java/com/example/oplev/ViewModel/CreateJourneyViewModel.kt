@@ -6,7 +6,8 @@ import com.example.oplev.data.dto.CategoryDto
 import com.example.oplev.data.dto.JourneyDto
 
 
-class CreateJourneyViewModel(var journey: JourneyDto, var categoryData: CategoryDto) {
+class CreateJourneyViewModel(var journey: JourneyDto, var categoryData: CategoryDto):
+    BaseViewModel<Idea>() {
 
 
 
@@ -20,4 +21,6 @@ class CreateJourneyViewModel(var journey: JourneyDto, var categoryData: Category
     fun getCategories():MutableList<Category> {
         return categoryData.categorys
     }
+
+
 }

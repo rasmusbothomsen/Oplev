@@ -7,12 +7,11 @@ import com.example.oplev.data.dto.FolderDto
 class FolderCollection {
 
      companion object {
-         fun folderDtoFromMap(folderMap: HashMap<Int, Folder>, parentFolder:Folder): FolderDto {
-             val folderDto = FolderDto(parentFolder)
-             folderDto.childFolders?.addAll(folderMap.entries.filter { it.key == parentFolder.id }
-                 .map { folderDtoFromMap(folderMap,it.value) })
-             folderMap.remove(parentFolder.id)
-             return folderDto
+             fun folderDtoFromMap(folderMap: HashMap<Folder, Int>, parentFolder:Folder): FolderDto {
+                 val folderDto = FolderDto(parentFolder)
+                 folderMap.entries.filter { it.value == parentFolder.id }
+                     .forEach{ folderDto.childFolders?.add(folderDtoFromMap(folderMap,it.key)) }
+                 return folderDto
          }
      }
 }

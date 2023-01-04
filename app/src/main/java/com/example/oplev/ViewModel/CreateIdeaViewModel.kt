@@ -1,9 +1,10 @@
 package com.example.oplev.ViewModel
 
+import com.example.oplev.Model.Folder
 import com.example.oplev.data.dto.JourneyDto
 import com.example.oplev.Model.Idea
 
-class CreateIdeaViewModel(var journeyData: JourneyDto) {
+class CreateIdeaViewModel(var journeyData: JourneyDto)  {
 
     fun createNewIdea(titel: String, beskrivelse: String, link: String){
 

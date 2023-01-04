@@ -35,7 +35,7 @@ data class Journey(
         onDelete = ForeignKey.SET_NULL)
     var image: String?,
     val categoryID: Int,
-    //var date: Date?,
+    var date: String?,
     var description: String,
     var title: String,
 

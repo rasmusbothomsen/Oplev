@@ -9,8 +9,6 @@ class JourneyCollection {
     suspend fun getJourneyDto():List<JourneyDto>{
         val journeyDao = MainActivity.instance.JourneyDao()
 
-
-
         return emptyList()
     }
 
