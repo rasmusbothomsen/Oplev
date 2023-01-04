@@ -43,7 +43,7 @@ class DependencyController {
         val journeys = journeyData.journeys
         val seneste = Category("Seneste", journeys)
         val favoritter = Category("Favoritter", journeys)
-        val mumsesteg = Category("mumsesteg", journeys)
+        val mumsesteg = Category("Another", journeys)
         val categories = listOf(seneste,favoritter, mumsesteg)
 
         for (category in categories){

@@ -33,7 +33,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
     Scaffold(
         topBar = { TopBar(title = "Velkommen" /** + profile.userName **/ )},
         content = {
-            //Nedenstående skal i en c  omposable
+            //Nedenstående skal i en composable
                   Column(modifier = Modifier
                       .fillMaxSize()
                       .verticalScroll(rememberScrollState())) {
