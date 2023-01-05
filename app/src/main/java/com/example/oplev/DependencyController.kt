@@ -4,21 +4,28 @@ import com.example.oplev.data.dto.CategoryDto
 import com.example.oplev.data.dto.JourneyDto
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
-/*
+import com.example.oplev.data.dto.FrontpageDto
+
+//import com.example.oplev.Model.Journey
+
 class DependencyController {
-     var categoryData = CategoryDto()
-     var journeyData = JourneyDto()
+    var categoryData = CategoryDto()
+    var journeyData = JourneyDto()
+    var frontpageData = FrontpageDto()
 
-    fun initializeData(){
+    fun initializeData() {
         /* TODO */
-
+/*
         initiazileJournyData()
         initializeCategorydata()
+
+ */
     }
 
     fun getCategoryDataDependency(): CategoryDto {
         return categoryData
     }
+
     fun getJourneyDataDependency(): JourneyDto {
         return journeyData
     }
@@ -27,29 +34,31 @@ class DependencyController {
     This Method is used to initialize journeydata, to keep the dependency across the app.
     Mainly used to test data before database connection
      */
+
     fun initiazileJournyData(){
-        val journey1 = Journey("e","img_denmark",null,"","Danmark", null)
-        val journey2 = Journey("e","img_norway",null,"","Norge",null)
-        val journey3 = Journey("e","img_finland",null,"","Finland",null)
-        val journey4 = Journey("e","img_turkey",null,"","Tyrkiet",null)
+        val journey1 = Journey("e","img_denmark",1,null,"Danmark", "Danmark")
+        val journey2 = Journey("e","img_norway",2,null,"Norge","Norge")
+        val journey3 = Journey("e","img_finland",3,null,"Finland","Finland")
+        val journey4 = Journey("e","img_turkey",1,null,"Tyrkiet","Tyrkiet")
         val journeys = listOf(journey1, journey2, journey3, journey4)
 
         for (journey in journeys){
-            journeyData.journeys.add(journey)
+            categoryData.journeys.add(journey)
         }
 
     }
     fun initializeCategorydata(){
-        val journeys = journeyData.journeys
-        val seneste = Category("Seneste", journeys)
-        val favoritter = Category("Favoritter", journeys)
-        val mumsesteg = Category("Another", journeys)
+        val journeys = categoryData.journeys
+        val seneste = Category(1, "Seneste", journeys)
+        val favoritter = Category(2, "Favoritter", journeys)
+        val mumsesteg = Category(3, "mumsesteg", journeys)
         val categories = listOf(seneste,favoritter, mumsesteg)
 
         for (category in categories){
-            categoryData.categorys.add(category)
+            frontpageData.categories.add(category)
         }
     }
+
+
 }
 
- */

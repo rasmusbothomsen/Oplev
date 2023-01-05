@@ -235,7 +235,7 @@ fun ideas(journeyViewModel: JourneyViewModel) {
 fun TopBar(title: String) {
     TopAppBar( modifier = Modifier.height(65.dp),
         title = { Text(title, textAlign = TextAlign.Center) },
-
+/*
         navigationIcon = {
             IconButton(onClick = {
                 TODO()
@@ -248,7 +248,9 @@ fun TopBar(title: String) {
 
 
             }
-        },
+        }
+        */
+
 
 
         backgroundColor = Color.LightGray
@@ -276,6 +278,6 @@ fun BottomBar(){
 @Preview(showBackground = true)
 @Composable
 fun JourneyPreview(){
-    var testJourney = Journey(tag = "test", image = null, date = null, description = "This is a test", title = "Danmark", folder = null, ideas = null)
+    var testJourney = Journey(tag = "test", image = null, date = null, description = "This is a test", title = "Danmark", categoryID = 1)
     JourneyScreen(journeyViewModel = JourneyViewModel(testJourney))
 }

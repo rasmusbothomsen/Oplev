@@ -1,5 +1,6 @@
 package com.example.oplev.sites
 
+import android.app.Activity
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -29,25 +30,18 @@ import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.FrontPageViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+
 
 @Preview
 @Composable
 fun FrontPagePrev() {
-    val journey1 = Journey("e","img_denmark",null,"","Danmark", null)
-    val journey2 = Journey("e","img_norway",null,"","Norge",null)
-    val journey3 = Journey("e","img_finland",null,"","Finland",null)
-    val journey4 = Journey("e","img_turkey",null,"","Tyrkiet",null)
-    val journeys = mutableListOf<Journey>(journey1, journey2, journey3, journey4)
 
-    val seneste = Category("Seneste", journeys)
-    val favoritter = Category("Favoritter", journeys)
-    val mumsesteg = Category("Another", journeys)
-    val categories = listOf(seneste,favoritter, mumsesteg)
-    var categoryData = CategoryDto()
-    categoryData.categorys= categories.toMutableList()
-    val frontpageViewModel = FrontPageViewModel(categoryData)
 
 
 }
@@ -69,6 +63,10 @@ fun MenuDrawer(){
 fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavController) {
     val scaffoldstate = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val activity = LocalContext.current as Activity
+
+
     Scaffold(
         scaffoldState = scaffoldstate,
             drawerContent = {
@@ -86,15 +84,15 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         modifier = Modifier.padding(0.dp, 25.dp, 0.dp, 0.dp),
                         fontSize = 20.sp
                     )
-                    /*IconButton(
-                        onClick = { /*TODO*/ },
+                    IconButton(
+                        onClick = { },
                         modifier = Modifier.padding(40.dp, 15.dp, 0.dp, 0.dp)
                     )
                     {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
 
                     }
-        */
+
                 }
                 Row(Modifier.padding(20.dp, 20.dp, 0.dp, 0.dp)) {
                     Icon(
@@ -162,9 +160,14 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                             .rotate(90f),
                         tint = Color.Cyan
                     )
-                    TextButton(onClick = { /*TODO*/ }) {
+                    TextButton(onClick = {
+
+                        frontpageViewModel.signOut()
+
+                        navController.navigate(Screen.LoginScreen.route)
+                    }) {
                         Text(
-                            text = "Mere",
+                            text = "Sign out",
                             fontSize = 18.sp,
                             modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)
                         )
@@ -191,8 +194,14 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                 }
         },
         drawerGesturesEnabled = true,
-        topBar = { TopBar("Velkommen") },
-        content = { FrontPageColumn(frontpageViewModel.categoryData.categorys, navController) },
+        topBar = {
+            var userName = ""
+            runBlocking {
+                userName = frontpageViewModel.getUserName(activity, context)
+            }
+            TopBar("Velkommen $userName")
+        },
+        content = { FrontPageColumn(frontpageViewModel.frontpageDto.categories, navController) },
         bottomBar = { BottomBar(scope,scaffoldstate) },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,

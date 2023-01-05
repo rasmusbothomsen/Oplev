@@ -1,5 +1,6 @@
 package com.example.oplev.sites.Journy
 
+import android.app.Activity
 import android.content.Context
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -114,8 +116,11 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
 
                           }
                           Spacer(modifier = Modifier.width(40.dp))
+                          val context = LocalContext.current
+                          val activity = LocalContext.current as Activity
                           Button(
                               onClick = { createJourneyViewModel.createNewJourney(destination,category,beskrivelse)
+                                  createJourneyViewModel.createJourneyInDB(destination,category,beskrivelse, activity, context)
                                   navController.navigate(Screen.FrontPageScreen.route)
                                         },
                               colors = ButtonDefaults.buttonColors(
@@ -253,24 +258,6 @@ fun ExposedDropdownMenu(list : List<Category>, imageVector: ImageVector,selected
 @Preview(showBackground = true)
 @Composable
 fun createJourneyPreview(){
-    val journey1 = Journey("e","img_denmark",null,"","Danmark", null)
-    val journey2 = Journey("e","img_norway",null,"","Norge",null)
-    val journey3 = Journey("e","img_finland",null,"","Finland",null)
-    val journey4 = Journey("e","img_turkey",null,"","Tyrkiet",null)
-    val journeys = mutableListOf<Journey>(journey1, journey2, journey3, journey4)
-
-    val seneste = Category("Seneste", journeys)
-    val favoritter = Category("Favoritter", journeys)
-    val categories = listOf(seneste,favoritter)
-    /*
-    val createJourneyViewModel = CreateJourneyViewModel()
-
-    createJourneyViewModel.category.categorys.add(favoritter)
-    createJourneyViewModel.category.categorys.add(seneste)
-
-     */
-    //createJourneyComp(createJourneyViewModel)
-
 
 
     }
