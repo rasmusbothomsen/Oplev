@@ -6,7 +6,7 @@ import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
 
 @Dao
-interface CategoryDao:BaseDao<Category> {
+interface CategoryDao {
     @Query("Select*from category")
     fun getAll(): List<Category>
 

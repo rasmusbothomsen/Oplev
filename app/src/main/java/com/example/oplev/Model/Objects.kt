@@ -1,16 +1,15 @@
 package com.example.oplev.Model
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import com.google.firebase.auth.FirebaseUser
 import java.util.Date
 
 @Entity
 data class Idea(
     @PrimaryKey var id:Int,
-    @ForeignKey (entity = Category::class, parentColumns = ["id"],
-        childColumns = ["folderId"],
-        onDelete = ForeignKey.SET_NULL)
     var folderId:Int,
     var title: String,
     var description: String,
@@ -29,19 +28,12 @@ data class Folder(
 data class Category(
     @PrimaryKey val id: Int,
     var title: String,
-    var journeys: MutableList<Journey> = mutableListOf()
 )
 
 @Entity
 data class Journey(
     @PrimaryKey var id:Int,
     var tag: String,
-    /*
-    @ForeignKey (entity = Category::class, parentColumns = ["id"],
-        childColumns = ["categoryID"],
-        onDelete = ForeignKey.SET_NULL)
-
-     */
     var image: String?,
     val categoryID: Int,
     var date: String?,
