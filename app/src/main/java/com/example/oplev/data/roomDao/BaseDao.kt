@@ -1,18 +1,17 @@
 package com.example.oplev.data.roomDao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
-/*
+
 @Dao
 interface BaseDao<T> {
 
 
-        @Insert
+        @Insert(onConflict = OnConflictStrategy.REPLACE)
         suspend fun insert(item: T)
+
+        @Insert(onConflict = OnConflictStrategy.REPLACE)
+        suspend fun insertAll(items: List<T>)
 
         @Update
         suspend fun update(item: T)
@@ -21,4 +20,4 @@ interface BaseDao<T> {
         suspend fun delete(item: T)
     }
 
- */
+

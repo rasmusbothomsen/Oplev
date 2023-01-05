@@ -1,5 +1,5 @@
 package com.example.oplev.data.dto
 
-abstract class baseDto<T> (
+open class baseDto<T> (
     baseObject: T
         )

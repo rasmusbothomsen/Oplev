@@ -6,7 +6,7 @@ import com.example.oplev.Model.Idea
 class FolderDto (
     baseObject:Folder
         ){
-    var ideas: MutableList<Idea>? = mutableListOf<Idea>()
+    var ideas: MutableList<IdeaDto>? = mutableListOf<IdeaDto>()
     var childFolders: MutableList<FolderDto>? = mutableListOf<FolderDto>()
 
 }

@@ -6,6 +6,6 @@ import com.example.oplev.Model.Folder
 
 @Dao
 interface FolderDao {
-    @Query("select*from Folder")
-    fun findFolderFromJourneyId():List<Folder>
+    @Query("select*from Folder where journeyId == :journeyId")
+    fun findFolderFromJourneyId(journeyId:Int):List<Folder>
 }

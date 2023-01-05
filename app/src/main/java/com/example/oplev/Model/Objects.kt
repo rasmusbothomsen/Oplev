@@ -8,6 +8,10 @@ import java.util.Date
 @Entity
 data class Idea(
     @PrimaryKey var id:Int,
+    @ForeignKey (entity = Category::class, parentColumns = ["id"],
+        childColumns = ["folderId"],
+        onDelete = ForeignKey.SET_NULL)
+    var folderId:Int,
     var title: String,
     var description: String,
     var link: String?,

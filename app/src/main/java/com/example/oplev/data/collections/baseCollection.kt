@@ -1,4 +1,11 @@
 package com.example.oplev.data.collections
 
-class baseCollection {
+open class baseCollection<T> {
+
+
+
+ open fun roomDataLink():List<T>{
+
+ }
+
 }

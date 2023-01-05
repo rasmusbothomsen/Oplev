@@ -1,4 +1,6 @@
 package com.example.oplev.data.dto
 
-class IdeaDto {
+import com.example.oplev.Model.Idea
+
+class IdeaDto(var baseObject:Idea) {
 }
