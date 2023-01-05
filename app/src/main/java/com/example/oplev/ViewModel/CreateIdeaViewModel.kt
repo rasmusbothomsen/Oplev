@@ -1,14 +1,16 @@
 package com.example.oplev.ViewModel
 
-import com.example.oplev.Model.Folder
 import com.example.oplev.data.dto.JourneyDto
 import com.example.oplev.Model.Idea
+import com.example.oplev.data.dto.IdeaDto
 
-class CreateIdeaViewModel(var journeyData: JourneyDto)  {
+class CreateIdeaViewModel():
+    BaseViewModel<Idea>(){
 
-    fun createNewIdea(titel: String, beskrivelse: String, link: String){
+    var idea = readItems()
 
-        // var tempIdea = Idea(titel, beskrivelse, link, null)
-        // journeyData.ideas.add(tempIdea)
+    fun createNewIdea(ID: Int, Title: String, Description: String, link: String?, Image: String?){
+        val tempIdea = Idea(ID, Title, Description, link, Image)
+        create(tempIdea)
     }
 }

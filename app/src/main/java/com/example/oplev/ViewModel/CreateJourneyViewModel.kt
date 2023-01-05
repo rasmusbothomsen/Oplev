@@ -1,26 +1,22 @@
 package com.example.oplev.ViewModel
-import android.util.Log
+
 import com.example.oplev.Model.*
-import com.example.oplev.data.*
-import com.example.oplev.data.dto.CategoryDto
-import com.example.oplev.data.dto.JourneyDto
-
-
-class CreateJourneyViewModel(var journey: JourneyDto, var categoryData: CategoryDto):
-    BaseViewModel<Idea>() {
 
 
 
-    fun createNewJourney(destination : String, category: String, beskrivelse: String){
-        Log.d("beskrivelse",beskrivelse)
-        Log.d("destination",destination)
-        Log.d("category",category)
-        var tempJourney = Journey("e","img_finland",null, beskrivelse,destination,null,null)
-        journey.journeys.add(tempJourney)
-    }
-    fun getCategories():MutableList<Category> {
-        return categoryData.categorys
+class CreateJourneyViewModel():
+    BaseViewModel<Journey>() {
+
+    var journey = readItems()
+
+    fun createNewJourney(Id: Int, tag: String, Image: String?, CategoryID: Int, Date: String?, Description: String, Title: String){
+        val tempJourney = Journey(Id, tag, Image, CategoryID, Date, Description, Title)
+        create(tempJourney)
     }
 
+
+    fun getCategories(): List<Category>{
+        // Kan dette lade sig gøre i og med at BaseViewModel<Journey> i extension?
+    }
 
 }

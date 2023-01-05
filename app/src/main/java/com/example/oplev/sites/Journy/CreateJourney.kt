@@ -26,9 +26,15 @@ import com.example.oplev.ViewModel.CreateJourneyViewModel
 
 @Composable
 fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navController: NavController){
-    var destination by remember { mutableStateOf("") }
-    var category by remember { mutableStateOf("") }
-    var beskrivelse by remember { mutableStateOf("") }
+    var ID by remember { mutableStateOf(0) }
+    var tag by remember { mutableStateOf("") }
+    var Image by remember { mutableStateOf("") }
+    var CategoryID by remember { mutableStateOf(0) }
+    var Date by remember { mutableStateOf("") }
+    var Description by remember { mutableStateOf("") }
+    var Title by remember { mutableStateOf("") }
+
+    var categoryTitle by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = { TopBar(title = "Velkommen" /** + profile.userName **/ )},
@@ -62,11 +68,11 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                           }
                           }
                       inputTextfield("Destination",80,imageVector = Icons.Filled.LocationOn, onValueChange = {
-                          destination = it
-                      },destination)
+                          Title = it
+                      },Title)
                      //Nedenstående skal være dropdown
-                      ExposedDropdownMenu(list = createJourneyViewModel.getCategories().toList(), imageVector = Icons.Filled.Warning, category, upDateValue = {
-                          category = it.title
+                      ExposedDropdownMenu(list = createJourneyViewModel.getCategories().toList(), imageVector = Icons.Filled.Warning, categoryTitle, upDateValue = {
+                          categoryTitle = it.title //JEG ER IKKE SIKKER PÅ DETTE ER KORREKT? D:
                       })
 
 
@@ -93,8 +99,8 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                           /* Skal være en "time picker"*/ inputFieldNoRow("Til kl.",80, imageVector = Icons.Filled.Warning)
                       }
                       inputTextfield("Beskriv oplevelsen",height = 150,imageVector = Icons.Filled.Menu, onValueChange = {
-                          beskrivelse = it
-                      },beskrivelse)
+                          Description = it
+                      },Description)
                       Row(modifier = Modifier.padding(60.dp,20.dp,0.dp,80.dp)) {
                           //Nedenstående buttons skal være composables
                           Button(
@@ -115,7 +121,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                           }
                           Spacer(modifier = Modifier.width(40.dp))
                           Button(
-                              onClick = { createJourneyViewModel.createNewJourney(destination,category,beskrivelse)
+                              onClick = { createJourneyViewModel.createNewJourney(ID,tag,Image, CategoryID, Date, Description, Title)
                                   navController.navigate(Screen.FrontPageScreen.route)
                                         },
                               colors = ButtonDefaults.buttonColors(
@@ -248,7 +254,7 @@ fun ExposedDropdownMenu(list : List<Category>, imageVector: ImageVector,selected
 }
 
 
-
+/*
 @OptIn(ExperimentalMaterialApi::class)
 @Preview(showBackground = true)
 @Composable
@@ -262,16 +268,12 @@ fun createJourneyPreview(){
     val seneste = Category("Seneste", journeys)
     val favoritter = Category("Favoritter", journeys)
     val categories = listOf(seneste,favoritter)
-    /*
+
     val createJourneyViewModel = CreateJourneyViewModel()
 
     createJourneyViewModel.category.categorys.add(favoritter)
     createJourneyViewModel.category.categorys.add(seneste)
 
-     */
+
     //createJourneyComp(createJourneyViewModel)
-
-
-
-    }
-
+} */
