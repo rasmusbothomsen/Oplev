@@ -1,7 +1,8 @@
 package com.example.oplev.data.dto
 
 import com.example.oplev.Model.Category
+import com.example.oplev.Model.Journey
 
 class FrontpageDto {
-    var categories = mutableListOf<Category>(Category(1,"Seneste", null))
+    var categories = mutableListOf<Category>()
 }

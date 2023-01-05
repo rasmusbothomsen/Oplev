@@ -38,6 +38,9 @@ class AuthViewModel() : ViewModel() {
                     updateUI(user, true)
 
                     add["firstname"] = firstname
+                    add["lastname"] = lastname
+                    add["hasOnboarded"] = false
+
 
                     db.collection("users")
                         .document(Firebase.auth.currentUser?.uid.toString())
@@ -66,7 +69,7 @@ class AuthViewModel() : ViewModel() {
             }
         // [END create_user_with_email]
 
-    fun signIn(email: String, password: String, baseContext: Context, activity: Activity) {
+    suspend fun signIn(email: String, password: String, baseContext: Context, activity: Activity) {
         // [START sign_in_with_email]
         Firebase.auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(activity) { task ->
@@ -84,11 +87,11 @@ class AuthViewModel() : ViewModel() {
                     ).show()
                     updateUI(null, false)
                 }
-            }
+            }.await()
         // [END sign_in_with_email]
     }
 
-    private fun sendEmailVerification(activity: Activity) {
+    fun sendEmailVerification(activity: Activity) {
         // [START send_email_verification]
         val user = Firebase.auth.currentUser!!
         user.sendEmailVerification()

@@ -74,7 +74,9 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController, sta
 
         Button(
             onClick = {
-                authViewModel.signIn(email,password,context,activity)
+                runBlocking {
+                    authViewModel.signIn(email, password, context, activity)
+                }
                 if (FirebaseAuth.getInstance().currentUser != null){
                     navController.navigate(Screen.FrontPageScreen.route)
                 }

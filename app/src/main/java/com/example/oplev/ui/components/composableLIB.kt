@@ -70,6 +70,9 @@ fun NavController() {
         composable(route = Screen.LoginScreen.route){
             LoginView(authViewModel = authViewModel, navController = navController)
         }
+        composable(route = Screen.ProfileScreen.route){
+            ProfileView(authViewModel = authViewModel, navController = navController)
+        }
     }
 
 

@@ -161,10 +161,10 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         tint = Color.Cyan
                     )
                     TextButton(onClick = {
-                        FirebaseAuth.getInstance().signOut()
-                        if (FirebaseAuth.getInstance().currentUser == null){
-                            navController.navigate(Screen.LoginScreen.route)
-                        }
+
+                        frontpageViewModel.signOut()
+
+                        navController.navigate(Screen.LoginScreen.route)
                     }) {
                         Text(
                             text = "Sign out",

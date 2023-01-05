@@ -46,4 +46,9 @@ class FrontPageViewModel(var frontpageDto: FrontpageDto) {
         return userInfo["firstname"].toString()
 
     }
+
+    fun signOut(){
+        Firebase.auth.signOut()
+    }
+
 }
