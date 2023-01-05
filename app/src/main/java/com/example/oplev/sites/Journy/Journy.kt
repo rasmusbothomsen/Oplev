@@ -278,6 +278,6 @@ fun BottomBar(){
 @Preview(showBackground = true)
 @Composable
 fun JourneyPreview(){
-    var testJourney = Journey(tag = "test", image = null, date = null, description = "This is a test", title = "Danmark", categoryID = 1)
+    var testJourney = Journey(tag = "test", image = null, date = null, description = "This is a test", title = "Danmark", id = 1, categoryID = 1)
     JourneyScreen(journeyViewModel = JourneyViewModel(testJourney))
 }

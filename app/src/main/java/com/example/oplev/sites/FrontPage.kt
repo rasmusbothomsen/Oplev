@@ -223,7 +223,7 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
 }
 
 @Composable
-fun FrontPageColumn(categories: List<Category>, navController: NavController) {
+fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController) {
     Column(modifier = Modifier
         .verticalScroll(rememberScrollState())
     )
@@ -238,10 +238,10 @@ fun FrontPageColumn(categories: List<Category>, navController: NavController) {
 }
 
 @Composable
-fun CategoryRow(category: Category, navController: NavController) {
+fun CategoryRow(category: CategoryDto, navController: NavController) {
     val max = category.journeys.size-1
     Text(
-        text = category.title,
+        text = category.baseObject?.title.toString(),
         fontSize = 20.sp,
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,

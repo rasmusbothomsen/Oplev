@@ -7,7 +7,7 @@ import com.example.oplev.data.dto.FolderDto
 
 class FolderDataService {
     fun roomDataLink(journeyId:Int): List<FolderDto> {
-        var folderDao = MainActivity.instance.FolderDao()
+        var folderDao = MainActivity.database.FolderDao()
         val folderCollection = FolderCollection()
         var folders = folderDao.findFolderFromJourneyId(journeyId)
         var folderMap = HashMap<Folder,Int>()

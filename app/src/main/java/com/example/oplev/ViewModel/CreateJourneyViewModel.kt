@@ -45,10 +45,10 @@ class CreateJourneyViewModel(var journey: JourneyDto, var categoryData: Category
         Log.d("beskrivelse",beskrivelse)
         Log.d("destination",destination)
         Log.d("category",category)
-        var tempJourney = Journey(tag ="e",image = "img_finland", categoryID = 1, description = beskrivelse, date = null, title = "test")
+        var tempJourney = Journey(tag ="e",image = "img_finland", categoryID = 1, description = beskrivelse, date = null, title = "test", id = 1)
         categoryData.journeys.add(tempJourney)
     }
-    fun getCategories():MutableList<Category> {
+    fun getCategories():MutableList<CategoryDto> {
         return frontpageDto.categories
     }
 }

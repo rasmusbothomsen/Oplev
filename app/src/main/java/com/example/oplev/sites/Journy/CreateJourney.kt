@@ -21,10 +21,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.oplev.Model.Category
-import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.CreateJourneyViewModel
+import com.example.oplev.data.dto.CategoryDto
 
 @Composable
 fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navController: NavController){
@@ -67,12 +67,12 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                           destination = it
                       },destination)
                      //Nedenstående skal være dropdown
-                      ExposedDropdownMenu(list = createJourneyViewModel.getCategories().toList(), imageVector = Icons.Filled.Warning, category, upDateValue = {
+                      ExposedDropdownMenu(list = createJourneyViewModel.getCategories().toList(), imageVector = Icons.Filled.Warning, category) {
                           category = it.title
-                      })
+                      }
 
 
-                          inputTextfield("Inviter Venner",80, imageVector = Icons.Filled.Warning, onValueChange = {
+                      inputTextfield("Inviter Venner",80, imageVector = Icons.Filled.Warning, onValueChange = {
                               /*TODO*/
                           },"")
                       //Nedenstående rows skal i en composable
@@ -193,7 +193,7 @@ fun DatePickerTest(context : Context) {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ExposedDropdownMenu(list : List<Category>, imageVector: ImageVector,selectedOption:String, upDateValue: (Category) -> Unit){
+fun ExposedDropdownMenu(list: List<CategoryDto>, imageVector: ImageVector, selectedOption:String, upDateValue: (Category) -> Unit){
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionlocal by remember {
         mutableStateOf(selectedOption)
@@ -239,12 +239,12 @@ fun ExposedDropdownMenu(list : List<Category>, imageVector: ImageVector,selected
                 list.forEach { selectionOption ->
                     DropdownMenuItem(
                         onClick = {
-                            upDateValue.invoke(selectionOption)
-                            selectedOptionlocal = selectionOption.title
+                            upDateValue.invoke(selectionOption.baseObject!!)
+                            selectedOptionlocal = selectionOption.baseObject?.title.toString()
                             expanded = false
                         }
                     ) {
-                        Text(text = selectionOption.title)
+                        Text(text = selectionOption.baseObject?.title.toString())
                     }
                 }
             }

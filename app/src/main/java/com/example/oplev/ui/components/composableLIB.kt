@@ -52,7 +52,7 @@ fun NavController() {
 
     val authViewModel = AuthViewModel()
 
-    var testJourney = Journey(tag = "test", image = null, date = null, description = "This is a test", title = "Danmark", categoryID = 1)
+    var testJourney = Journey(tag = "test", image = null, date = null, description = "This is a test", title = "Danmark", categoryID = 1, id = 1)
 
     NavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
         composable(route = Screen.FrontPageScreen.route) {

@@ -4,7 +4,7 @@ import com.example.oplev.Model.*
 
 
  class JourneyDto(
-     /* baseObject:Journey */
+     val baseObject:Journey?
  ) {
     var folders = mutableListOf<Folder>()
 

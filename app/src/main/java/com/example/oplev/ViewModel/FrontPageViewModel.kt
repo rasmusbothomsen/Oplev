@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.example.oplev.Model.Category
+import com.example.oplev.data.dto.CategoryDto
 import com.example.oplev.data.dto.FrontpageDto
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -14,7 +15,7 @@ import kotlinx.coroutines.tasks.await
 class FrontPageViewModel(var frontpageDto: FrontpageDto) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    fun getCategories(): MutableList<Category>? {
+    fun getCategories(): MutableList<CategoryDto>? {
         return frontpageDto.categories
     }
 

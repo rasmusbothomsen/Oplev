@@ -171,7 +171,7 @@ fun inputFieldNoRow(label: String, height: Int, imageVector: ImageVector){
 @Preview
 @Composable
 fun createIdeaPreview(){
-    CreateIdea(CreateIdeaViewModel = CreateIdeaViewModel(JourneyDto()))
+    CreateIdea(CreateIdeaViewModel = CreateIdeaViewModel(JourneyDto(null)))
 }
 
 

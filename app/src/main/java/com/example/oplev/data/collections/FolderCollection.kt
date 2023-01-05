@@ -28,7 +28,7 @@ class FolderCollection(
 
 
     fun getIdeasForFolder(folder:Folder):List<IdeaDto>{
-        val ideaDao = MainActivity.instance.IdeaDao()
+        val ideaDao = MainActivity.database.IdeaDao()
         var ideaDtos = mutableListOf<IdeaDto>()
         var ideasForFolder = ideaDao.getIdeaFromFolderID(folder.id)
         for(idea in ideasForFolder){
