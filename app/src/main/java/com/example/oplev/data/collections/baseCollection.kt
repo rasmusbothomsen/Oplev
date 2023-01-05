@@ -1,11 +1,9 @@
 package com.example.oplev.data.collections
 
-open class baseCollection<T> {
+interface baseCollection<T> {
 
 
 
- open fun roomDataLink():List<T>{
-
- }
+ fun roomDataLink():List<T>
 
 }
