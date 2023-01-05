@@ -18,9 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import com.example.oplev.Data.JourneyData
-import com.example.oplev.DependencyController
+import com.example.oplev.data.dto.JourneyDto
 import com.example.oplev.R
 import com.example.oplev.ViewModel.*
 import com.example.oplev.sites.TopBar
@@ -173,7 +171,7 @@ fun inputFieldNoRow(label: String, height: Int, imageVector: ImageVector){
 @Preview
 @Composable
 fun createIdeaPreview(){
-    CreateIdea(CreateIdeaViewModel = CreateIdeaViewModel(JourneyData()))
+    CreateIdea(CreateIdeaViewModel = CreateIdeaViewModel(JourneyDto()))
 }
 
 

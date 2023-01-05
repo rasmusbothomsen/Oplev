@@ -1,31 +1,46 @@
 package com.example.oplev.Model
 
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 import java.util.Date
 
+@Entity
 data class Idea(
+    @PrimaryKey var id:Int,
+    @ForeignKey (entity = Category::class, parentColumns = ["id"],
+        childColumns = ["folderId"],
+        onDelete = ForeignKey.SET_NULL)
+    var folderId:Int,
     var title: String,
     var description: String,
     var link: String?,
     var image: String?)
 
+@Entity
 data class Folder(
-    var idea: Idea,
-    var folder: Folder?,
+    @PrimaryKey val id:Int,
+    var journeyId:Int,
+    var parentFolderId:Int,
     var title: String,
-    var ideas: MutableList<Idea>? = mutableListOf<Idea>()
     )
 
+@Entity
 data class Category(
+    @PrimaryKey val id: Int,
     var title: String,
-    var journeys : MutableList<Journey>
 )
-
+@Entity
 data class Journey(
+    @PrimaryKey var id:Int,
     var tag: String,
+    @ForeignKey (entity = Category::class, parentColumns = ["id"],
+        childColumns = ["categoryID"],
+        onDelete = ForeignKey.SET_NULL)
     var image: String?,
-    var date: Date?,
+    val categoryID: Int,
+    var date: String?,
     var description: String,
     var title: String,
-    var folder: MutableList<Folder>? = mutableListOf<Folder>(),
-    var ideas: MutableList<Idea>? = mutableListOf<Idea>()
+
     )

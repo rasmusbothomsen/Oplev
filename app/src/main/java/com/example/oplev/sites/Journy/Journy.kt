@@ -41,7 +41,7 @@ typealias ComposableFun = @Composable () -> Unit
 
 
 @Composable
-fun JourneyScreen(journeyViewModel: JourneyViewModel, modifier: Modifier = Modifier, ) {
+fun JourneyScreen(journeyViewModel: JourneyViewModel, modifier: Modifier = Modifier) {
 
     Scaffold(
         topBar = {TopBar(title = "Velkommen {User}")},
