@@ -53,7 +53,7 @@ fun NavController() {
 
     val frontpageViewModel = FrontPageViewModel(dependencyController.frontpageData)
 
-    val createJourneyViewModel = CreateJourneyViewModel(dependencyController.journeyData,dependencyController.categoryData, dependencyController.frontpageData)
+    val createJourneyViewModel = CreateJourneyViewModel(/*dependencyController.journeyData,dependencyController.categoryData, dependencyController.frontpageData */)
 
     val authViewModel = AuthViewModel(dataService = UserDataService(FirebaseFirestore.getInstance(),MainActivity.database.UserDao()))
 

@@ -9,10 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -22,19 +19,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.oplev.data.dto.CategoryDto
-import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
+import com.example.oplev.Model.States
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.FrontPageViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -107,7 +103,7 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         , tint = Color.Cyan
                     )
 
-                    TextButton(onClick = { /*TODO*/ }) {
+                    TextButton(onClick = { navController.navigate(Screen.ProfileScreen.route)}) {
                         Text(text = "Profil",
                             fontSize = 18.sp,
                             modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp))
@@ -204,64 +200,68 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
             }
             TopBar("Velkommen $userName")
         },
-        content = { FrontPageColumn(frontpageViewModel.frontpageDto.categories, navController) },
+        content = { FrontPageColumn(frontpageViewModel.frontpageDto.categories, navController, frontpageViewModel, state) },
         bottomBar = { BottomBar(scope,scaffoldstate) },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
         floatingActionButton = {
-            Column() {
-                val alpha: Float by animateFloatAsState(if (state.fabExpanded) 315f else 0f)
+                Column() {
+                    val alpha: Float by animateFloatAsState(if (state.fabExpanded) 315f else 0f)
 
-                if (state.fabExpanded) {
-                    Row() {
-                        FloatingActionButton(onClick = { /*TODO*/ }, modifier = Modifier.size(50.dp)) {
-                            Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(30.dp),
-                                tint = Color.White
-                            )
+                    if (state.fabExpanded) {
+                        Row() {
+                            FloatingActionButton(
+                                onClick = { frontpageViewModel.changeDialogVal() },
+                                modifier = Modifier.size(50.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(30.dp),
+                                    tint = Color.White
+                                )
+                            }
+                            Text(text = "Ny kategori")
                         }
-                        Text(text = "Ny kategori")
+                        Row() {
+                            FloatingActionButton(onClick = {
+                                navController.navigate(Screen.CreateJourneyScreen.route)
+                            }, modifier = Modifier.size(50.dp)) {
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(30.dp),
+                                    tint = Color.White
+                                )
+                            }
+                            Text(text = "Ny Rejse")
+                        }
                     }
-                    Row() {
-                        FloatingActionButton(onClick = {
-                            navController.navigate(Screen.CreateJourneyScreen.route) }, modifier = Modifier.size(50.dp)) {
-                            Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(30.dp),
-                                tint = Color.White
-                            )
-                        }
-                        Text(text = "Ny Rejse")
+
+                    FloatingActionButton(shape = CircleShape,
+                        modifier = Modifier.size(width = 75.dp, height = 75.dp),
+                        onClick = {
+                            frontpageViewModel.expandFab()
+                            //navController.navigate(Screen.CreateJourneyScreen.route)
+                        }) {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(38.dp)
+                                .rotate(alpha),
+                            tint = Color.White
+                        )
                     }
                 }
-
-                FloatingActionButton(shape = CircleShape,
-                    modifier = Modifier.size(width = 75.dp, height = 75.dp),
-                    onClick = {
-                        frontpageViewModel.expandFab()
-                        //navController.navigate(Screen.CreateJourneyScreen.route)
-                    }) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "",
-                        modifier = Modifier
-                            .size(38.dp)
-                            .rotate(alpha),
-                        tint = Color.White
-                    )
-                }
-            }
         },
     )
 }
 
 @Composable
-fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController) {
+fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController, frontPageViewModel: FrontPageViewModel, state: States) {
     Column(modifier = Modifier
         .verticalScroll(rememberScrollState())
     )
@@ -273,6 +273,47 @@ fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController)
             CategoryRow(categories[i], navController = navController)
         }
     }
+    if(state.dialogState) {
+        NewCategoryDialog(frontPageViewModel = frontPageViewModel)
+    }
+}
+
+@Composable
+fun NewCategoryDialog(frontPageViewModel: FrontPageViewModel){
+    AlertDialog(
+        onDismissRequest = { /*TODO*/ },
+        title = { Text(text = "Indtast navnet på den nye kategori")},
+        text = {
+            var categoryTitle by remember { mutableStateOf("") }
+
+            OutlinedTextField(
+                value = categoryTitle,
+                label = { Text(text = "Kategori", textAlign = TextAlign.Center) },
+                modifier = Modifier
+                    .width(130.dp),
+                onValueChange = {
+                    categoryTitle = it
+                },
+                singleLine = true
+            )
+        },
+        confirmButton = {
+            Button(onClick = {
+            //Gem kategori-titel
+                frontPageViewModel.changeDialogVal()
+            }) {
+                Text(text = "Gem")
+            }
+        },
+        dismissButton = {
+            Button(onClick = {
+                frontPageViewModel.changeDialogVal()
+                frontPageViewModel.expandFab()
+            }) {
+                Text(text = "Annuller")
+            }
+        }
+    )
 }
 
 @Composable
@@ -348,13 +389,15 @@ fun JourneyCard(journey: Journey, navController: NavController) {
 
 @Composable
 fun TopBar(title: String) {
+    val col = ("#E3C5A0").toColorInt()
+    //E3C5A0
     TopAppBar( modifier = Modifier.height(65.dp),
         title = { Text(title,
         //modifier = Modifier.padding(60.dp, 0.dp, 0.dp, 0.dp)
         ) },
         navigationIcon = {
             IconButton(
-                onClick = { TODO() }
+                onClick = {}
             )
             {
                 Icon(
@@ -363,7 +406,7 @@ fun TopBar(title: String) {
                 )
             }
                          },
-                backgroundColor = Color.LightGray
+                backgroundColor = Color(col)
             )
 }
 

@@ -51,7 +51,10 @@ data class UserInfo(
 data class States(
     var signInSuccessful : Boolean = false,
     var user : FirebaseUser? = null,
-    var fabExpanded : Boolean = false
+    var fabExpanded : Boolean = false,
+    var dialogState : Boolean = false,
+    var nameEditable : Boolean = false,
+    var phoneNumEditable : Boolean = false
 )
 
 

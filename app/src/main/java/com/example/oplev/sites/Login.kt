@@ -2,21 +2,27 @@ package com.example.oplev.sites
 
 
 import android.app.Activity
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.oplev.data.dto.CategoryDto
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
 import com.example.oplev.Model.States
+import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.FrontPageViewModel
 import com.example.oplev.ViewModel.AuthViewModel
@@ -31,7 +37,6 @@ fun LoginView(authViewModel: AuthViewModel, navController: NavController) {
     val state = authViewModel.state.value
     Scaffold(
         scaffoldState = scaffoldstate,
-        topBar = { TopBar("") },
         content = { LoginContent(authViewModel, navController, state) },
     )
 }
@@ -40,8 +45,16 @@ fun LoginView(authViewModel: AuthViewModel, navController: NavController) {
 fun LoginContent(authViewModel: AuthViewModel, navController: NavController, states: States) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val backgroundColor = Color(("#ECC5C9").toColorInt())
+    val logotextcol = Color(("#004070").toColorInt())
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(backgroundColor)) {
+        Row {
+            Image(painter = painterResource(id = R.drawable.oplev_logo), contentDescription = "")
+            Text(text = "OPLEV", fontSize = 64.sp,
+            style = MaterialTheme.typography.h1) }
 
         Spacer(modifier = Modifier.height(20.dp))
 

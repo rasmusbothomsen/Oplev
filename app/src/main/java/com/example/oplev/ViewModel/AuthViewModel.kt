@@ -54,6 +54,16 @@ class AuthViewModel(
         }
     }
 
+    fun nameStateChange(){
+        var currentState = state.value.nameEditable
+        _state.value = _state.value.copy(nameEditable = !currentState )
+    }
+
+    fun PhoneStateChange(){
+        var currentState = state.value.phoneNumEditable
+        _state.value = _state.value.copy(phoneNumEditable = !currentState )
+    }
+
 
 
     fun updateUI(user: FirebaseUser?, isSuccessful : Boolean) {
