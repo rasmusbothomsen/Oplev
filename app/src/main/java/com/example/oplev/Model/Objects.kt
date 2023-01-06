@@ -48,7 +48,8 @@ data class User(
 
 data class States(
     var signInSuccessful : Boolean = false,
-    var user : FirebaseUser? = null
+    var user : FirebaseUser? = null,
+    var fabExpanded : Boolean = false
 )
 
 

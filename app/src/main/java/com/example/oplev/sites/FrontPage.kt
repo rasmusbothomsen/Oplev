@@ -1,6 +1,7 @@
 package com.example.oplev.sites
 
 import android.app.Activity
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -9,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -63,6 +65,7 @@ fun MenuDrawer(){
 fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavController) {
     val scaffoldstate = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+    val state = frontpageViewModel.state.value
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
 
@@ -206,15 +209,20 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
         floatingActionButton = {
+
+            val alpha: Float by animateFloatAsState(if (state.fabExpanded) 315f else 0f)
+
             FloatingActionButton(shape = CircleShape, modifier = Modifier.size(width = 75.dp, height = 75.dp),
                 onClick = {
-                    navController.navigate(Screen.CreateJourneyScreen.route)
+                    frontpageViewModel.expandFab()
+                    //navController.navigate(Screen.CreateJourneyScreen.route)
                 }) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = "",
                     modifier = Modifier
-                        .size(38.dp),
+                        .size(38.dp)
+                        .rotate(alpha),
                     tint = Color.White
                 )
             }

@@ -32,8 +32,11 @@ class AuthViewModel() : ViewModel() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
+                    /*
                     Toast.makeText(baseContext, "Authentication successful.",
                         Toast.LENGTH_SHORT).show()
+
+                     */
                     val user = Firebase.auth.currentUser
                     updateUI(user, true)
 
@@ -49,20 +52,29 @@ class AuthViewModel() : ViewModel() {
                         taskk ->
                         if (taskk.isSuccessful){
                             Log.d(TAG, "createUserInFirestore:success")
+                            /*
                             Toast.makeText(baseContext, "Creation successful.",
                                 Toast.LENGTH_SHORT).show()
+
+                             */
                         } else {
                             Log.w(TAG, "createUserInFirestore:failure", task.exception)
+                            /*
                             Toast.makeText(baseContext, "Creation failed.",
                                 Toast.LENGTH_SHORT).show()
+
+                             */
                         }
                     }
 
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
+                    /*
                     Toast.makeText(baseContext, "Authentication failed.",
                         Toast.LENGTH_SHORT).show()
+
+                     */
                     updateUI(null, false)
                 }
             }
@@ -81,10 +93,13 @@ class AuthViewModel() : ViewModel() {
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
+                    /*
                     Toast.makeText(
                         baseContext, "Authentication failed.",
                         Toast.LENGTH_SHORT
                     ).show()
+
+                     */
                     updateUI(null, false)
                 }
             }.await()
