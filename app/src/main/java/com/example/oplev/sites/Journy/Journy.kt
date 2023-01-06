@@ -61,7 +61,6 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, modifier: Modifier = Modif
 
 fun createItemsForColumn(): List<ComposableFun>{
 
-
     return emptyList();
 }
 
@@ -102,7 +101,6 @@ fun imageAndText(
     }
 }
 
-
 @Composable
 fun dynamicColumn(itemsInColumn: List<ComposableFun>){
 
@@ -114,7 +112,6 @@ fun dynamicColumn(itemsInColumn: List<ComposableFun>){
                 itemsInColumn[x]()
             }
         }
-
     }
 }
 

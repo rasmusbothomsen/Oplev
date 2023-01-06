@@ -28,9 +28,15 @@ import com.example.oplev.data.dto.CategoryDto
 
 @Composable
 fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navController: NavController){
-    var destination by remember { mutableStateOf("") }
+    var ID by remember { mutableStateOf(0) }
+    var tag by remember { mutableStateOf("") }
+    var Image by remember { mutableStateOf("") }
+    var CategoryId by remember { mutableStateOf(0) }
+    var Date by remember { mutableStateOf("") }
+    var Description by remember { mutableStateOf("") }
+    var Title by remember { mutableStateOf("") }
+
     var category by remember { mutableStateOf("") }
-    var beskrivelse by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = { TopBar(title = "Velkommen" /** + profile.userName **/ )},
@@ -64,10 +70,10 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                           }
                           }
                       inputTextfield("Destination",80,imageVector = Icons.Filled.LocationOn, onValueChange = {
-                          destination = it
-                      },destination)
+                          Title = it
+                      },Title)
                      //Nedenstående skal være dropdown
-                      ExposedDropdownMenu(list = createJourneyViewModel.getCategories().toList(), imageVector = Icons.Filled.Warning, category) {
+                      ExposedDropdownMenu(list = createJourneyViewModel.getCategories(), imageVector = Icons.Filled.Warning, category) {
                           category = it.title
                       }
 
@@ -95,8 +101,8 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                           /* Skal være en "time picker"*/ inputFieldNoRow("Til kl.",80, imageVector = Icons.Filled.Warning)
                       }
                       inputTextfield("Beskriv oplevelsen",height = 150,imageVector = Icons.Filled.Menu, onValueChange = {
-                          beskrivelse = it
-                      },beskrivelse)
+                          Description = it
+                      },Description)
                       Row(modifier = Modifier.padding(60.dp,20.dp,0.dp,80.dp)) {
                           //Nedenstående buttons skal være composables
                           Button(
@@ -119,8 +125,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                           val context = LocalContext.current
                           val activity = LocalContext.current as Activity
                           Button(
-                              onClick = { createJourneyViewModel.createNewJourney(destination,category,beskrivelse)
-                                  createJourneyViewModel.createJourneyInDB(destination,category,beskrivelse, activity, context)
+                              onClick = { createJourneyViewModel.createNewJourney(ID, tag, Image, CategoryId, Date, Description, Title)
                                   navController.navigate(Screen.FrontPageScreen.route)
                                         },
                               colors = ButtonDefaults.buttonColors(
@@ -142,10 +147,6 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
     )
 }
 
-@Composable
-fun testinggg(){
-    Scaffold(content = { Text(text = "")})
-}
 @Composable
 fun inputTextfield(label: String, height: Int, imageVector: ImageVector, onValueChange: (String) -> Unit, input: String){
     Row(modifier = Modifier
@@ -183,17 +184,10 @@ fun inputFieldNoRow(label: String, height: Int, imageVector: ImageVector){
     )
 }
 
-@Composable
-fun DatePickerTest(context : Context) {
-    val year : Int
-    val month : Int
-    val day : Int
-}
-
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ExposedDropdownMenu(list: List<CategoryDto>, imageVector: ImageVector, selectedOption:String, upDateValue: (Category) -> Unit){
+fun ExposedDropdownMenu(list: List<Category>, imageVector: ImageVector, selectedOption:String, upDateValue: (Category) -> Unit){
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionlocal by remember {
         mutableStateOf(selectedOption)
@@ -239,12 +233,12 @@ fun ExposedDropdownMenu(list: List<CategoryDto>, imageVector: ImageVector, selec
                 list.forEach { selectionOption ->
                     DropdownMenuItem(
                         onClick = {
-                            upDateValue.invoke(selectionOption.baseObject!!)
-                            selectedOptionlocal = selectionOption.baseObject?.title.toString()
+                            upDateValue.invoke(selectionOption)
+                            selectedOptionlocal = selectionOption.title.toString()
                             expanded = false
                         }
                     ) {
-                        Text(text = selectionOption.baseObject?.title.toString())
+                        Text(text = selectionOption.title.toString())
                     }
                 }
             }
