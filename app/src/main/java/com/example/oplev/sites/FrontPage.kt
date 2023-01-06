@@ -209,22 +209,52 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
         floatingActionButton = {
+            Column() {
+                val alpha: Float by animateFloatAsState(if (state.fabExpanded) 315f else 0f)
 
-            val alpha: Float by animateFloatAsState(if (state.fabExpanded) 315f else 0f)
+                if (state.fabExpanded) {
+                    Row() {
+                        FloatingActionButton(onClick = { /*TODO*/ }, modifier = Modifier.size(50.dp)) {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(30.dp),
+                                tint = Color.White
+                            )
+                        }
+                        Text(text = "Ny kategori")
+                    }
+                    Row() {
+                        FloatingActionButton(onClick = {
+                            navController.navigate(Screen.CreateJourneyScreen.route) }, modifier = Modifier.size(50.dp)) {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(30.dp),
+                                tint = Color.White
+                            )
+                        }
+                        Text(text = "Ny Rejse")
+                    }
+                }
 
-            FloatingActionButton(shape = CircleShape, modifier = Modifier.size(width = 75.dp, height = 75.dp),
-                onClick = {
-                    frontpageViewModel.expandFab()
-                    //navController.navigate(Screen.CreateJourneyScreen.route)
-                }) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "",
-                    modifier = Modifier
-                        .size(38.dp)
-                        .rotate(alpha),
-                    tint = Color.White
-                )
+                FloatingActionButton(shape = CircleShape,
+                    modifier = Modifier.size(width = 75.dp, height = 75.dp),
+                    onClick = {
+                        frontpageViewModel.expandFab()
+                        //navController.navigate(Screen.CreateJourneyScreen.route)
+                    }) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(38.dp)
+                            .rotate(alpha),
+                        tint = Color.White
+                    )
+                }
             }
         },
     )
@@ -285,7 +315,9 @@ fun JourneyCard(journey: Journey, navController: NavController) {
             .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
 
             Column() {
-                Box(modifier = Modifier.padding().fillMaxSize()) {
+                Box(modifier = Modifier
+                    .padding()
+                    .fillMaxSize()) {
                     Image(
                         painter = painterResource(id = drawableId),
                         contentDescription = "Image Denmark",
