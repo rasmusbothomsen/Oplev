@@ -1,5 +1,6 @@
 package com.example.oplev.ui.components
 
+import android.app.Activity
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -26,6 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.oplev.DependencyController
+import com.example.oplev.MainActivity
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import com.example.oplev.Screen
@@ -33,9 +35,12 @@ import com.example.oplev.ViewModel.AuthViewModel
 import com.example.oplev.ViewModel.CreateJourneyViewModel
 import com.example.oplev.ViewModel.FrontPageViewModel
 import com.example.oplev.ViewModel.JourneyViewModel
+import com.example.oplev.data.AppDatabase
+import com.example.oplev.data.dataService.UserDataService
 import com.example.oplev.sites.*
 import com.example.oplev.sites.Journy.JourneyScreen
 import com.example.oplev.sites.Journy.createJourneyComp
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -50,7 +55,7 @@ fun NavController() {
 
     val createJourneyViewModel = CreateJourneyViewModel(dependencyController.journeyData,dependencyController.categoryData, dependencyController.frontpageData)
 
-    val authViewModel = AuthViewModel()
+    val authViewModel = AuthViewModel(dataService = UserDataService(FirebaseFirestore.getInstance(),MainActivity.database.UserDao()))
 
     var testJourney = Journey(tag = "test", image = null, date = null, description = "This is a test", title = "Danmark", categoryID = 1, id = 1)
 

@@ -1,15 +1,13 @@
 package com.example.oplev.Model
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import androidx.room.Relation
 import com.google.firebase.auth.FirebaseUser
-import java.util.Date
 
-@Entity
+@Entity(tableName = "ideas" , primaryKeys =["id","ownerId"] )
 data class Idea(
-    @PrimaryKey var id:Int,
+    val id:Long,
+    val ownerId:Long,
     var folderId:Int,
     var title: String,
     var description: String,
@@ -42,8 +40,12 @@ data class Journey(
 
     )
 
-data class User(
-    val firstname: String
+@Entity(tableName = "user_info")
+data class UserInfo(
+    @PrimaryKey val userId:String,
+    val eMail:String,
+    val firstname: String,
+    val hasOnboarded:Boolean
 )
 
 data class States(

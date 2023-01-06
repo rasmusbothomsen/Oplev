@@ -1,14 +1,17 @@
 package com.example.oplev
 
+import android.app.Activity
 import com.example.oplev.data.dto.CategoryDto
 import com.example.oplev.data.dto.JourneyDto
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
+import com.example.oplev.data.AppDatabase
 import com.example.oplev.data.dto.FrontpageDto
 
 //import com.example.oplev.Model.Journey
 
-class DependencyController {
+class DependencyController() {
+
     var categoryData = CategoryDto(null)
     var journeyData = JourneyDto(null)
     var frontpageData = FrontpageDto()
@@ -24,6 +27,7 @@ class DependencyController {
 
     fun getCategoryDataDependency(): CategoryDto {
         return categoryData
+
     }
 
     fun getJourneyDataDependency(): JourneyDto {
