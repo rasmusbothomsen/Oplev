@@ -84,6 +84,8 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
                     val source = ImageDecoder.createSource(context.contentResolver, it)
                     bitmap.value = ImageDecoder.decodeBitmap(source)
                 }
+
+                //BTM SKAL GEMMES I EN VARIABEL SOM KAN SMIDES IND I DB!
                 bitmap.value?.let{ btm ->
                     Image(bitmap = btm.asImageBitmap(), contentDescription = null,
                     contentScale = ContentScale.Crop,
