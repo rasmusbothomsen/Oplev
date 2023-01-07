@@ -6,12 +6,14 @@ import com.example.oplev.data.dto.JourneyDto
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.Journey
 import com.example.oplev.data.AppDatabase
+import com.example.oplev.data.dataService.CategoryDataService
+import com.example.oplev.data.dataService.JourneyDataService
 import com.example.oplev.data.dto.FrontpageDto
 
 //import com.example.oplev.Model.Journey
 
 class DependencyController() {
-
+    //region oldCode
     var categoryData = CategoryDto(null)
     var journeyData = JourneyDto(null)
     var frontpageData = FrontpageDto()
@@ -62,7 +64,17 @@ class DependencyController() {
             frontpageData.categories.add(category)
         }
     }
+    //endregion
 
 
+    fun intializeJourneyDataService(): JourneyDataService{
+        var dataService = JourneyDataService(MainActivity.database.JourneyDao())
+        return dataService
+    }
+
+    fun initCategoryDataService():CategoryDataService{
+        var dataService = CategoryDataService(MainActivity.database.CategoryDao())
+        return dataService
+    }
 }
 
