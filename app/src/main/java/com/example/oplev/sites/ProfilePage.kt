@@ -1,18 +1,30 @@
 package com.example.oplev.sites
 
 
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -49,14 +61,41 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
                         .fillMaxWidth()
                         .align(Alignment.TopCenter)
                 )
-                Image(painter = painterResource(id = R.drawable.design_uden_navn__8_),
-                    contentDescription = "Background pic",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .graphicsLayer {
-                            translationX = 0f
-                            translationY = 160f
-                        })
+
+            Box( modifier = Modifier
+                .width(125.dp)
+                .height(125.dp)
+                .graphicsLayer {
+                    translationX = 360f
+                    translationY = 160f
+                }){
+            //https://www.youtube.com/watch?v=ec8YymnjQSE&ab_channel=KBCODER
+            var imageUri by remember { mutableStateOf<Uri?>(null) }
+            val context = LocalContext.current
+            val bitmap = remember { mutableStateOf<Bitmap?>(null) }
+            val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()){uri: Uri? -> imageUri = uri}
+                Image(painter = painterResource(id = R.drawable.design_uden_navn__8_), contentDescription = null)
+
+            imageUri?.let{
+                if (Build.VERSION.SDK_INT < 28){
+                    bitmap.value = MediaStore.Images
+                        .Media.getBitmap(context.contentResolver, it)
+                } else {
+                    val source = ImageDecoder.createSource(context.contentResolver, it)
+                    bitmap.value = ImageDecoder.decodeBitmap(source)
+                }
+                bitmap.value?.let{ btm ->
+                    Image(bitmap = btm.asImageBitmap(), contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.clip(RoundedCornerShape(15.dp)))
+                }
+            }
+                IconButton(onClick = { launcher.launch("image/*") }, modifier = Modifier
+                    .align(Alignment.BottomEnd)) {
+                    Icon(imageVector = Icons.Default.AddCircle, contentDescription = null, tint = Color.White)
+                }
+            }
+
         }
 
         //SKAL HENTE BRUGERNAVN
@@ -64,27 +103,14 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
         var nameEditable = states.nameEditable
 
         TextField(
-            // below line is used to get
-            // value of text field,
             value = fullname.value,
-
-            // below line is used to get value in text field
-            // on value change in text field.
             onValueChange = { fullname.value = it },
-
-            // below line is used to add placeholder
-            // for our text field.
             placeholder = { Text(text = "Berfin Flora Turan") },
-
-            // modifier is use to add padding
-            // to our text field, and a circular border
             modifier = Modifier
                 .padding(all = 16.dp)
                 .fillMaxWidth()
                 .border(1.dp, Color.LightGray, CircleShape),
-
             shape = CircleShape,
-
             colors = TextFieldDefaults.textFieldColors(
                 textColor = Color.Black,
                 disabledTextColor = Color.Gray,
@@ -105,27 +131,14 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
         var phoneNumEditable = states.phoneNumEditable
 
         TextField(
-            // below line is used to get
-            // value of text field,
             value = phoneNum.value,
-
-            // below line is used to get value in text field
-            // on value change in text field.
             onValueChange = { phoneNum.value = it },
-
-            // below line is used to add placeholder
-            // for our text field.
             placeholder = { Text(text = "+45 12 34 56 78") },
-
-            // modifier is use to add padding
-            // to our text field, and a circular border
             modifier = Modifier
                 .padding(all = 16.dp)
                 .fillMaxWidth()
                 .border(1.dp, Color.LightGray, CircleShape),
-
             shape = CircleShape,
-
             colors = TextFieldDefaults.textFieldColors(
                 textColor = Color.Black,
                 disabledTextColor = Color.Gray,
@@ -193,6 +206,7 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
         }
 
     }
-
-
 }
+
+
+
