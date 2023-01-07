@@ -9,12 +9,5 @@ import com.example.oplev.data.roomDao.CategoryDao
 class CategoryDataService(
     val cateGoryDao:CategoryDao
 ) {
-    fun getAllCategories(): List<Category>{
-        var CategoryDao = MainActivity.database.CategoryDao()
-        var categories = CategoryDao.getAll()
-        var test = Idea(123,123,2,"","","","")
 
-
-        return categories
-    }
 }

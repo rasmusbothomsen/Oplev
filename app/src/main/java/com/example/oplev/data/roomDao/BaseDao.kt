@@ -11,7 +11,7 @@ import kotlinx.coroutines.selects.select
 interface BaseDao<T> {
 
     @Insert
-    fun insert(item:T)
+    suspend fun insert(item:T)
     @Update
     fun update(item: T)
     @Delete

@@ -6,7 +6,7 @@ open class BaseDataService<T> (
      val baseDao: BaseDao<T>
         ){
 
-    fun insertRoom(item: T){
+    suspend fun insertRoom(item: T){
         baseDao.insert(item)
     }
 
@@ -16,7 +16,5 @@ open class BaseDataService<T> (
     fun deleteItem(item:T){
         baseDao.delete(item)
     }
-    fun getAll(item:T){
-        baseDao
-    }
+
 }

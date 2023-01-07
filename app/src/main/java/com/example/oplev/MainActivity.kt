@@ -11,23 +11,14 @@ import kotlinx.coroutines.runBlocking
 //import com.example.oplev.ui.components.NavController
 
 class MainActivity : ComponentActivity() {
-    companion object Instance{
-
-        lateinit var context: Context
-        lateinit var database: AppDatabase
-    }
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        runBlocking{
-            context = applicationContext
-            database = Room.databaseBuilder(context,AppDatabase::class.java,"oplev_database").allowMainThreadQueries().build()
-        }
-        setContent {
-            com.example.oplev.ui.components.NavController()
 
+        setContent {
+            NavControllerMock()
         }
 
     }

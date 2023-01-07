@@ -8,7 +8,7 @@ import com.example.oplev.data.dto.baseDto
 @Dao
 interface JourneyDao:BaseDao<Journey> {
     @Query("select * from Journey")
-    fun getAll(): List<Journey>
+    suspend fun getAll(): List<Journey>
 
 
 }
