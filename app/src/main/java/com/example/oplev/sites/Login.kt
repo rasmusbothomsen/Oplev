@@ -272,7 +272,7 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
 
             TextButton(
                 onClick = {
-                    //navController.navigate(Screen.SignUpScreen.route)
+                    navController.navigate(Screen.SignUpScreen.route)
                     scope.launch {
                         scaffoldState.drawerState.open()
                     }

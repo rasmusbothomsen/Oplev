@@ -1,80 +1,45 @@
 package com.example.oplev
 
-import android.app.Activity
-import com.example.oplev.data.dto.CategoryDto
-import com.example.oplev.data.dto.JourneyDto
-import com.example.oplev.Model.Category
-import com.example.oplev.Model.Journey
+import android.app.Application
+import com.example.oplev.ViewModel.AuthViewModel
+import com.example.oplev.ViewModel.CreateJourneyViewModel
+import com.example.oplev.ViewModel.FrontPageViewModel
+import com.example.oplev.ViewModel.JourneyViewModel
 import com.example.oplev.data.AppDatabase
 import com.example.oplev.data.dataService.CategoryDataService
 import com.example.oplev.data.dataService.JourneyDataService
-import com.example.oplev.data.dto.FrontpageDto
+import com.example.oplev.data.dataService.QueueDataService
+import com.example.oplev.data.dataService.UserDataService
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import io.grpc.Context
 
 //import com.example.oplev.Model.Journey
 
 class DependencyController() {
-    //region oldCode
-    var categoryData = CategoryDto(null)
-    var journeyData = JourneyDto(null)
-    var frontpageData = FrontpageDto()
 
-    fun initializeData() {
-        /* TODO */
-/*
-        initiazileJournyData()
-        initializeCategorydata()
 
- */
+    fun initFrontPageViewModel(context: android.content.Context): FrontPageViewModel {
+        return FrontPageViewModel()
     }
 
-    fun getCategoryDataDependency(): CategoryDto {
-        return categoryData
+    fun initCreateJourneyViewModel(context: android.content.Context,application: Application):CreateJourneyViewModel{
+        val appDb = AppDatabase.getInstance(context)
+        val queueDataService = QueueDataService(appDb)
+        val journeyDataService = JourneyDataService(appDb.JourneyDao(),queueDataService)
+        val categoryDataService = CategoryDataService(appDb.CategoryDao())
+        return CreateJourneyViewModel(journeyDataService,categoryDataService,application)
 
     }
-
-    fun getJourneyDataDependency(): JourneyDto {
-        return journeyData
+    fun intiJourneyViewModel():JourneyViewModel{
+        return JourneyViewModel()
     }
 
-    /*
-    This Method is used to initialize journeydata, to keep the dependency across the app.
-    Mainly used to test data before database connection
-     */
-
-    fun initiazileJournyData(){
-        val journey1 = Journey(1,"img_denmark",null,1,title ="Danmark", description = "Danmark", date = null)
-        val journey2 = Journey(1,"img_norway",null,1,title="Norge",description="Norge", date = null)
-        val journey3 = Journey(1,"img_finland",null,1,title="Finland",description="Finland", date = null)
-        val journey4 = Journey(1,"img_turkey",null,1,title="Tyrkiet",description="Tyrkiet", date = null)
-        val journeys = listOf(journey1, journey2, journey3, journey4)
-
-        for (journey in journeys){
-            categoryData.journeys.add(journey)
-        }
-
-    }
-    fun initializeCategorydata(){
-        val journeys = categoryData.journeys
-        val seneste = CategoryDto(Category(1,"Seneste"))
-        val favoritter = CategoryDto(Category(2,"Favoritter"))
-        val mumsesteg = CategoryDto(Category(3,"Tester"))
-        val categories = listOf(seneste,favoritter, mumsesteg)
-
-        for (category in categories){
-            frontpageData.categories.add(category)
-        }
-    }
-    //endregion
-
-
-    fun intializeJourneyDataService(): JourneyDataService{
-        var dataService = JourneyDataService(MainActivity.database.JourneyDao())
-        return dataService
-    }
-
-    fun initCategoryDataService():CategoryDataService{
-        var dataService = CategoryDataService(MainActivity.database.CategoryDao())
-        return dataService
+    fun initAuthViewModel(context: android.content.Context):AuthViewModel{
+        val appDb = AppDatabase.getInstance(context)
+        val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
+        return  AuthViewModel(userDataService)
     }
 }
 

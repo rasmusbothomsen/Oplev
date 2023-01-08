@@ -1,12 +1,48 @@
 package com.example.oplev.data.dataService
 
+import android.app.Activity
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import com.example.oplev.Model.Journey
+import com.example.oplev.ViewModel.AuthViewModel
+import com.example.oplev.data.AppDatabase
 import com.example.oplev.data.roomDao.BaseDao
 import com.example.oplev.data.roomDao.JourneyDao
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 
 class JourneyDataService(
-    val dao:JourneyDao
-): BaseDataService<Journey>(dao) {
+    val dao:JourneyDao, queueDataService: QueueDataService,
+): BaseDataService<Journey>(dao, queueDataService) {
+    private var db : FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    override suspend fun insertRoom(item: Journey) {
+        val add = HashMap<String,Any>()
+        add["id"] = item.id
+        add["createdBy"] = Firebase.auth.currentUser?.uid.toString()
+        add["category"] = item.categoryID
+        add["description"] = item.description
+        add["lastEdit"] = Firebase.auth.currentUser?.uid.toString()
+
+        db.collection("journeys")
+            .document(Firebase.auth.currentUser?.uid.toString())
+            .set(add)
+            .addOnCompleteListener(){
+                    task ->
+                if(task.isSuccessful){
+                    Log.d("FirebaseInsert",  "STATUS: SUCCESS")
+                }else{
+                    insertQueueItem(item,item.id)
+                }
+            }
+
+        super.insertRoom(item)
+    }
+
+
 
 
 }

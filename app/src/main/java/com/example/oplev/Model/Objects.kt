@@ -3,6 +3,7 @@ package com.example.oplev.Model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.firebase.auth.FirebaseUser
+import java.util.UUID
 
 @Entity(tableName = "ideas" , primaryKeys =["id","ownerId"] )
 data class Idea(
@@ -30,7 +31,7 @@ data class Category(
 
 @Entity
 data class Journey(
-    @PrimaryKey var id:Int,
+    @PrimaryKey val id:String,
     var tag: String,
     var image: String?,
     val categoryID: Int,
@@ -47,6 +48,14 @@ data class UserInfo(
     val firstname: String,
     val hasOnboarded:Boolean
 )
+@Entity(tableName = "queue_table")
+data class QueueItem(
+    @PrimaryKey(autoGenerate = true) val id: Long,
+    val type: String,
+    val objectId: String,
+    val firstInsert: Boolean
+)
+
 
 data class States(
     var signInSuccessful : Boolean = false,

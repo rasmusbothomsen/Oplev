@@ -200,7 +200,7 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
             }
             TopBar("Velkommen $userName")
         },
-        content = { FrontPageColumn(frontpageViewModel.frontpageDto.categories, navController, frontpageViewModel, state) },
+        content = { FrontPageColumn(frontpageViewModel.getCategories(), navController, frontpageViewModel, state) },
         bottomBar = { BottomBar(scope,scaffoldstate) },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,

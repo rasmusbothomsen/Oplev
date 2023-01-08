@@ -1,6 +1,6 @@
 package com.example.oplev.ui.components
 
-import android.app.Activity
+import android.app.Application
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -27,56 +28,39 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.oplev.DependencyController
-import com.example.oplev.MainActivity
-import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import com.example.oplev.Screen
-import com.example.oplev.ViewModel.AuthViewModel
-import com.example.oplev.ViewModel.CreateJourneyViewModel
-import com.example.oplev.ViewModel.FrontPageViewModel
 import com.example.oplev.ViewModel.JourneyViewModel
-import com.example.oplev.data.AppDatabase
-import com.example.oplev.data.dataService.UserDataService
 import com.example.oplev.sites.*
 import com.example.oplev.sites.Journy.JourneyScreen
 import com.example.oplev.sites.Journy.createJourneyComp
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 
 @Composable
-fun NavController() {
+fun NavController(application: Application) {
     val navController = rememberNavController()
     var dependencyController = DependencyController()
-    dependencyController.initializeData()
+    var context = LocalContext.current.applicationContext as android.content.Context
 
-    val frontpageViewModel = FrontPageViewModel(dependencyController.frontpageData)
-
-    val createJourneyViewModel = CreateJourneyViewModel(dependencyController.intializeJourneyDataService(),dependencyController.initCategoryDataService())
-
-    val authViewModel = AuthViewModel(dataService = UserDataService(FirebaseFirestore.getInstance(),MainActivity.database.UserDao()))
-
-    var testJourney = Journey(tag = "test", image = null, date = null, description = "This is a test", title = "Danmark", categoryID = 1, id = 1)
 
     NavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
         composable(route = Screen.FrontPageScreen.route) {
-            TotalView(frontpageViewModel = frontpageViewModel, navController)
+            TotalView(frontpageViewModel = dependencyController.initFrontPageViewModel(context), navController)
         }
         composable(route = Screen.CreateJourneyScreen.route) {
-            createJourneyComp(createJourneyViewModel = createJourneyViewModel, navController )
+            createJourneyComp(createJourneyViewModel = dependencyController.initCreateJourneyViewModel(context,application), navController )
         }
         composable(route = Screen.JourneyScreen.route){
-            JourneyScreen(journeyViewModel = JourneyViewModel(testJourney))
+            JourneyScreen(journeyViewModel = dependencyController.intiJourneyViewModel())
         }
         composable(route = Screen.SignUpScreen.route){
-            CreateUserView(authViewModel = authViewModel , navController = navController)
+            CreateUserView(authViewModel = dependencyController.initAuthViewModel(context) , navController = navController)
         }
         composable(route = Screen.LoginScreen.route){
-            LoginView(authViewModel = authViewModel, navController = navController)
+            LoginView(authViewModel = dependencyController.initAuthViewModel(context), navController = navController)
         }
         composable(route = Screen.ProfileScreen.route){
-            ProfileView(authViewModel = authViewModel, navController = navController)
+            ProfileView(authViewModel = dependencyController.initAuthViewModel(context), navController = navController)
         }
     }
 
