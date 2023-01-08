@@ -1,6 +1,9 @@
 package com.example.oplev.ViewModel
 
-open class BaseViewModel<T>  {
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+
+open class BaseViewModel<T>(application: Application) :AndroidViewModel(application)  {
 
 
     fun readItems(): List<T> {

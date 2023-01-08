@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import com.example.oplev.Model.Category
+import com.example.oplev.Model.Journey
 import com.example.oplev.Model.States
 import com.example.oplev.data.dataService.CategoryDataService
 import com.example.oplev.data.dto.CategoryDto
@@ -17,14 +18,27 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 
-class FrontPageViewModel(var frontpageDto: FrontpageDto) {
+class FrontPageViewModel(/*var frontpageDto: FrontpageDto*/) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val _state = mutableStateOf(States())
     val state: State<States> = _state
 
-    fun getCategories(): MutableList<CategoryDto>? {
-        return frontpageDto.categories
+
+    fun getCategories(): MutableList<CategoryDto> {
+        /**TODO THIS IS TEMP**/
+        var cate = Category(1,"")
+        val journey1 = Journey("1","img_denmark","img_norway",1,title ="Danmark", description = "Danmark", date = null)
+        val journey2 = Journey("1","img_norway","img_norway",1,title="Norge",description="Norge", date = null)
+        val journey3 = Journey("1","img_finland","img_norway",1,title="Finland",description="Finland", date = null)
+        val journey4 = Journey("1","img_turkey","img_norway",1,title="Tyrkiet",description="Tyrkiet", date = null)
+
+        var dto = CategoryDto(cate)
+        dto.journeys = mutableListOf(journey1,journey2,journey3,journey4)
+        return mutableListOf(dto,dto,dto)
+
     }
+
+
 
     fun setCategories(categories: List<Category>?) {
         /* TODO */

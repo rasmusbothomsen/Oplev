@@ -1,5 +1,6 @@
 package com.example.oplev
 
+import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -26,7 +27,7 @@ class MainActivity : ComponentActivity() {
             database = Room.databaseBuilder(context,AppDatabase::class.java,"oplev_database").allowMainThreadQueries().build()
         }
         setContent {
-            com.example.oplev.ui.components.NavController()
+            com.example.oplev.ui.components.NavController(application)
 
         }
 

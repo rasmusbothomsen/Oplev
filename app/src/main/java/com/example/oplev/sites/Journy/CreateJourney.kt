@@ -28,7 +28,6 @@ import com.example.oplev.data.dto.CategoryDto
 
 @Composable
 fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navController: NavController){
-    var ID by remember { mutableStateOf(0) }
     var tag by remember { mutableStateOf("") }
     var Image by remember { mutableStateOf("") }
     var CategoryId by remember { mutableStateOf(0) }
@@ -125,7 +124,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                           val context = LocalContext.current
                           val activity = LocalContext.current as Activity
                           Button(
-                              onClick = { createJourneyViewModel.createNewJourney(ID, tag, Image, CategoryId, Date, Description, Title)
+                              onClick = { createJourneyViewModel.createNewJourney( tag, Image, CategoryId, Date, Description, Title)
                                   navController.navigate(Screen.FrontPageScreen.route)
                                         },
                               colors = ButtonDefaults.buttonColors(

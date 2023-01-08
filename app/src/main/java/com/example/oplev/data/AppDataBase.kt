@@ -8,13 +8,14 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.oplev.Model.*
 import com.example.oplev.data.roomDao.*
 
-@Database(entities = [Category::class, Journey::class, Folder::class, Idea::class, UserInfo::class], version = 1)
+@Database(entities = [Category::class, Journey::class, Folder::class, Idea::class, UserInfo::class,QueueItem::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun CategoryDao(): CategoryDao
     abstract fun JourneyDao(): JourneyDao
     abstract fun FolderDao(): FolderDao
     abstract fun IdeaDao(): IdeaDao
     abstract fun UserDao(): UserDao
+    abstract fun QueDao():QueDao
 
     companion object {
         private var instance: AppDatabase? = null

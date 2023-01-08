@@ -10,8 +10,8 @@ public class JourneyViewModel extends ViewModel {
     private JourneyDto journeyData;
 
 
-    public JourneyViewModel(Journey journey) {
-        this.journey = journey;
+    public JourneyViewModel() {
+        this.journey = null;
     }
 
     public String journeyImage(){
