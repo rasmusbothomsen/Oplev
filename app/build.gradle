@@ -70,8 +70,12 @@ dependencies {
     def nav_version = "2.5.3"
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
+    // Thanks to https://icons8.com for icons
+    implementation "br.com.devsrsouza.compose.icons.android:line-awesome:1.0.0"
+
     def room_version = "2.2.5"
 
+    kapt "org.xerial:sqlite-jdbc:3.34.0"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     def lifecycle_version = "2.6.0-alpha01"
