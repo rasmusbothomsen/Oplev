@@ -6,7 +6,7 @@ import com.example.oplev.Model.Journey
 import com.example.oplev.data.dto.baseDto
 
 @Dao
-interface JourneyDao {
+interface JourneyDao:BaseDao<Journey> {
     @Query("select * from Journey")
     fun getAll(): List<Journey>
 

@@ -8,8 +8,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.States
+import com.example.oplev.data.dataService.CategoryDataService
 import com.example.oplev.data.dto.CategoryDto
 import com.example.oplev.data.dto.FrontpageDto
+import com.example.oplev.data.roomDao.CategoryDao
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -67,6 +69,11 @@ class FrontPageViewModel(var frontpageDto: FrontpageDto) {
     fun expandFab(){
         val currentValue = state.value.fabExpanded
         _state.value = _state.value.copy(fabExpanded = !currentValue)
+    }
+
+    fun changeDialogVal(){
+        val currentValue = state.value.dialogState
+        _state.value = _state.value.copy(dialogState = !currentValue)
     }
 
 }

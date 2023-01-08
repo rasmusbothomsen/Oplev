@@ -7,7 +7,7 @@ import com.example.oplev.Model.Idea
 @Dao
 interface IdeaDao {
 
-    @Query("Select * from Idea where folderId == :folderId")
+    @Query("Select * from ideas where folderId == :folderId")
     fun getIdeaFromFolderID(folderId:Int):List<Idea>
 
 }
