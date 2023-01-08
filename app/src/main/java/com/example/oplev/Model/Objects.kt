@@ -54,7 +54,8 @@ data class States(
     var fabExpanded : Boolean = false,
     var dialogState : Boolean = false,
     var nameEditable : Boolean = false,
-    var phoneNumEditable : Boolean = false
+    var phoneNumEditable : Boolean = false,
+    var forgotpassworddialog : Boolean = false
 )
 
 

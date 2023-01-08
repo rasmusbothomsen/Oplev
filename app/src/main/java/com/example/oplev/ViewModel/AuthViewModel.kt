@@ -54,6 +54,18 @@ class AuthViewModel(
         }
     }
 
+    suspend fun sendPasswordReset(mail : String) {
+        // [START send_password_reset]
+
+        Firebase.auth.sendPasswordResetEmail(mail)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "Email sent.")
+                }
+            }.await()
+        // [END send_password_reset]
+    }
+
     fun nameStateChange(){
         var currentState = state.value.nameEditable
         _state.value = _state.value.copy(nameEditable = !currentState )
@@ -62,6 +74,11 @@ class AuthViewModel(
     fun PhoneStateChange(){
         var currentState = state.value.phoneNumEditable
         _state.value = _state.value.copy(phoneNumEditable = !currentState )
+    }
+
+    fun forgotPasswordStateChange(){
+        var currentState = state.value.forgotpassworddialog
+        _state.value = _state.value.copy(forgotpassworddialog = !currentState )
     }
 
 
