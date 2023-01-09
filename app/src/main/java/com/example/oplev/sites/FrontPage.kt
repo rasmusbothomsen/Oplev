@@ -281,12 +281,12 @@ fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController,
 
 @Composable
 fun NewCategoryDialog(frontPageViewModel: FrontPageViewModel){
+    var categoryTitle by remember { mutableStateOf("") }
+    val activity = LocalContext.current as Activity
     AlertDialog(
         onDismissRequest = { /*TODO*/ },
         title = { Text(text = "Indtast navnet på den nye kategori")},
         text = {
-            var categoryTitle by remember { mutableStateOf("") }
-
             OutlinedTextField(
                 value = categoryTitle,
                 label = { Text(text = "Kategori", textAlign = TextAlign.Center) },
@@ -300,7 +300,9 @@ fun NewCategoryDialog(frontPageViewModel: FrontPageViewModel){
         },
         confirmButton = {
             Button(onClick = {
-            //Gem kategori-titel
+                runBlocking {
+                    frontPageViewModel.createCategory(categoryTitle, activity)
+                }
                 frontPageViewModel.changeDialogVal()
             }) {
                 Text(text = "Gem")
@@ -333,6 +335,9 @@ fun CategoryRow(category: CategoryDto, navController: NavController) {
     ) {
         for (i in 0..max) {
             JourneyCard(category.journeys[i], navController = navController)
+        }
+        if (category.journeys.size < 1){
+            Text(text = "Ingen rejser oprettet.", color = Color.LightGray)
         }
     }
 }

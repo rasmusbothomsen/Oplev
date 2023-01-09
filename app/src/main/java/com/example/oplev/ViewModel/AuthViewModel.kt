@@ -1,13 +1,17 @@
 package com.example.oplev.ViewModel
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.oplev.Model.Category
 import com.example.oplev.Model.States
+import com.example.oplev.data.dataService.CategoryDataService
 import com.example.oplev.data.dataService.UserDataService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -15,27 +19,35 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import java.util.*
 
 
-class AuthViewModel(
-    val dataService:UserDataService
-) : ViewModel() {
+class AuthViewModel(val userDataService: UserDataService, application: Application, val categoryDataService: CategoryDataService):
+    BaseViewModel<Category>(
+    application
+) {
     private val _state = mutableStateOf(States())
     val state: State<States> = _state
 
-        // [END create_user_with_email]
 
         fun createNewUser(firstname: String, lastname: String, email: String, password: String, baseContext: Context, activity: Activity){
+
             var success = false
 
-                 success = dataService.createAccount(firstname,lastname,email,password,baseContext,activity)
+            success = userDataService.createAccount(firstname,lastname,email,password,baseContext,activity)
+
+            runBlocking {
+                categoryDataService.createCategory("Seneste", activity)
+                categoryDataService.createCategory("Favoritter", activity)
+            }
 
         val user = Firebase.auth.currentUser
         if (success){
         updateUI(user, true)
-
         }
         else{
         updateUI(null, false)
@@ -43,11 +55,10 @@ class AuthViewModel(
 
     }
     suspend fun signIn(email: String, password: String, baseContext: Context, activity: Activity) {
-        val success = dataService.signIn(email,password,baseContext,activity)
+        val success = userDataService.signIn(email,password,baseContext,activity)
         val user = Firebase.auth.currentUser
         if (success){
             updateUI(user, true)
-
         }
         else{
             updateUI(null, false)

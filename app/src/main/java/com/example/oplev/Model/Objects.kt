@@ -24,7 +24,7 @@ data class Folder(
 
 @Entity
 data class Category(
-    @PrimaryKey val id: Int,
+    @PrimaryKey val id: String,
     var title: String,
 )
 

@@ -101,9 +101,10 @@ fun CreateUserContent(authViewModel: AuthViewModel, navController: NavController
 
         Button(
             onClick = {
-                authViewModel.createNewUser(firstname, lastname, email, password, context, activity)
-
-                if (FirebaseAuth.getInstance().currentUser != null){
+                runBlocking {
+                    authViewModel.createNewUser(firstname, lastname, email, password, context, activity)
+                }
+                if (FirebaseAuth.getInstance().currentUser != null) {
                     navController.navigate(Screen.FrontPageScreen.route)
                 }
             }
