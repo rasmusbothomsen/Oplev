@@ -181,7 +181,7 @@ fun topScreenLayout(context: Context){
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()){ uri: Uri? -> imageUri = uri}
 
-    Box(modifier = Modifier.height(120.dp)){
+    Box(modifier = Modifier.height(120.dp).fillMaxWidth()){
         Column(
             modifier = Modifier
                 .fillMaxHeight()
