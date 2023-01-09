@@ -14,12 +14,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -181,15 +181,15 @@ fun topScreenLayout(context: Context){
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()){ uri: Uri? -> imageUri = uri}
 
-    Box(modifier = Modifier.height(120.dp).fillMaxWidth()){
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
-
-        )
-        {
-            Image(painter = painterResource(id = R.drawable.img_finland), contentDescription = "Placeholder")
+    Box(modifier = Modifier
+        .height(120.dp)
+        .fillMaxWidth()){
+            Image(painter = painterResource(id = R.drawable.img_finland),
+                contentDescription = "Placeholder", modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                contentScale = ContentScale.FillBounds
+            )
             imageUri?.let{
                 if (Build.VERSION.SDK_INT < 28){
                     bitmap.value = MediaStore.Images
@@ -208,8 +208,7 @@ fun topScreenLayout(context: Context){
                             .fillMaxHeight())
                 }
             }
-        }
-        IconButton(onClick = { launcher.launch("image/*") },  modifier = Modifier
+        IconButton(onClick = { launcher.launch("image/*") }, modifier = Modifier
             .align(Alignment.BottomEnd)) {
             Icon(imageVector = Icons.Default.AddCircle, contentDescription ="",
                 tint=Color.White
