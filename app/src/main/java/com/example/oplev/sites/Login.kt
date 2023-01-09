@@ -122,15 +122,8 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
 
     DisposableEffect(
         AndroidView(
-            factory = {
-                StyledPlayerView(context).apply {
-                    hideController()
-                    useController = false
-                    player = exoPlayer
-                }
-            },
+            factory = { it.buildPlayerView(exoPlayer) },
             modifier = Modifier.fillMaxSize()
-
         )
     ) {
         onDispose {
