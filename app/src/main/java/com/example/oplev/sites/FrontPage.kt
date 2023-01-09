@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
+import com.example.oplev.Model.Category
 import com.example.oplev.data.dto.CategoryDto
 import com.example.oplev.Model.Journey
 import com.example.oplev.Model.States
