@@ -51,7 +51,7 @@ fun NavController(application: Application) {
             createJourneyComp(createJourneyViewModel = dependencyController.initCreateJourneyViewModel(context,application), navController )
         }
         composable(route = Screen.JourneyScreen.route){
-            JourneyScreen(journeyViewModel = dependencyController.intiJourneyViewModel())
+            JourneyScreen(journeyViewModel = dependencyController.intiJourneyViewModel(context, application))
         }
         composable(route = Screen.SignUpScreen.route){
             CreateUserView(authViewModel = dependencyController.initAuthViewModel(context) , navController = navController)

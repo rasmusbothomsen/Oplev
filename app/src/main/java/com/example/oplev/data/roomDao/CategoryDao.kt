@@ -13,4 +13,7 @@ interface CategoryDao {
     @Query("select * from Journey where categoryID like :id")
     fun getJourneysRelatedToCategory(id:Int): List<Journey>
 
+    @Query("select id from category where title like :Title")
+    fun getCategoryId(Title: String): Int
+
 }

@@ -24,8 +24,6 @@ import com.example.oplev.Model.Idea
 import com.example.oplev.R
 import com.example.oplev.ViewModel.IdeaViewModel
 import com.example.oplev.sites.Journy.BottomBar
-import com.example.oplev.sites.Journy.TopBar
-import com.example.oplev.sites.Journy.ideas
 import com.example.oplev.ui.theme.OplevBlue
 import com.example.oplev.ui.theme.OplevMain
 import com.example.oplev.ui.theme.Oplevsec
@@ -62,7 +60,7 @@ fun IdeaScreenPreview(){
 @Composable
 fun IdeaGriddy() {
     Scaffold(
-        topBar = { TopBar(title = "{journeyName} Ideas") }
+        topBar = { /*TopBar(title = "{journeyName} Ideas") */}
         ) {
         LazyVerticalGrid(
             cells = GridCells.Fixed(3),

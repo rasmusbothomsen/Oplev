@@ -28,4 +28,11 @@ class CategoryDataService(
         }
         return dtos
     }
+
+    fun getCategoryId(Title: String): Int{
+        var CategoryDao = MainActivity.database.CategoryDao()
+        var categoryId = CategoryDao.getCategoryId(Title)
+
+        return categoryId
+    }
 }
