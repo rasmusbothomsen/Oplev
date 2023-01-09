@@ -20,8 +20,8 @@ import io.grpc.Context
 class DependencyController() {
 
 
-    fun initFrontPageViewModel(context: android.content.Context): FrontPageViewModel {
-        return FrontPageViewModel()
+    fun initFrontPageViewModel(context: android.content.Context,application: Application): FrontPageViewModel {
+        return FrontPageViewModel(application, CategoryDataService(AppDatabase.getInstance(context).CategoryDao()))
     }
 
     fun initCreateJourneyViewModel(context: android.content.Context,application: Application):CreateJourneyViewModel{
