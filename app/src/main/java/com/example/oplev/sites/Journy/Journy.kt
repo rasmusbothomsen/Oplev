@@ -18,8 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,16 +25,20 @@ import androidx.compose.ui.unit.sp
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import androidx.compose.material.Text
+import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
 import com.example.oplev.Model.Idea
-import com.example.oplev.ViewModel.IdeaViewModel
+import com.example.oplev.Model.Folder
+import com.example.oplev.Screen
 import com.example.oplev.sites.*
 
 import com.example.oplev.ViewModel.JourneyViewModel
-import com.example.oplev.sites.Idea.IdeaGridItem
-import com.example.oplev.ui.theme.OplevTheme
+import com.example.oplev.ui.theme.OplevFarve2
 import kotlinx.coroutines.runBlocking
 
 // make an alias
@@ -44,9 +46,12 @@ typealias ComposableFun = @Composable () -> Unit
 
 
 @Composable
-fun JourneyScreen(journeyViewModel: JourneyViewModel) {
+fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavController) {
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
+
+    var folders = journeyViewModel.getFolders()
+    var ideas = journeyViewModel.getIdeas()
 
     Scaffold(
         topBar = {
@@ -54,25 +59,19 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel) {
             runBlocking {
                 userName = journeyViewModel.getUserName(activity, context)
             }
-            com.example.oplev.sites.TopBar("Velkommen $userName")},
+            TopBar("Velkommen $userName")},
         content = {
             Column(modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
             ) {
                 imageAndText(text = journeyViewModel.getJourneyTitle(), image = null, journeyViewModel = journeyViewModel)
-                gridLazytest()
+                gridForFoldersAndIdeas(folders, ideas, navController)
             }
-                /* HER SKAL LAVES MATRIX AF ROW/COLUMN TIL IDEAS*/
-
                   },
         bottomBar = { BottomBar()} )
 }
 
-fun createItemsForColumn(): List<ComposableFun>{
-
-    return emptyList();
-}
 
 @Composable
 fun imageAndText(
@@ -97,7 +96,7 @@ fun imageAndText(
         Box(
             modifier = Modifier
                 .align(alignment = Alignment.CenterHorizontally)
-                .background(Color.Yellow)
+                .background(OplevFarve2)
                 .fillMaxWidth()
         ) {
             Text(
@@ -113,39 +112,93 @@ fun imageAndText(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun gridLazytest(){
-    val test: ComposableFun = {
-        Box(modifier = Modifier
-            .size(100.dp)
-            .background(Color.Black)) {
-            Button(onClick = { Log.d("HIHIH","HOHOOH")}) {
-
-            }
-
-        }
-    }
-
-    val itemsInColumn = listOf(test,test,test)
+fun gridForFoldersAndIdeas(folders: List<Folder?>, ideas: List<Idea?>, navController: NavController){
 
     LazyVerticalGrid(cells = GridCells.Fixed(3),horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(24.dp)){
 
-        itemsInColumn.forEachIndexed{
-            index, function ->  item { folderCreator(ideas = null) }
+        if(folders != null){
+            folders.forEachIndexed {
+                index, function -> item { folderCreator(function!!) }
+            }
         }
-
-        itemsInColumn.forEachIndexed{
-            index, function -> item { IdeaGridItem(viewModel = IdeaViewModel()) }
+        if(ideas != null){
+            ideas.forEachIndexed {
+                index, function -> item { ideaCreator(function!!, navController) }
+            }
         }
-        }
-
-
     }
 
+}
 
 @Composable
-fun folderCreator(ideas: List<Idea>?){
+fun folderCreator(folder: Folder){
+    Column(
+        modifier = Modifier.size(100.dp)
+    ) {
+        IconButton(onClick = { /*TODO Opdater så der åbnes til folderen*/ }) {
+            Icon(imageVector = Icons.Default.MailOutline, contentDescription = "Folder", modifier = Modifier.size(80.dp))
+        }
+        Text(text = folder.title, modifier = Modifier.align(Alignment.CenterHorizontally))
+    }
+}
+
+@Composable
+fun ideaCreator(idea: Idea, navController: NavController){
+    Column(
+        modifier = Modifier.size(100.dp)
+    ){
+        IconButton(onClick = { navController.navigate(Screen.FrontPageScreen.route /* skal ændres til ideaPage */) }) {
+            Icon(imageVector = Icons.Default.Menu, contentDescription = "Idea", modifier = Modifier.size(80.dp))
+        }
+        Text(text = idea.title, modifier = Modifier.align(Alignment.CenterHorizontally))
+    }
+}
+
+@Composable
+fun BottomBar(){
+    BottomAppBar(modifier = Modifier.height(65.dp), cutoutShape = CircleShape,) {
+        BottomNavigation() {
+            BottomNavigationItem(
+                icon = { Icon(imageVector = Icons.Default.Menu, "") },
+                label = { Text(text = "Menu") },
+                selected = false,
+                onClick = {})
+            BottomNavigationItem(
+                icon = { Icon(imageVector = Icons.Default.Search, "") },
+                label = { Text(text = "Søg") },
+                selected = false,
+                onClick = {})
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+@Composable
+fun folderCreator2(ideas: List<Idea>?){
     Box(modifier = Modifier
         .size(100.dp)
         .clip(RoundedCornerShape(20.dp))
@@ -201,39 +254,8 @@ fun folderCreator(ideas: List<Idea>?){
     }
 }
 
-@Composable
-fun boxCreator(color: Color) {
-    Box(modifier = Modifier
-        .size(100.dp)
-        .background(color)) {
-        Button(onClick = { Log.d("HIHIH", "HOHOOH") }) {
 
-        }
-    }
-
-}
-
-@Composable
-fun BottomBar(){
-    BottomAppBar(modifier = Modifier.height(65.dp), cutoutShape = CircleShape,) {
-        BottomNavigation() {
-            BottomNavigationItem(
-                icon = { Icon(imageVector = Icons.Default.Menu, "") },
-                label = { Text(text = "Menu") },
-                selected = false,
-                onClick = {})
-            BottomNavigationItem(
-                icon = { Icon(imageVector = Icons.Default.Search, "") },
-                label = { Text(text = "Søg") },
-                selected = false,
-                onClick = {})
-        }
-    }
-}
-
-
-
-
+*/
 
 @Preview(showBackground = true)
 @Composable

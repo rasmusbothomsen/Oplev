@@ -7,6 +7,8 @@ import android.icu.text.CaseMap.Title
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import com.example.oplev.Model.Folder
+import com.example.oplev.Model.Idea
 import com.example.oplev.Model.Journey
 import com.example.oplev.Model.States
 import com.example.oplev.data.dataService.JourneyDataService
@@ -21,12 +23,23 @@ class JourneyViewModel(val journeyDataService: JourneyDataService, application: 
     val state: State<States> = _state
     var chosenJourney = state.value.chosenJourneyState
 
+
     fun getJourneyTitle(): String{
 
         chosenJourney?.title.let {
             return it!!
         }
         return ""
+    }
+
+    fun getFolders(): List<Folder>{
+
+        return emptyList()
+    }
+
+    fun getIdeas(): List<Idea>{
+
+        return emptyList()
     }
 
 
