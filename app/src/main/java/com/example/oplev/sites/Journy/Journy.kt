@@ -1,5 +1,6 @@
 package com.example.oplev.sites.Journy
 
+import android.app.Activity
 import android.media.Image
 import android.util.Log
 import androidx.compose.foundation.*
@@ -28,6 +29,7 @@ import com.example.oplev.R
 import androidx.compose.material.Text
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalContext
 import com.example.oplev.Model.Idea
 import com.example.oplev.ViewModel.IdeaViewModel
 import com.example.oplev.sites.*
@@ -35,22 +37,30 @@ import com.example.oplev.sites.*
 import com.example.oplev.ViewModel.JourneyViewModel
 import com.example.oplev.sites.Idea.IdeaGridItem
 import com.example.oplev.ui.theme.OplevTheme
+import kotlinx.coroutines.runBlocking
 
 // make an alias
 typealias ComposableFun = @Composable () -> Unit
 
 
 @Composable
-fun JourneyScreen(journeyViewModel: JourneyViewModel, modifier: Modifier = Modifier) {
+fun JourneyScreen(journeyViewModel: JourneyViewModel) {
+    val context = LocalContext.current
+    val activity = LocalContext.current as Activity
 
     Scaffold(
-        topBar = {TopBar(title = "Velkommen {User}")},
+        topBar = {
+            var userName = ""
+            runBlocking {
+                userName = journeyViewModel.getUserName(activity, context)
+            }
+            com.example.oplev.sites.TopBar("Velkommen $userName")},
         content = {
             Column(modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
             ) {
-                imageAndText(text = journeyViewModel.journeyTitle(), image = null, journeyViewModel = journeyViewModel)
+                //imageAndText(text = journeyViewModel.getJourneyTitle(), image = null, journeyViewModel = journeyViewModel)
                 gridLazytest()
             }
                 /* HER SKAL LAVES MATRIX AF ROW/COLUMN TIL IDEAS*/
@@ -90,27 +100,13 @@ fun imageAndText(
                 .background(Color.Yellow)
                 .fillMaxWidth()
         ) {
-            Text(
-                text = journeyViewModel.journeyTitle(),
+            /*Text(
+                text = journeyViewModel.getJourneyTitle(),
                 fontSize = 17.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
-            )
+            )*/
          }
-        }
-    }
-}
-
-@Composable
-fun dynamicColumn(itemsInColumn: List<ComposableFun>){
-
-    LazyColumn(contentPadding = PaddingValues(horizontal = 8.dp)) {
-
-        item {
-            for (x in 0 until (itemsInColumn.size)){
-                Spacer(modifier = Modifier.height(5.dp))
-                itemsInColumn[x]()
-            }
         }
     }
 }
@@ -138,7 +134,6 @@ fun gridLazytest(){
         itemsInColumn.forEachIndexed{
             index, function ->  item { folderCreator(ideas = null) }
         }
-
 
         itemsInColumn.forEachIndexed{
             index, function -> item { IdeaGridItem(viewModel = IdeaViewModel()) }
@@ -217,42 +212,6 @@ fun boxCreator(color: Color) {
     }
 
 }
-@Composable
-fun folders(journeyViewModel: JourneyViewModel){
-
-}
-
-@Composable
-fun ideas(journeyViewModel: JourneyViewModel) {
-
-}
-
-
-@Composable
-fun TopBar(title: String) {
-    TopAppBar( modifier = Modifier.height(65.dp),
-        title = { Text(title, textAlign = TextAlign.Center) },
-/*
-        navigationIcon = {
-            IconButton(onClick = {
-                TODO()
-            })
-            {
-                Icon(
-                    painter = painterResource(id = R.drawable.oplev72dpi),
-                    contentDescription = ""
-                )
-
-
-            }
-        }
-        */
-
-
-
-        backgroundColor = Color.LightGray
-    )
-}
 
 @Composable
 fun BottomBar(){
@@ -271,6 +230,10 @@ fun BottomBar(){
         }
     }
 }
+
+
+
+
 
 @Preview(showBackground = true)
 @Composable

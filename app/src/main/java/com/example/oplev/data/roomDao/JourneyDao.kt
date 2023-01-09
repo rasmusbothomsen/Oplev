@@ -10,5 +10,4 @@ interface JourneyDao:BaseDao<Journey> {
     @Query("select * from Journey")
     fun getAll(): List<Journey>
 
-
 }

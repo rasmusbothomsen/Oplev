@@ -3,7 +3,6 @@ package com.example.oplev.Model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.firebase.auth.FirebaseUser
-import java.util.UUID
 
 @Entity(tableName = "ideas" , primaryKeys =["id","ownerId"] )
 data class Idea(
@@ -64,7 +63,8 @@ data class States(
     var dialogState : Boolean = false,
     var nameEditable : Boolean = false,
     var phoneNumEditable : Boolean = false,
-    var forgotpassworddialog : Boolean = false
+    var forgotpassworddialog : Boolean = false,
+    var chosenJourneyState: Journey? = null
 )
 
 

@@ -1,10 +1,7 @@
 package com.example.oplev.data.dataService
 
-import android.app.Activity
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.ui.platform.LocalContext
+import com.example.oplev.MainActivity
 import com.example.oplev.Model.Journey
 import com.example.oplev.ViewModel.AuthViewModel
 import com.example.oplev.data.AppDatabase
@@ -41,8 +38,6 @@ class JourneyDataService(
 
         super.insertRoom(item)
     }
-
-
 
 
 }

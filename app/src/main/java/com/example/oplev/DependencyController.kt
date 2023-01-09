@@ -29,11 +29,16 @@ class DependencyController() {
         val queueDataService = QueueDataService(appDb)
         val journeyDataService = JourneyDataService(appDb.JourneyDao(),queueDataService)
         val categoryDataService = CategoryDataService(appDb.CategoryDao())
-        return CreateJourneyViewModel(journeyDataService,categoryDataService,application)
+        return CreateJourneyViewModel(journeyDataService, categoryDataService, application)
 
     }
-    fun intiJourneyViewModel():JourneyViewModel{
-        return JourneyViewModel()
+    fun intiJourneyViewModel(context: android.content.Context, application: Application):JourneyViewModel{
+        val appDb = AppDatabase.getInstance(context)
+        val queueDataService = QueueDataService(appDb)
+        val journeyDataService = JourneyDataService(appDb.JourneyDao(),queueDataService)
+
+
+        return JourneyViewModel(journeyDataService, application)
     }
 
     fun initAuthViewModel(context: android.content.Context):AuthViewModel{
