@@ -45,7 +45,7 @@ fun NavController(application: Application) {
 
     NavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
         composable(route = Screen.FrontPageScreen.route) {
-            TotalView(frontpageViewModel = dependencyController.initFrontPageViewModel(context), navController)
+            TotalView(frontpageViewModel = dependencyController.initFrontPageViewModel(context,application), navController)
         }
         composable(route = Screen.CreateJourneyScreen.route) {
             createJourneyComp(createJourneyViewModel = dependencyController.initCreateJourneyViewModel(context,application), navController )

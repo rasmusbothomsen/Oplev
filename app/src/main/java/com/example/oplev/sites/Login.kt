@@ -127,7 +127,8 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
                     hideController()
                     useController = false
                     player = exoPlayer
-                }},
+                }
+            },
             modifier = Modifier.fillMaxSize()
 
         )
@@ -254,11 +255,13 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
 
             Button(
                 onClick = {
-                    runBlocking {
-                        authViewModel.signIn(email, password, context, activity)
-                    }
-                    if (FirebaseAuth.getInstance().currentUser != null) {
-                        navController.navigate(Screen.FrontPageScreen.route)
+                    if (!email.isEmpty() && !password.isEmpty()) {
+                        runBlocking {
+                            authViewModel.signIn(email, password, context, activity)
+                        }
+                        if (FirebaseAuth.getInstance().currentUser != null) {
+                            navController.navigate(Screen.FrontPageScreen.route)
+                        }
                     }
                 }, shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(backgroundColor = logotextcol),
@@ -273,9 +276,6 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
             TextButton(
                 onClick = {
                     navController.navigate(Screen.SignUpScreen.route)
-                    scope.launch {
-                        scaffoldState.drawerState.open()
-                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -311,44 +311,3 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
         }
     }
 }
-
-@Composable
-fun VideoView() {
-    // Fetching the Local Context
-    val mContext = LocalContext.current
-
-    // Declaring a string value
-    // that stores raw video url
-    val videoUri = "https://storage.googleapis.com/exoplayer-test-media-0/BigBuckBunny_320x180.mp4"
-
-    val mediaItem = MediaItem.fromUri(videoUri)
-
-    val context = LocalContext.current
-
-    val exoPlayer = ExoPlayer.Builder(LocalContext.current)
-        .build()
-        .also { exoPlayer ->
-            val mediaItem = MediaItem.Builder()
-                .setUri(videoUri)
-                .build()
-            exoPlayer.setMediaItem(mediaItem)
-            exoPlayer.prepare()
-            exoPlayer.playWhenReady = true
-            exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
-            exoPlayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
-        }
-
-    DisposableEffect(
-        AndroidView(factory = {
-            StyledPlayerView(context).apply {
-                hideController()
-                useController = false
-                player = exoPlayer
-            }
-        })
-    ) {
-        onDispose { exoPlayer.release() }
-    }
-}
-
-
