@@ -53,10 +53,6 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
 
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-    val bitmap = remember { mutableStateOf<Bitmap?>(null) }
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()){ uri: Uri? -> imageUri = uri}
-
     Scaffold(
         topBar = { var userName = ""
             runBlocking {
@@ -68,7 +64,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                   Column(modifier = Modifier
                       .fillMaxSize()
                       .verticalScroll(rememberScrollState())) {
-                      topScreenLayout()
+                      topScreenLayout(context)
                       inputTextfield("Destination",80,imageVector = Icons.Default.LocationOn, onValueChange = {
                           Title = it
                       }, Title)
@@ -180,7 +176,11 @@ fun datePicker(){
 }
 
 @Composable
-fun topScreenLayout(){
+fun topScreenLayout(context: Context){
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val bitmap = remember { mutableStateOf<Bitmap?>(null) }
+    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()){ uri: Uri? -> imageUri = uri}
+
     Box(modifier = Modifier.height(120.dp)){
         Column(
             modifier = Modifier
@@ -189,16 +189,27 @@ fun topScreenLayout(){
 
         )
         {
-            Image(
-                painter = painterResource(id = R.drawable.img_finland),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                contentDescription = "PlaceholderImage",
-                contentScale = ContentScale.FillBounds
-            )
+            Image(painter = painterResource(id = R.drawable.img_finland), contentDescription = "Placeholder")
+            imageUri?.let{
+                if (Build.VERSION.SDK_INT < 28){
+                    bitmap.value = MediaStore.Images
+                        .Media.getBitmap(context.contentResolver, it)
+                } else {
+                    val source = ImageDecoder.createSource(context.contentResolver, it)
+                    bitmap.value = ImageDecoder.decodeBitmap(source)
+                }
+
+                //BTM SKAL GEMMES I EN VARIABEL SOM KAN SMIDES IND I DB!
+                bitmap.value?.let{ btm ->
+                    Image(bitmap = btm.asImageBitmap(), contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight())
+                }
+            }
         }
-        IconButton(onClick = { /*TODO*/ },  modifier = Modifier
+        IconButton(onClick = { launcher.launch("image/*") },  modifier = Modifier
             .align(Alignment.BottomEnd)) {
             Icon(imageVector = Icons.Default.AddCircle, contentDescription ="",
                 tint=Color.White
@@ -207,25 +218,6 @@ fun topScreenLayout(){
     }
 }
 
-@Composable
-fun addImage(imageUri: Uri, bitmap: MutableState<Bitmap?>, context: Context){
-    imageUri?.let{
-        if (Build.VERSION.SDK_INT < 28){
-            bitmap.value = MediaStore.Images
-                .Media.getBitmap(context.contentResolver, it)
-        } else {
-            val source = ImageDecoder.createSource(context.contentResolver, it)
-            bitmap.value = ImageDecoder.decodeBitmap(source)
-        }
-
-        //BTM SKAL GEMMES I EN VARIABEL SOM KAN SMIDES IND I DB!
-        bitmap.value?.let{ btm ->
-            Image(bitmap = btm.asImageBitmap(), contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.clip(RoundedCornerShape(15.dp)))
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

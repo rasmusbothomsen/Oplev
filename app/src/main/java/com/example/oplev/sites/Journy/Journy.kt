@@ -60,7 +60,7 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel) {
                 .fillMaxHeight()
                 .fillMaxWidth()
             ) {
-                //imageAndText(text = journeyViewModel.getJourneyTitle(), image = null, journeyViewModel = journeyViewModel)
+                imageAndText(text = journeyViewModel.getJourneyTitle(), image = null, journeyViewModel = journeyViewModel)
                 gridLazytest()
             }
                 /* HER SKAL LAVES MATRIX AF ROW/COLUMN TIL IDEAS*/
@@ -100,12 +100,12 @@ fun imageAndText(
                 .background(Color.Yellow)
                 .fillMaxWidth()
         ) {
-            /*Text(
+            Text(
                 text = journeyViewModel.getJourneyTitle(),
                 fontSize = 17.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
-            )*/
+            )
          }
         }
     }

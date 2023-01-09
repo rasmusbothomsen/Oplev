@@ -19,11 +19,14 @@ class JourneyViewModel(val journeyDataService: JourneyDataService, application: 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val _state = mutableStateOf(States())
     val state: State<States> = _state
+    var chosenJourney = state.value.chosenJourneyState
 
-    fun getJourneyTitle(): String?{
-        val journeyTitle = state.value.chosenJourneyState?.title
+    fun getJourneyTitle(): String{
 
-        return journeyTitle
+        chosenJourney?.title.let {
+            return it!!
+        }
+        return ""
     }
 
 
