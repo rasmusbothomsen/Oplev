@@ -64,7 +64,8 @@ data class States(
     var nameEditable : Boolean = false,
     var phoneNumEditable : Boolean = false,
     var forgotpassworddialog : Boolean = false,
-    var chosenJourneyState: Journey? = null
+    var chosenJourneyState: Journey? = null,
+    var chosenIdeaState: Idea? = null
 )
 
 

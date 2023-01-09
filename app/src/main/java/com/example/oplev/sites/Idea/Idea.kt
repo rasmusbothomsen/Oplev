@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.example.oplev.R
 import com.example.oplev.ViewModel.IdeaViewModel
 import com.example.oplev.sites.Journy.BottomBar
-import com.example.oplev.sites.Journy.TopBar
+import com.example.oplev.sites.TopBar
 import com.example.oplev.ui.theme.OplevBlue
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.Lightbulb
