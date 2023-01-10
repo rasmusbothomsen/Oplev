@@ -4,11 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.firebase.auth.FirebaseUser
 
-@Entity(tableName = "ideas" , primaryKeys =["id","ownerId"] )
+@Entity(tableName = "ideas" )
 data class Idea(
-    val id:Long,
-    val ownerId:Long,
-    var folderId:Int,
+    @PrimaryKey val id:String,
+    var folderId:String,
     var title: String,
     var description: String,
     var link: String?,
@@ -33,7 +32,7 @@ data class Journey(
     @PrimaryKey val id:String,
     var tag: String,
     var image: String?,
-    val categoryID: Int,
+    val categoryID: String,
     var date: String?,
     var description: String,
     var title: String,
