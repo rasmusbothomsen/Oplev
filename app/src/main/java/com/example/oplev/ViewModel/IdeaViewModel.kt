@@ -1,6 +1,7 @@
 package com.example.oplev.ViewModel
 
 import android.app.Application
+import android.media.Image
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import com.example.oplev.Model.Idea
@@ -13,10 +14,40 @@ class IdeaViewModel (val dataService: IdeaDataService, application: Application)
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val _state = mutableStateOf(States())
     val state: State<States> = _state
+    var idea = state.value.chosenIdeaState
 
-    fun getIdeaTitle(): String?{
-        val ideaTitle = state.value.chosenIdeaState?.title
-
-        return ideaTitle
+    fun getIdeaTitle(): String{
+        idea?.title.let {
+            return it!!
+        }
+        return ""
     }
+    fun getIdeaDescription(): String{
+        idea?.description.let {
+            return it!!
+        }
+        return ""
+    }
+    fun getIdeaLink(): String{
+        idea?.link.let {
+            return it!!
+        }
+        return ""
+    }
+    fun getIdeaImage(): String{
+        idea?.image.let {
+            return it!!
+        }
+        return ""
+    }
+    fun getIdeaDate(): String{
+        idea?.date.let {
+            return it!!
+        }
+        return ""
+    }
+
+
+
+
 }

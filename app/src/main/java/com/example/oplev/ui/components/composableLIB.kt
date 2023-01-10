@@ -1,6 +1,9 @@
 package com.example.oplev.ui.components
 
 import android.app.Application
+import android.app.DatePickerDialog
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -20,6 +23,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
@@ -32,8 +36,12 @@ import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.JourneyViewModel
 import com.example.oplev.sites.*
+import com.example.oplev.sites.Idea.IdeaScreen
 import com.example.oplev.sites.Journy.JourneyScreen
 import com.example.oplev.sites.Journy.createJourneyComp
+import java.time.LocalDate
+import java.time.LocalTime
+import java.util.*
 
 
 @Composable
@@ -62,6 +70,11 @@ fun NavController(application: Application) {
         composable(route = Screen.ProfileScreen.route){
             ProfileView(authViewModel = dependencyController.initAuthViewModel(context, application), navController = navController)
         }
+       /*composable(route = Screen.IdeaScreen.route){
+               IdeaScreen(ideaViewModel = dependencyController.initIdeaViewModel(context,application), navController = navController)
+        }
+
+        */
     }
 
 
@@ -231,4 +244,26 @@ fun ExposedDropdownMenu(){
         }
     }
 
+}
+
+@Composable
+fun DateandTimePicker(){
+    var date by remember { mutableStateOf(LocalDate.now()) }
+    var time by remember { mutableStateOf(LocalTime.now()) }
+    Column {
+        Text(text = "Date: $date")
+        Text(text = "Time: $time")
+        Button(onClick = { date = LocalDate.now() }) {
+            Text(text = "Pick Date")
+        }
+        Button(onClick = { time = LocalTime.now() }) {
+            Text(text = "Pick Time")
+        }
+    }
+}
+
+@Preview
+@Composable
+fun DateandTimePickerPreview() {
+    DateandTimePicker()
 }

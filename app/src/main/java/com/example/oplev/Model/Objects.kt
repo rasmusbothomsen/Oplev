@@ -11,7 +11,9 @@ data class Idea(
     var title: String,
     var description: String,
     var link: String?,
-    var image: String?)
+    var image: String?,
+    var date: String,
+)
 
 @Entity
 data class Folder(
