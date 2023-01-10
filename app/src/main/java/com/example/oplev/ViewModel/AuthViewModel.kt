@@ -34,7 +34,20 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
     val state: State<States> = _state
 
 
-        fun createNewUser(firstname: String, lastname: String, email: String, password: String, baseContext: Context, activity: Activity){
+        fun createNewUser(fullname: String, email: String, password: String, baseContext: Context, activity: Activity){
+            var str = fullname
+            var delimiter1 = " "
+
+            val parts = str.split(delimiter1)
+            var firstname = ""
+            var lastname = ""
+
+            if (parts.size > 1){
+                firstname = parts[0]
+                for (i in 1..parts.size){
+                    lastname += i
+                }
+            }
 
             var success = false
 
