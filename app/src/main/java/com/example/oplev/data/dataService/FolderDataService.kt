@@ -6,6 +6,7 @@ import com.example.oplev.data.collections.FolderCollection
 import com.example.oplev.data.dto.FolderDto
 
 class FolderDataService {
+    /*
     fun roomDataLink(journeyId:Int): List<FolderDto> {
         var folderDao = MainActivity.database.FolderDao()
         val folderCollection = FolderCollection()
@@ -24,4 +25,6 @@ class FolderDataService {
         }
         return emptyList()
     }
+
+     */
 }

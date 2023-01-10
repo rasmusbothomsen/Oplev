@@ -17,7 +17,7 @@ interface CategoryDao:BaseDao<Category> {
     fun getJourneysRelatedToCategory(id:String): List<Journey>
 
     @Query("select id from category where title like :Title")
-    fun getCategoryId(Title: String): Int
+    fun getCategoryId(Title: String): String
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addCategory(category: Category)

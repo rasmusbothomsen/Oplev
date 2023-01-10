@@ -20,14 +20,14 @@ import java.util.*
 class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val categoryDataService:CategoryDataService, application: Application): BaseViewModel<Journey>(application) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    fun createNewJourney( tag: String, Image: String?, CategoryID: Int, Date: String?, Description: String, Title: String){
+    fun createNewJourney( tag: String, Image: String?, CategoryID: String, Date: String?, Description: String, Title: String){
         val tempJourney = Journey(UUID.randomUUID().toString(), tag, Image, CategoryID, Date, Description, Title)
         viewModelScope.launch(Dispatchers.IO) {
             journeydataService.insertRoom(tempJourney)
         }
     }
 
-    fun getCategoryIdFromTitle(Title: String): Int{
+    fun getCategoryIdFromTitle(Title: String): String{
         val categoryID = categoryDataService.getCategoryId(Title)
 
         return categoryID

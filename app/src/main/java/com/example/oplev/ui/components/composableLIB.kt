@@ -28,6 +28,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.oplev.DependencyController
+import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.JourneyViewModel
@@ -35,12 +36,17 @@ import com.example.oplev.sites.*
 import com.example.oplev.sites.Journy.JourneyScreen
 import com.example.oplev.sites.Journy.createJourneyComp
 
+data class sharedUiState(
+    var choosenJourney:Journey? = null
+)
 
 @Composable
 fun NavController(application: Application) {
     val navController = rememberNavController()
     var dependencyController = DependencyController()
     var context = LocalContext.current.applicationContext as android.content.Context
+    var uiState = sharedUiState()
+
 
 
     NavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
@@ -50,8 +56,9 @@ fun NavController(application: Application) {
         composable(route = Screen.CreateJourneyScreen.route) {
             createJourneyComp(createJourneyViewModel = dependencyController.initCreateJourneyViewModel(context,application), navController )
         }
-        composable(route = Screen.JourneyScreen.route){
-            JourneyScreen(journeyViewModel = dependencyController.intiJourneyViewModel(context, application), navController)
+        composable(route = Screen.JourneyScreen.route+"/{id}"){navBackStack ->
+            val journeyID = navBackStack.arguments?.getString("id")
+            JourneyScreen(journeyViewModel = dependencyController.intiJourneyViewModel(context, application,journeyID!!), navController)
         }
         composable(route = Screen.SignUpScreen.route){
             CreateUserView(authViewModel = dependencyController.initAuthViewModel(context, application) , navController = navController)

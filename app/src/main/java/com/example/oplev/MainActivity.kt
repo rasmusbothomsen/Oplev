@@ -24,7 +24,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         runBlocking{
             context = applicationContext
-            database = Room.databaseBuilder(context,AppDatabase::class.java,"oplev_database").allowMainThreadQueries().build()
+            database = AppDatabase.getInstance(context)
+            AppDatabase.CreateDummyData()
         }
         setContent {
             com.example.oplev.ui.components.NavController(application)

@@ -3,23 +3,18 @@ package com.example.oplev.ViewModel
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.viewModelScope
-import com.example.oplev.Model.Category
-import com.example.oplev.Model.States
-import com.example.oplev.Model.UserInfo
+import androidx.core.os.bundleOf
+import com.example.oplev.Model.*
 import com.example.oplev.data.dataService.CategoryDataService
 import com.example.oplev.data.dto.CategoryDto
-import com.example.oplev.data.roomDao.CategoryDao
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.util.*
 
 class FrontPageViewModel(application: Application, val categoryDataService: CategoryDataService):BaseViewModel<Category>(
     application
@@ -36,6 +31,9 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
         var categorylist = categoryDataService.getCategoryDto()
 
         return categorylist
+    }
+    fun createNavBundleJourney(journey: Journey): Bundle {
+        return bundleOf("journeyId" to journey.id)
     }
 
 

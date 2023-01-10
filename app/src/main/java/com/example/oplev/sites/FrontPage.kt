@@ -271,7 +271,7 @@ fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController,
         for (i in 0..max) {
             Spacer(modifier = Modifier
                 .height(15.dp))
-            CategoryRow(categories[i], navController = navController)
+            CategoryRow(categories[i], navController = navController,frontPageViewModel)
         }
     }
     if(state.dialogState) {
@@ -320,7 +320,7 @@ fun NewCategoryDialog(frontPageViewModel: FrontPageViewModel){
 }
 
 @Composable
-fun CategoryRow(category: CategoryDto, navController: NavController) {
+fun CategoryRow(category: CategoryDto, navController: NavController, frontPageViewModel: FrontPageViewModel) {
     val max = category.journeys.size-1
     Text(
         text = category.baseObject?.title.toString(),
@@ -334,7 +334,7 @@ fun CategoryRow(category: CategoryDto, navController: NavController) {
         .horizontalScroll(rememberScrollState()), verticalAlignment = Alignment.Bottom
     ) {
         for (i in 0..max) {
-            JourneyCard(category.journeys[i], navController = navController)
+            JourneyCard(category.journeys[i], navController = navController,frontPageViewModel)
         }
         if (category.journeys.size < 1){
             Text(text = "Ingen rejser oprettet.", color = Color.LightGray)
@@ -343,7 +343,7 @@ fun CategoryRow(category: CategoryDto, navController: NavController) {
 }
 
 @Composable
-fun JourneyCard(journey: Journey, navController: NavController) {
+fun JourneyCard(journey: Journey, navController: NavController,frontPageViewModel: FrontPageViewModel) {
     val img = journey.image
     val context = LocalContext.current
     val drawableId = remember(img) {
@@ -356,7 +356,8 @@ fun JourneyCard(journey: Journey, navController: NavController) {
 
         Card(modifier = Modifier
             .clickable {
-                navController.navigate(Screen.JourneyScreen.route)
+                val journeyId = journey.id
+                navController.navigate(Screen.JourneyScreen.route+"/$journeyId")
             }
             /** Tror at nedstående skal ændres. Vi vil gerne have default paddings på hele projektet. */
             .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {

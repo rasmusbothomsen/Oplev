@@ -10,7 +10,7 @@ import com.example.oplev.data.roomDao.IdeaDao
 
 class FolderCollection(
 
-){
+){/*
     var iterations = 0
 
     fun folderDtoFromMap(folderMap: HashMap<Folder, Int>, parentFolder:Folder): FolderDto {
@@ -37,4 +37,5 @@ class FolderCollection(
         return ideaDtos
 
     }
+    */
 }

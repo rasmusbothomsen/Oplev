@@ -53,5 +53,9 @@ class JourneyDataService(
         return dao.getIdeasFromFolder(id)
     }
 
+    fun findSingle(id:String):Journey{
+        return dao.findSingle(id)
+    }
+
 
 }

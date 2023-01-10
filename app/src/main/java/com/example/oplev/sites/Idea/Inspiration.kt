@@ -92,7 +92,7 @@ fun LinksScreen() {
 }
 
 @Composable
-fun PictureItem(viewModel: IdeaViewModel) {
+fun PictureItem(/*viewModel: IdeaViewModel*/) {
 
     Box(
         modifier = Modifier
@@ -138,7 +138,7 @@ fun PictureScreen() {
             ){
 
                 itemsInColumn.forEachIndexed{
-                        index, function -> item { PictureItem(viewModel = IdeaViewModel()) }
+                        index, function -> item { PictureItem(/*viewModel = IdeaViewModel()*/) }
                 }
             }
 

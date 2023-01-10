@@ -21,4 +21,7 @@ interface JourneyDao:BaseDao<Journey> {
     @Query("select* from ideas where folderId == :id")
     fun getIdeasFromFolder(id: String):List<Idea>
 
+    @Query("select * from Journey where id == :id")
+    fun findSingle(id:String):Journey
+
 }

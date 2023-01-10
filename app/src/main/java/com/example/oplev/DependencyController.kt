@@ -1,6 +1,7 @@
 package com.example.oplev
 
 import android.app.Application
+import com.example.oplev.Model.Journey
 import com.example.oplev.ViewModel.AuthViewModel
 import com.example.oplev.ViewModel.CreateJourneyViewModel
 import com.example.oplev.ViewModel.FrontPageViewModel
@@ -34,11 +35,11 @@ class DependencyController() {
         return CreateJourneyViewModel(journeyDataService, categoryDataService, application)
 
     }
-    fun intiJourneyViewModel(context: android.content.Context, application: Application):JourneyViewModel{
+    fun intiJourneyViewModel(context: android.content.Context, application: Application,journeyId: String):JourneyViewModel{
         val appDb = AppDatabase.getInstance(context)
         val queueDataService = QueueDataService(appDb)
         val journeyDataService = JourneyDataService(appDb.JourneyDao(),queueDataService)
-        return JourneyViewModel(journeyDataService, application)
+        return JourneyViewModel(journeyDataService, application,journeyId)
     }
 
     fun initAuthViewModel(context: android.content.Context, application: Application):AuthViewModel{

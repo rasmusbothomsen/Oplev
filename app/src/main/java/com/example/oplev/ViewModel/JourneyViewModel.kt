@@ -20,26 +20,22 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
 
-data class JourneyUiState(
-    val openFolder:Folder? = null,
-    val folders:List<Folder> = emptyList(),
-    val ideas:List<Idea> = emptyList()
 
-)
-
-class JourneyViewModel(val journeyDataService: JourneyDataService, application: Application): BaseViewModel<Journey>(application) {
+class JourneyViewModel(val journeyDataService: JourneyDataService, application: Application, journeyID: String): BaseViewModel<Journey>(application) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val _state = MutableStateFlow(States())
     private val _uiState = MutableStateFlow(JourneyUiState())
+    private val currentJourney:Journey
 
     val uiState:StateFlow<JourneyUiState> = _uiState.asStateFlow()
     val state: StateFlow<States> = _state.asStateFlow()
 
 
     init {
+        currentJourney = journeyDataService.findSingle(journeyID)
         _uiState.update { currentState ->
             currentState.copy(
-                openFolder = journeyDataService.getAbseluteParentFolder(state.value.chosenJourneyState!!.id),
+                openFolder = journeyDataService.getAbseluteParentFolder(currentJourney.id),
             )
         }
         updateOpenFolder()
@@ -69,7 +65,7 @@ class JourneyViewModel(val journeyDataService: JourneyDataService, application: 
 
     fun getJourneyTitle(): String{
 
-        state.value.chosenJourneyState?.title.let {
+        currentJourney.title.let {
             return it!!
         }
         return ""
@@ -97,4 +93,11 @@ class JourneyViewModel(val journeyDataService: JourneyDataService, application: 
     }
 
 
+
 }
+data class JourneyUiState(
+    val openFolder:Folder? = null,
+    val folders:List<Folder> = emptyList(),
+    val ideas:List<Idea> = emptyList()
+
+)
