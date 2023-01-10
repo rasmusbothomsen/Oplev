@@ -21,7 +21,12 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     fun createNewJourney( tag: String, Image: String?, CategoryID: String, Date: String?, Description: String, Title: String){
-        val tempJourney = Journey(UUID.randomUUID().toString(), tag, Image, CategoryID, Date, Description, Title)
+        var img = Image
+        if (img == null){
+            // default billede her
+            img = "img_paris"
+        }
+        val tempJourney = Journey(UUID.randomUUID().toString(), tag, img, CategoryID, Date, Description, Title)
         viewModelScope.launch(Dispatchers.IO) {
             journeydataService.insertRoom(tempJourney)
         }
