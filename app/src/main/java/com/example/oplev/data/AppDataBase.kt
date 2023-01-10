@@ -8,7 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.oplev.Model.*
 import com.example.oplev.data.roomDao.*
 
-@Database(entities = [Category::class, Journey::class, Folder::class, Idea::class, UserInfo::class,QueueItem::class], version = 3)
+@Database(entities = [Category::class, Journey::class, Folder::class, Idea::class, UserInfo::class,QueueItem::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun CategoryDao(): CategoryDao
     abstract fun JourneyDao(): JourneyDao
@@ -26,7 +26,7 @@ abstract class AppDatabase : RoomDatabase() {
             if (instance == null)
                 instance = Room.databaseBuilder(
                     ctx.applicationContext, AppDatabase::class.java,
-                    "note_database"
+                    "oplev_DataBase"
                 ).allowMainThreadQueries()
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallback)
