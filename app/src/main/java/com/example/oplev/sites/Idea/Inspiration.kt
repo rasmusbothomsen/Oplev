@@ -41,7 +41,7 @@ fun InspirationBottomBar(){
                 icon = { Icon(imageVector = LineAwesomeIcons.PenSolid, "") },
                 label = { Text(text = "Noter") },
                 selected = false,
-                onClick = {})
+                onClick = {  })
             BottomNavigationItem(
                 icon = { Icon(imageVector = LineAwesomeIcons.LinkSolid, "") },
                 label = { Text(text = "Links") },
@@ -69,15 +69,19 @@ fun InspirationScreen() {
 }
 
 @Composable
-fun TextScreen() {
+fun NotesScreen() {
     Scaffold(
         topBar = { TopBar(title = "Noter") },
         content = {
-            inputTextfield(label = "", height = 500, imageVector = LineAwesomeIcons.PenSolid, onValueChange = {}, input = "")
+            Column(
+                modifier = Modifier
+                    .padding(5.dp)
+            ) {
+                inputTextfield(label = "", height = 700, imageVector = LineAwesomeIcons.PenSolid, onValueChange = {}, input = "")
 
+            }
         },
         bottomBar = { InspirationBottomBar() } )
-
 }
 
 @Composable
@@ -92,7 +96,7 @@ fun LinksScreen() {
 }
 
 @Composable
-fun PictureItem(/*viewModel: IdeaViewModel*/) {
+fun PictureItem() {
 
     Box(
         modifier = Modifier
@@ -130,16 +134,11 @@ fun PictureScreen() {
                 }
             }
 
-            val itemsInColumn = listOf(test,test,test)
-
             LazyVerticalGrid(cells = GridCells.Fixed(3),horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(24.dp)
             ){
 
-                itemsInColumn.forEachIndexed{
-                        index, function -> item { PictureItem(/*viewModel = IdeaViewModel()*/) }
-                }
             }
 
         },
@@ -152,5 +151,4 @@ fun PictureScreen() {
 @Preview
 @Composable
 fun InspirationScreenPreview() {
-PictureScreen()
 }
