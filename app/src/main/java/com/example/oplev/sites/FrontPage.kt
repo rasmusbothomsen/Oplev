@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -76,8 +77,8 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         painter = painterResource(id = R.drawable.oplev300dpi),
                         contentDescription = "Bare et logo",
                         modifier = Modifier
-                            .size(85.dp, 85.dp)
-                            .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                                .size(85.dp, 85.dp)
+                                .padding(0.dp, 0.dp, 0.dp, 0.dp)
                     )
                     Text(
                         text = "OPLEV Menu",
@@ -99,8 +100,8 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         imageVector = Icons.Default.AccountCircle,
                         contentDescription = "",
                         modifier = Modifier
-                            .size(45.dp, 45.dp)
-                            .padding(0.dp, 5.dp, 0.dp, 0.dp)
+                                .size(45.dp, 45.dp)
+                                .padding(0.dp, 5.dp, 0.dp, 0.dp)
                         , tint = Color.Cyan
                     )
 
@@ -120,8 +121,8 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         imageVector = Icons.Default.Warning,
                         contentDescription = "",
                         modifier = Modifier
-                            .size(45.dp, 45.dp)
-                            .padding(0.dp, 5.dp, 0.dp, 0.dp), tint = Color.Cyan
+                                .size(45.dp, 45.dp)
+                                .padding(0.dp, 5.dp, 0.dp, 0.dp), tint = Color.Cyan
                     )
 
                     TextButton(onClick = { /*TODO*/ }) {
@@ -138,8 +139,8 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         imageVector = Icons.Default.Settings,
                         contentDescription = "",
                         modifier = Modifier
-                            .size(45.dp, 45.dp)
-                            .padding(0.dp, 5.dp, 0.dp, 0.dp), tint = Color.Cyan
+                                .size(45.dp, 45.dp)
+                                .padding(0.dp, 5.dp, 0.dp, 0.dp), tint = Color.Cyan
                     )
 
                     TextButton(onClick = { /*TODO*/ }) {
@@ -155,9 +156,9 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = "",
                         modifier = Modifier
-                            .size(45.dp, 45.dp)
-                            .padding(0.dp, 5.dp, 0.dp, 0.dp)
-                            .rotate(90f),
+                                .size(45.dp, 45.dp)
+                                .padding(0.dp, 5.dp, 0.dp, 0.dp)
+                                .rotate(90f),
                         tint = Color.Cyan
                     )
                     TextButton(onClick = {
@@ -201,20 +202,24 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
             }
             TopBar("Velkommen $userName")
         },
-        content = { FrontPageColumn(frontpageViewModel.getCategories(), navController, frontpageViewModel, state) },
+        content = { paddingValues -> FrontPageColumn(frontpageViewModel.getCategories(), navController, frontpageViewModel, state) },
         bottomBar = { BottomBar(scope,scaffoldstate) },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
         floatingActionButton = {
                 Column() {
                     val alpha: Float by animateFloatAsState(if (state.fabExpanded) 315f else 0f)
+                    var x : Float = 0f
+                    var y : Float = 0f
 
                     if (state.fabExpanded) {
-                        Row() {
+                        Row(modifier = Modifier
+                                .graphicsLayer {
+                                    translationX = 90f
+                                    translationY = -180f}) {
                             FloatingActionButton(
                                 onClick = { frontpageViewModel.changeDialogVal() },
-                                modifier = Modifier.size(50.dp)
-                            ) {
+                                modifier = Modifier.size(50.dp)) {
                                 Icon(
                                     imageVector = Icons.Filled.Add,
                                     contentDescription = "",
@@ -225,7 +230,10 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                             }
                             Text(text = "Ny kategori")
                         }
-                        Row() {
+                        Row(modifier = Modifier.graphicsLayer {
+                                    translationX = 90f
+                                    translationY = -160f
+                                }) {
                             FloatingActionButton(onClick = {
                                 navController.navigate(Screen.CreateJourneyScreen.route)
                             }, modifier = Modifier.size(50.dp)) {
@@ -239,10 +247,19 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                             }
                             Text(text = "Ny Rejse")
                         }
+
+                        x = 60f
+                        y = -140f
                     }
 
                     FloatingActionButton(shape = CircleShape,
-                        modifier = Modifier.size(width = 75.dp, height = 75.dp),
+                        modifier = Modifier
+                                .size(width = 75.dp, height = 75.dp)
+                                .graphicsLayer {
+                                    translationX = x
+                                    translationY = y
+                                }
+                            ,
                         onClick = {
                             frontpageViewModel.expandFab()
                             //navController.navigate(Screen.CreateJourneyScreen.route)
@@ -251,8 +268,8 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                             imageVector = Icons.Filled.Add,
                             contentDescription = "",
                             modifier = Modifier
-                                .size(38.dp)
-                                .rotate(alpha),
+                                    .size(38.dp)
+                                    .rotate(alpha),
                             tint = Color.White
                         )
                     }
@@ -264,7 +281,8 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
 @Composable
 fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController, frontPageViewModel: FrontPageViewModel, state: States) {
     Column(modifier = Modifier
-        .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState())
+            .fillMaxSize()
     )
     {
         val max = categories.size-1
@@ -336,8 +354,8 @@ fun CategoryRow(category: CategoryDto, navController: NavController, frontPageVi
         for (i in 0..max) {
             JourneyCard(category.journeys[i], navController = navController,frontPageViewModel)
         }
-        if (category.journeys.size < 1){
-            Text(text = "Ingen rejser oprettet.", color = Color.LightGray)
+        if (category.journeys.size < 1) {
+                Text(text = "Ingen rejser oprettet", color = Color.LightGray, fontSize = 30.sp)
         }
     }
 }
@@ -355,17 +373,17 @@ fun JourneyCard(journey: Journey, navController: NavController,frontPageViewMode
     }
 
         Card(modifier = Modifier
-            .clickable {
-                val journeyId = journey.id
-                navController.navigate(Screen.JourneyScreen.route+"/$journeyId")
-            }
-            /** Tror at nedstående skal ændres. Vi vil gerne have default paddings på hele projektet. */
-            .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
+                .clickable {
+                    val journeyId = journey.id
+                    navController.navigate(Screen.JourneyScreen.route + "/$journeyId")
+                }
+                /** Tror at nedstående skal ændres. Vi vil gerne have default paddings på hele projektet. */
+                .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
 
             Column() {
                 Box(modifier = Modifier
-                    .padding()
-                    .fillMaxSize()) {
+                        .padding()
+                        .fillMaxSize()) {
                     Image(
                         painter = painterResource(id = drawableId),
                         contentDescription = "Image Denmark",
@@ -373,9 +391,9 @@ fun JourneyCard(journey: Journey, navController: NavController,frontPageViewMode
                     )
                     Box(
                         modifier = Modifier
-                            //.fillMaxWidth().height(23.dp)
-                            .align(Alignment.BottomCenter)
-                            .background(Color.Black.copy(alpha = 0.6f))
+                                //.fillMaxWidth().height(23.dp)
+                                .align(Alignment.BottomCenter)
+                                .background(Color.Black.copy(alpha = 0.6f))
                     ) {
                         Text(
                             fontSize = 18.sp,
@@ -408,7 +426,7 @@ fun TopBar(title: String) {
             )
             {
                 Icon(
-                    painter = painterResource(id = R.drawable.oplev72dpi),
+                    painter = painterResource(id = R.drawable.oplev_logo),
                     contentDescription = ""
                 )
             }
@@ -424,16 +442,12 @@ fun BottomBar(scope: CoroutineScope, scaffoldState: ScaffoldState){
         BottomNavigation {
             BottomNavigationItem(
                 icon = {
-                    IconButton(
-                        onClick = {scope.launch{
-                            scaffoldState.drawerState.open()
-                        }}
-                    ) {
-                        Icon(imageVector = Icons.Default.Menu, contentDescription = "" )}
-                       },
+                    Icon(imageVector = Icons.Default.Menu, contentDescription = "" )},
                 label = { Text(text = "Menu") },
                 selected = false,
-                onClick = { })
+                onClick = { scope.launch{
+                    scaffoldState.drawerState.open()
+                } })
             BottomNavigationItem(
                 icon = {
                     Icon(
