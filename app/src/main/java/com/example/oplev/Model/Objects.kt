@@ -46,7 +46,7 @@ data class UserInfo(
     @PrimaryKey val userId:String,
     val eMail:String,
     val firstname: String,
-    val hasOnboarded:Boolean
+    var hasOnboarded:Boolean = false
 )
 @Entity(tableName = "queue_table")
 data class QueueItem(

@@ -9,6 +9,8 @@ import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
 
+
+
 )
 
 private val LightColorPalette = lightColors(
@@ -19,13 +21,15 @@ private val LightColorPalette = lightColors(
 
 
 
+
     //Other default colors to override
     background = Color.White,
     surface = Color.White,
     //onPrimary = Color.White,
     //onSecondary = Color.Black,
     onBackground = Color.Black,
-    onSurface = Color.Black,
+    onSurface = Color.Black
+
 
 )
 
@@ -44,3 +48,4 @@ fun OplevTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable 
         content = content
     )
 }
+

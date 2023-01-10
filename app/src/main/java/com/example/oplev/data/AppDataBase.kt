@@ -57,7 +57,8 @@ abstract class AppDatabase : RoomDatabase() {
                 title = "Idea 1",
                 description = "This is the description for Idea 1",
                 link = "www.idea1.com",
-                image = "img_japan"
+                image = "img_japan",
+                date = "1"
             )
 
 
@@ -67,7 +68,9 @@ abstract class AppDatabase : RoomDatabase() {
                 title = "Idea 2",
                 description = "This is the description for Idea 2",
                 link = "www.idea2.com",
-                image = "img_india"
+                image = "img_india",
+                date = "1"
+
             )
 
 
@@ -77,7 +80,8 @@ abstract class AppDatabase : RoomDatabase() {
                 title = "Idea 3",
                 description = "This is the description for Idea 3",
                 link = null,
-                image = "img_japan"
+                image = "img_japan",
+                date = "1"
             )
 
 

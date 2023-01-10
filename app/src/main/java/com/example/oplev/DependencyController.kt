@@ -2,10 +2,7 @@ package com.example.oplev
 
 import android.app.Application
 import com.example.oplev.Model.Journey
-import com.example.oplev.ViewModel.AuthViewModel
-import com.example.oplev.ViewModel.CreateJourneyViewModel
-import com.example.oplev.ViewModel.FrontPageViewModel
-import com.example.oplev.ViewModel.JourneyViewModel
+import com.example.oplev.ViewModel.*
 import com.example.oplev.data.AppDatabase
 import com.example.oplev.data.dataService.CategoryDataService
 import com.example.oplev.data.dataService.JourneyDataService
@@ -47,6 +44,13 @@ class DependencyController() {
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
         val categoryDataService = CategoryDataService(appDb.CategoryDao())
         return  AuthViewModel(userDataService, application, categoryDataService)
+    }
+
+    fun initOnboardingViewModel(context: android.content.Context, application: Application): OnboadringViewModel{
+        val appDb = AppDatabase.getInstance(context)
+        val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
+
+        return OnboadringViewModel(userDataService, application)
     }
 }
 

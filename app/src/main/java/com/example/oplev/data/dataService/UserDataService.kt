@@ -73,6 +73,14 @@ class UserDataService(
     private fun reload() {
 
     }
+    suspend fun updateOnboarding(){
+        val user = Firebase.auth.currentUser?.uid
+        if(user!=null){
+            val userinfo = userDao.getUserFromId(user)
+            userinfo.hasOnboarded = true
+            userDao.update(userinfo)
+        }
+    }
 
     suspend fun signIn(email: String, password: String, baseContext: Context, activity: Activity):Boolean {
         var success = false
