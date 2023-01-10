@@ -16,9 +16,9 @@ data class Idea(
 
 @Entity
 data class Folder(
-    @PrimaryKey val id:Int,
-    var journeyId:Int,
-    var parentFolderId:Int,
+    @PrimaryKey val id:String,
+    var journeyId:String,
+    var parentFolderId:String,
     var title: String,
     )
 
@@ -65,7 +65,7 @@ data class States(
     var phoneNumEditable : Boolean = false,
     var forgotpassworddialog : Boolean = false,
     var chosenJourneyState: Journey? = null,
-    var chosenIdeaState: Idea? = null
+    var chosenIdeaState: Idea? = null,
 )
 
 

@@ -3,7 +3,6 @@ package com.example.oplev.ViewModel
 import android.app.Activity
 import android.app.Application
 import android.content.Context
-import android.icu.text.CaseMap.Title
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -15,32 +14,67 @@ import com.example.oplev.data.dataService.JourneyDataService
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
+
+data class JourneyUiState(
+    val openFolder:Folder? = null,
+    val folders:List<Folder> = emptyList(),
+    val ideas:List<Idea> = emptyList()
+
+)
 
 class JourneyViewModel(val journeyDataService: JourneyDataService, application: Application): BaseViewModel<Journey>(application) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private val _state = mutableStateOf(States())
-    val state: State<States> = _state
-    var chosenJourney = state.value.chosenJourneyState
+    private val _state = MutableStateFlow(States())
+    private val _uiState = MutableStateFlow(JourneyUiState())
+
+    val uiState:StateFlow<JourneyUiState> = _uiState.asStateFlow()
+    val state: StateFlow<States> = _state.asStateFlow()
+
+
+    init {
+        _uiState.update { currentState ->
+            currentState.copy(
+                openFolder = journeyDataService.getAbseluteParentFolder(state.value.chosenJourneyState!!.id),
+            )
+        }
+        updateOpenFolder()
+
+    }
+
+    private fun updateOpenFolder(){
+        _uiState.update { currentState ->
+            currentState.copy(
+                openFolder = currentState.openFolder,
+                ideas = journeyDataService.getIdeasFromFolder(currentState.openFolder!!.id),
+                folders = journeyDataService.getFolders(currentState.openFolder.id)
+            )
+        }
+    }
+
+    fun openNewFolder(folder: Folder){
+        _uiState.update { currentState ->
+            currentState.copy(
+                openFolder = folder,
+            )
+        }
+        updateOpenFolder()
+    }
+
 
 
     fun getJourneyTitle(): String{
 
-        chosenJourney?.title.let {
+        state.value.chosenJourneyState?.title.let {
             return it!!
         }
         return ""
     }
 
-    fun getFolders(): List<Folder>{
-
-        return emptyList()
-    }
-
-    fun getIdeas(): List<Idea>{
-
-        return emptyList()
-    }
 
 
     suspend fun getUserName(activity: Activity, baseContext: Context): String {

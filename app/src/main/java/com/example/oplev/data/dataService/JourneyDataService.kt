@@ -2,6 +2,8 @@ package com.example.oplev.data.dataService
 
 import android.util.Log
 import com.example.oplev.MainActivity
+import com.example.oplev.Model.Folder
+import com.example.oplev.Model.Idea
 import com.example.oplev.Model.Journey
 import com.example.oplev.ViewModel.AuthViewModel
 import com.example.oplev.data.AppDatabase
@@ -37,6 +39,18 @@ class JourneyDataService(
             }
 
         super.insertRoom(item)
+    }
+
+    fun getFolders(id:String):List<Folder>{
+        return dao.getAllfoldersFromId(id)
+    }
+
+    fun getAbseluteParentFolder(id:String):Folder{
+        return dao.getAbseluteParentFolder(id)
+    }
+
+    fun getIdeasFromFolder(id:String):List<Idea>{
+        return dao.getIdeasFromFolder(id)
     }
 
 

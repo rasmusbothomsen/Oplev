@@ -12,7 +12,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,9 +25,7 @@ import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import androidx.compose.material.Text
 import androidx.compose.material.icons.filled.MailOutline
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
@@ -49,9 +46,8 @@ typealias ComposableFun = @Composable () -> Unit
 fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavController) {
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
+    val uiState by journeyViewModel.uiState.collectAsState()
 
-    var folders = journeyViewModel.getFolders()
-    var ideas = journeyViewModel.getIdeas()
 
     Scaffold(
         topBar = {
@@ -66,7 +62,9 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
                 .fillMaxWidth()
             ) {
                 imageAndText(text = journeyViewModel.getJourneyTitle(), image = null, journeyViewModel = journeyViewModel)
-                gridForFoldersAndIdeas(folders, ideas, navController)
+                gridForFoldersAndIdeas(uiState.folders, uiState.ideas,
+                    onFolderClick = {it -> journeyViewModel.openNewFolder(it)},
+                    onIdeaClick = {it -> /** nav controller**/})
             }
                   },
         bottomBar = { BottomBar()} )
@@ -112,7 +110,7 @@ fun imageAndText(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun gridForFoldersAndIdeas(folders: List<Folder?>, ideas: List<Idea?>, navController: NavController){
+fun gridForFoldersAndIdeas(folders: List<Folder>, ideas: List<Idea>, onFolderClick:(Folder)-> Unit, onIdeaClick:(Idea)-> Unit){
 
     LazyVerticalGrid(cells = GridCells.Fixed(3),horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -120,12 +118,12 @@ fun gridForFoldersAndIdeas(folders: List<Folder?>, ideas: List<Idea?>, navContro
 
         if(folders != null){
             folders.forEachIndexed {
-                index, function -> item { folderCreator(function!!) }
+                index, function -> item { folderCreator(function, onFolderClick) }
             }
         }
         if(ideas != null){
             ideas.forEachIndexed {
-                index, function -> item { ideaCreator(function!!, navController) }
+                index, function -> item { ideaCreator(function, onIdeaClick) }
             }
         }
     }
@@ -133,11 +131,11 @@ fun gridForFoldersAndIdeas(folders: List<Folder?>, ideas: List<Idea?>, navContro
 }
 
 @Composable
-fun folderCreator(folder: Folder){
+fun folderCreator(folder: Folder, onFolderClick:(Folder)-> Unit){
     Column(
         modifier = Modifier.size(100.dp)
     ) {
-        IconButton(onClick = { /*TODO Opdater så der åbnes til folderen*/ }) {
+        IconButton(onClick = {onFolderClick(folder)}) {
             Icon(imageVector = Icons.Default.MailOutline, contentDescription = "Folder", modifier = Modifier.size(80.dp))
         }
         Text(text = folder.title, modifier = Modifier.align(Alignment.CenterHorizontally))
@@ -145,11 +143,11 @@ fun folderCreator(folder: Folder){
 }
 
 @Composable
-fun ideaCreator(idea: Idea, navController: NavController){
+fun ideaCreator(idea: Idea, onIdeaClick:(Idea)-> Unit){
     Column(
         modifier = Modifier.size(100.dp)
     ){
-        IconButton(onClick = { navController.navigate(Screen.FrontPageScreen.route /* skal ændres til ideaPage */) }) {
+        IconButton(onClick = {onIdeaClick(idea)}) {
             Icon(imageVector = Icons.Default.Menu, contentDescription = "Idea", modifier = Modifier.size(80.dp))
         }
         Text(text = idea.title, modifier = Modifier.align(Alignment.CenterHorizontally))
