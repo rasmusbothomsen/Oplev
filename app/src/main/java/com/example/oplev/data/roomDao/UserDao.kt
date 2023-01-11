@@ -1,9 +1,6 @@
 package com.example.oplev.data.roomDao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.oplev.Model.UserInfo
 
 @Dao
@@ -16,4 +13,7 @@ interface UserDao:BaseDao<UserInfo> {
       fun getAll():List<UserInfo>
       @Query("select*from user_info where userId == :id")
       fun getUserFromId(id:String):UserInfo
+      @Query("select phoneNum from user_info where userId == :id")
+      fun getPhoneNum(id:String):String
+
 }

@@ -4,19 +4,13 @@ import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.example.oplev.Model.UserInfo
 import com.example.oplev.ViewModel.AuthViewModel
 import com.example.oplev.data.roomDao.UserDao
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
 class UserDataService(
@@ -25,7 +19,7 @@ class UserDataService(
 ) {
     val add = HashMap<String, Any>()
 
-    fun createAccount(
+    suspend fun createAccount(
         firstname: String,
         lastname: String,
         email: String,
@@ -43,6 +37,7 @@ class UserDataService(
                     add["firstname"] = firstname
                     add["lastname"] = lastname
                     add["hasOnboarded"] = false
+                    add["phoneNum"] = ""
 
                     db.collection("users")
                         .document(Firebase.auth.currentUser?.uid.toString())
@@ -62,16 +57,16 @@ class UserDataService(
                 } else {
                     Log.w(AuthViewModel.TAG, "createUserWithEmail:failure", task.exception)
                 }
-            }
+            }.await()
 
-        addUserLocally(firstname, email)
+        addUserLocally(firstname, lastname, email)
 
         return success
     }
 
-    fun addUserLocally(firstname: String, email: String) {
+    fun addUserLocally(firstname: String, lastname: String, email: String) {
         val userInfoId = Firebase.auth.currentUser?.uid.toString()
-        var userInfo = UserInfo(userInfoId, email, firstname, false)
+        var userInfo = UserInfo(userInfoId, email, firstname, lastname,false, null)
 
         userDao.addUserInfo(userInfo)
         Log.d("Useradded", userInfo.eMail)
@@ -105,8 +100,15 @@ class UserDataService(
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d(AuthViewModel.TAG, "User account deleted.")
+                    deleteUserLocally(user.uid)
                 }
             }.await()
+    }
+
+    fun deleteUserLocally(id : String) {
+        val user = userDao.getUserFromId(id)
+        userDao.delete(user)
+        Log.d("User deleted", user.eMail)
     }
 
     suspend fun updateEmail(newEmail : String) {
@@ -116,9 +118,105 @@ class UserDataService(
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d(TAG, "User email address updated.")
+                    updateEmailLocally(user.uid, newEmail)
                 }
             }.await()
     }
+
+    fun updateEmailLocally(id : String, newEmail: String) {
+        val user = userDao.getUserFromId(id)
+        val newUserWithNewMail = UserInfo(id, newEmail, user.firstname, user.lastname, user.hasOnboarded, null)
+
+        runBlocking {
+            userDao.update(newUserWithNewMail)
+        }
+        Log.d("User email updated", user.eMail)
+    }
+
+    fun getPhoneNum(): String {
+        val user = Firebase.auth.currentUser
+
+        return userDao.getPhoneNum(user?.uid.toString())
+
+    }
+
+    fun getFullName(): String {
+        val user = Firebase.auth.currentUser
+        val userInfo = userDao.getUserFromId(user?.uid.toString())
+
+        return userInfo.firstname + " " + userInfo.lastname
+
+    }
+
+    suspend fun updatePhoneNum(newPhoneNum : String, activity: Activity) {
+        val user = Firebase.auth.currentUser
+
+        db.collection("users")
+            .document(user?.uid.toString())
+            .update("phoneNum", newPhoneNum).addOnCompleteListener(activity) {
+                task ->
+                if (task.isSuccessful){
+                        Log.d(TAG, "User email address updated.")
+                        updatePhoneNumLocally(user?.uid.toString(), newPhoneNum)
+                }
+            }
+    }
+
+    suspend fun updateName(firstname: String, lastname: String, activity: Activity) {
+        val user = Firebase.auth.currentUser
+
+        var success = false
+
+        db.collection("users")
+            .document(user?.uid.toString())
+            .update("firstname", firstname).addOnCompleteListener(activity) {
+                    task ->
+                if (task.isSuccessful){
+                    Log.d(TAG, "User firstname updated.")
+                   success = true
+                } else {
+                    success = false
+                }
+            }.await()
+
+        db.collection("users")
+            .document(user?.uid.toString())
+            .update("lastname", lastname).addOnCompleteListener(activity) {
+                    task ->
+                if (task.isSuccessful){
+                    Log.d(TAG, "User lastname updated.")
+                    success = true
+                }
+                else {
+                    success = false
+                }
+            }.await()
+
+        if (success) {
+            updateNameLocally(user?.uid.toString(), firstname, lastname)
+        }
+    }
+
+    fun updatePhoneNumLocally(id : String, newPhoneNum: String) {
+        val user = userDao.getUserFromId(id)
+        val newUserWithNewPhoneNum = UserInfo(id, user.eMail, user.firstname, user.lastname, user.hasOnboarded, newPhoneNum)
+
+        runBlocking {
+            userDao.update(newUserWithNewPhoneNum)
+        }
+        Log.d("User phone num updated", user.eMail)
+    }
+
+    fun updateNameLocally(id : String, firstname: String, lastname: String) {
+        val user = userDao.getUserFromId(id)
+        val newUserWithNewName = UserInfo(id, user.eMail, firstname, lastname, user.hasOnboarded, user.phoneNum)
+
+        runBlocking {
+            userDao.update(newUserWithNewName)
+        }
+        Log.d("User name updated", user.eMail)
+    }
+
 
     suspend fun signIn(email: String, password: String, baseContext: Context, activity: Activity) : Boolean {
         var success = false
@@ -128,8 +226,7 @@ class UserDataService(
                     Log.d(AuthViewModel.TAG, "signInWithEmail:success")
                     success = true
                 } else {
-                    Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    success = false
+                    Log.w(AuthViewModel.TAG, "signInWithEmail:failure", task.exception)
                 }
             }.await()
         return success

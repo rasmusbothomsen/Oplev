@@ -39,6 +39,30 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
        userDataService.deleteUser()
     }
 
+    suspend fun getPhoneNum() : String{
+        return userDataService.getPhoneNum()
+    }
+
+    suspend fun getFullName() : String{
+        return userDataService.getFullName()
+    }
+
+    suspend fun updateName(fullname: String){
+        var str = fullname
+        var delimiter1 = " "
+
+        val parts = str.split(delimiter1)
+        var lastname = ""
+
+        if (parts.size > 1){
+            var firstname = parts[0]
+            for (i in 1..parts.size){
+                lastname += i
+            }
+        }
+    }
+
+
     fun changeDialogVal(){
         val currentValue = state.value.emailDialogState
         _state.value = _state.value.copy(emailDialogState = !currentValue)
@@ -46,6 +70,10 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
 
     suspend fun updateEmail(email: String){
         userDataService.updateEmail(email)
+    }
+
+    suspend fun updatePhoneNum(newPhoneNum: String, activity: Activity){
+        userDataService.updatePhoneNum(newPhoneNum, activity)
     }
 
 
@@ -91,8 +119,6 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
         }
         else{
             updateUI(null, false)
-            val toast = Toast.makeText(baseContext, "Prøv igen", Toast.LENGTH_LONG)
-            toast.show()
             return
         }
     }

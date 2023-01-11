@@ -38,6 +38,8 @@ import com.example.oplev.Screen
 import com.example.oplev.ViewModel.AuthViewModel
 import com.example.oplev.ViewModel.FrontPageViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.runBlocking
 
 @Composable
@@ -103,15 +105,24 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
             }
 
         }
+        var fullNameFromDb = ""
+        runBlocking {
+           fullNameFromDb = authViewModel.getFullName()
+        }
+
+        var phoneNumFromDb = ""
+        runBlocking {
+            phoneNumFromDb = authViewModel.getPhoneNum()
+        }
 
         //SKAL HENTE BRUGERNAVN
-        val fullname = remember { mutableStateOf("Berfin Flora Turan") }
+        val fullname = remember { mutableStateOf(fullNameFromDb) }
         var nameEditable = states.nameEditable
 
         TextField(
             value = fullname.value,
             onValueChange = { fullname.value = it },
-            placeholder = { Text(text = "Berfin Flora Turan") },
+            placeholder = { Text(text = fullNameFromDb) },
             modifier = Modifier
                 .padding(all = 16.dp)
                 .fillMaxWidth()
@@ -133,13 +144,13 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
         enabled = nameEditable)
 
         //SKAL HENTE MAIL FRA DB
-        val phoneNum = remember { mutableStateOf("bfloraturan@gmail.com") }
+        val phoneNum = remember { mutableStateOf(phoneNumFromDb) }
         var phoneNumEditable = states.phoneNumEditable
 
         TextField(
             value = phoneNum.value,
             onValueChange = { phoneNum.value = it },
-            placeholder = { Text(text = "+45 12 34 56 78") },
+            placeholder = { Text(text = phoneNumFromDb) },
             modifier = Modifier
                 .padding(all = 16.dp)
                 .fillMaxWidth()
@@ -164,7 +175,16 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
             .fillMaxWidth()
             .padding(16.dp, 16.dp, 16.dp, 0.dp)) {
 
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = {
+                var email = Firebase.auth.currentUser?.email
+
+                runBlocking {
+                    if (email != null) {
+                        authViewModel.sendPasswordReset(email)
+                    }
+                    authViewModel.forgotPasswordStateChange()
+                }
+            }) {
                 Icon(imageVector = Icons.Default.Lock, contentDescription = "", tint = Color.Black )
                 Spacer(modifier = Modifier.width(20.dp))
                 Text(text = "Skift adgangskode", modifier = Modifier.padding(top=2.5.dp), color = Color.Black)
@@ -209,10 +229,30 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
         }
         Spacer(modifier = Modifier.height(20.dp))
 
+        var context = LocalContext.current
+        var activity = LocalContext.current as Activity
+
         val hexCode = "#79B56C"
         Button(onClick = {
-            /* TODO */
-            navController.navigate(Screen.FrontPageScreen.route)
+            var phoneNumber: String
+            runBlocking {
+                phoneNumber = authViewModel.getPhoneNum()
+            }
+            if (!phoneNum.equals(phoneNumber)) {
+                runBlocking {
+                    authViewModel.updatePhoneNum(phoneNumber, activity)
+                }
+                var fullName: String
+                runBlocking {
+                    fullName = authViewModel.getFullName()
+                }
+                if (!fullname.equals(fullName)) {
+                    runBlocking {
+                        authViewModel.updateName(fullname.toString())
+                    }
+                }
+                navController.navigate(Screen.FrontPageScreen.route)
+            }
         }, modifier = Modifier.align(Alignment.CenterHorizontally),
             colors = ButtonDefaults.buttonColors(backgroundColor = Color(hexCode.toColorInt()), contentColor = Color.White),
             shape = CircleShape
@@ -223,7 +263,33 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
         if(states.emailDialogState) {
             NewEmailDialog(authViewModel)
         }
+
+        //TODO ER TAGET FRA ASOS. SKAL ÆNDRES
+        if (states.forgotpassworddialog) {
+            AlertDialog(
+                onDismissRequest = { /*TODO*/ },
+                title = { Text(text = "LINK TIL NULSTILLING AF ADGANGSKODE ER SENDT") },
+                text = {
+                    Text(
+                        text =
+                        "Vi har sendt dig en e-mail til nulstilling af din adgangskode\n" +
+                                "\n" +
+                                "For at oprette din nye adgangskode skal du klikke på linket i e-mailen og angive en ny – pærenemt\n" +
+                                "\n" +
+                                "Har du ikke modtaget e-mailen? Tjek din spammappe."
+                    )
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        authViewModel.forgotPasswordStateChange()
+                    }) {
+                        Text(text = "OK")
+                    }
+                }
+            )
+        }
     }
+
 }
 
 @Composable
