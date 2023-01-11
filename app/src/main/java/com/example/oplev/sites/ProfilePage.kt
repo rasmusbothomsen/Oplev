@@ -1,6 +1,7 @@
 package com.example.oplev.sites
 
 
+import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -35,6 +36,9 @@ import com.example.oplev.Model.States
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.AuthViewModel
+import com.example.oplev.ViewModel.FrontPageViewModel
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun ProfileView(authViewModel: AuthViewModel, navController: NavController) {
@@ -173,7 +177,9 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
         Row(modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp, 16.dp, 16.dp, 0.dp)) {
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = {
+                authViewModel.changeDialogVal()
+            }) {
                 Icon(imageVector = Icons.Default.MailOutline, contentDescription = "", tint = Color.Black )
                 Spacer(modifier = Modifier.width(20.dp))
                 Text(text = "Skift mail", modifier = Modifier.padding(top=2.5.dp), color = Color.Black)
@@ -185,7 +191,14 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
         Row(modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp, 16.dp, 16.dp, 0.dp)) {
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = {
+                runBlocking {
+                    authViewModel.deleteUser()
+                }
+                if (FirebaseAuth.getInstance().currentUser == null) {
+                    navController.navigate(Screen.LoginScreen.route)
+                }
+            }) {
                 Icon(imageVector = Icons.Default.Close, contentDescription = "", tint = Color.Black )
                 Spacer(modifier = Modifier.width(20.dp))
                 Text(text = "Slet konto", modifier = Modifier.padding(top=2.5.dp), color = Color.Black)
@@ -207,7 +220,49 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
             Text(text = "Gem ændringer")
         }
 
+        if(states.emailDialogState) {
+            NewEmailDialog(authViewModel)
+        }
     }
+}
+
+@Composable
+fun NewEmailDialog(authViewModel: AuthViewModel){
+    var email by remember { mutableStateOf("") }
+    val activity = LocalContext.current as Activity
+    AlertDialog(
+        onDismissRequest = { /*TODO*/ },
+        title = { Text(text = "Indtast din nye mail")},
+        text = {
+            OutlinedTextField(
+                value = email,
+                label = { Text(text = "Mail", textAlign = TextAlign.Center) },
+                modifier = Modifier
+                    .width(130.dp),
+                onValueChange = {
+                    email = it
+                },
+                singleLine = true
+            )
+        },
+        confirmButton = {
+            Button(onClick = {
+                runBlocking {
+                    authViewModel.updateEmail(email)
+                }
+                authViewModel.changeDialogVal()
+            }) {
+                Text(text = "Gem")
+            }
+        },
+        dismissButton = {
+            Button(onClick = {
+                authViewModel.changeDialogVal()
+            }) {
+                Text(text = "Annuller")
+            }
+        }
+    )
 }
 
 

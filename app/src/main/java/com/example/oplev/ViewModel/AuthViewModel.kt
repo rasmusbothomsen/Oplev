@@ -13,6 +13,7 @@ import com.example.oplev.Model.Category
 import com.example.oplev.Model.States
 import com.example.oplev.data.dataService.CategoryDataService
 import com.example.oplev.data.dataService.UserDataService
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -32,6 +33,20 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
 ) {
     private val _state = mutableStateOf(States())
     val state: State<States> = _state
+
+
+    suspend fun deleteUser(){
+       userDataService.deleteUser()
+    }
+
+    fun changeDialogVal(){
+        val currentValue = state.value.emailDialogState
+        _state.value = _state.value.copy(emailDialogState = !currentValue)
+    }
+
+    suspend fun updateEmail(email: String){
+        userDataService.updateEmail(email)
+    }
 
 
         suspend fun createNewUser(fullname: String, email: String, password: String, baseContext: Context, activity: Activity){
@@ -76,6 +91,9 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
         }
         else{
             updateUI(null, false)
+            val toast = Toast.makeText(baseContext, "Prøv igen", Toast.LENGTH_LONG)
+            toast.show()
+            return
         }
     }
 

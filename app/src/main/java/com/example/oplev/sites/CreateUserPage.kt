@@ -3,6 +3,8 @@ package com.example.oplev.sites
 
 import android.app.Activity
 import android.text.Layout.Alignment
+import android.view.Gravity
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -250,12 +252,18 @@ fun CreateUserContent(authViewModel: AuthViewModel, navController: NavController
         val activity = LocalContext.current as Activity
         Button(
                 onClick = {
+                    if (password.equals(confPassword)){
                     runBlocking {
                         authViewModel.createNewUser(fullname, email, password, context, activity)
                     }
                     if (FirebaseAuth.getInstance().currentUser != null) {
                         navController.navigate(Screen.FrontPageScreen.route)
                     }
+                    } else {
+                        val toast = Toast.makeText(context, "Adgangskoderne er ikke ens. Prøv igen.", Toast.LENGTH_LONG)
+                        toast.show()
+                    }
+
                 }, shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(backgroundColor = logotextcol),
                 modifier = Modifier

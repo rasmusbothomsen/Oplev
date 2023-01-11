@@ -68,6 +68,7 @@ data class States(
     var forgotpassworddialog : Boolean = false,
     var chosenJourneyState: Journey? = null,
     var chosenIdeaState: Idea? = null,
+    var emailDialogState : Boolean = false,
 )
 
 
