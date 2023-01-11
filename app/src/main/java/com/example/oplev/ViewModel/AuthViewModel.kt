@@ -88,7 +88,7 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
             if (parts.size > 1){
                 firstname = parts[0]
                 for (i in 1..parts.size){
-                    lastname += i
+                    lastname += parts[i]
                 }
             }
 
