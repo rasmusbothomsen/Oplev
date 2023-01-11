@@ -10,13 +10,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.os.bundleOf
 import com.example.oplev.Model.*
 import com.example.oplev.data.dataService.CategoryDataService
+import com.example.oplev.data.dataService.UserDataService
 import com.example.oplev.data.dto.CategoryDto
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 
-class FrontPageViewModel(application: Application, val categoryDataService: CategoryDataService):BaseViewModel<Category>(
+class FrontPageViewModel(application: Application, val categoryDataService: CategoryDataService, val userDataService: UserDataService):BaseViewModel<Category>(
     application
 ) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -44,17 +45,7 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
     }
 
     suspend fun getUserName(activity: Activity, baseContext: Context): String {
-        val docRef = db.collection("users").document(Firebase.auth.currentUser?.uid.toString())
-        val userInfo = docRef.get()
-            .addOnCompleteListener(activity) { task ->
-                if (task.isSuccessful) {
-                    Log.d(AuthViewModel.TAG, "retrieveUserName:success")
-                } else {
-                    Log.d(AuthViewModel.TAG, "retrieveUserName:failed")
-                }
-            }.await()
-
-        return userInfo["firstname"].toString()
+        return userDataService.getFirstname()
     }
 
     suspend fun signOut(){

@@ -15,5 +15,13 @@ interface UserDao:BaseDao<UserInfo> {
       fun getUserFromId(id:String):UserInfo
       @Query("select phoneNum from user_info where userId == :id")
       fun getPhoneNum(id:String):String
+      @Query("UPDATE user_info SET phoneNum=:newPhoneNum WHERE userId = :id")
+      fun updatePhoneNum(newPhoneNum : String, id: String)
+      @Query("UPDATE user_info SET eMail=:newEmail WHERE userId = :id")
+      fun updateEmail(newEmail : String, id: String)
+      @Query("UPDATE user_info SET firstname=:newFirstName WHERE userId = :id")
+      fun updateFirstName(newFirstName : String, id: String)
+      @Query("UPDATE user_info SET lastname=:newLastName WHERE userId = :id")
+      fun updateLastName(newLastName : String, id: String)
 
 }

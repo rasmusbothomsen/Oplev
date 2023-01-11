@@ -105,12 +105,12 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
             }
 
         }
-        var fullNameFromDb = ""
+        var fullNameFromDb = " "
         runBlocking {
            fullNameFromDb = authViewModel.getFullName()
         }
 
-        var phoneNumFromDb = ""
+        var phoneNumFromDb = " "
         runBlocking {
             phoneNumFromDb = authViewModel.getPhoneNum()
         }
@@ -240,7 +240,7 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
             }
             if (!phoneNum.equals(phoneNumber)) {
                 runBlocking {
-                    authViewModel.updatePhoneNum(phoneNumber, activity)
+                    authViewModel.updatePhoneNum(phoneNum.value, activity)
                 }
                 var fullName: String
                 runBlocking {
@@ -248,7 +248,7 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
                 }
                 if (!fullname.equals(fullName)) {
                     runBlocking {
-                        authViewModel.updateName(fullname.toString())
+                        authViewModel.updateName(fullname.value, activity)
                     }
                 }
                 navController.navigate(Screen.FrontPageScreen.route)

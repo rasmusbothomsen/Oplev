@@ -37,7 +37,7 @@ class UserDataService(
                     add["firstname"] = firstname
                     add["lastname"] = lastname
                     add["hasOnboarded"] = false
-                    add["phoneNum"] = ""
+                    add["phoneNum"] = "Intet nummer gemt."
 
                     db.collection("users")
                         .document(Firebase.auth.currentUser?.uid.toString())
@@ -66,7 +66,7 @@ class UserDataService(
 
     fun addUserLocally(firstname: String, lastname: String, email: String) {
         val userInfoId = Firebase.auth.currentUser?.uid.toString()
-        var userInfo = UserInfo(userInfoId, email, firstname, lastname,false, null)
+        var userInfo = UserInfo(userInfoId, email, firstname, lastname,false, "Intet nummer gemt.")
 
         userDao.addUserInfo(userInfo)
         Log.d("Useradded", userInfo.eMail)
@@ -125,10 +125,9 @@ class UserDataService(
 
     fun updateEmailLocally(id : String, newEmail: String) {
         val user = userDao.getUserFromId(id)
-        val newUserWithNewMail = UserInfo(id, newEmail, user.firstname, user.lastname, user.hasOnboarded, null)
 
         runBlocking {
-            userDao.update(newUserWithNewMail)
+            userDao.updateEmail(newEmail,id)
         }
         Log.d("User email updated", user.eMail)
     }
@@ -148,6 +147,14 @@ class UserDataService(
 
     }
 
+    fun getFirstname(): String {
+        val user = Firebase.auth.currentUser
+        val userInfo = userDao.getUserFromId(user?.uid.toString())
+
+        return userInfo.firstname
+
+    }
+
     suspend fun updatePhoneNum(newPhoneNum : String, activity: Activity) {
         val user = Firebase.auth.currentUser
 
@@ -157,9 +164,9 @@ class UserDataService(
                 task ->
                 if (task.isSuccessful){
                         Log.d(TAG, "User email address updated.")
-                        updatePhoneNumLocally(user?.uid.toString(), newPhoneNum)
                 }
             }
+        updatePhoneNumLocally(user?.uid.toString(), newPhoneNum)
     }
 
     suspend fun updateName(firstname: String, lastname: String, activity: Activity) {
@@ -192,27 +199,23 @@ class UserDataService(
                 }
             }.await()
 
-        if (success) {
             updateNameLocally(user?.uid.toString(), firstname, lastname)
-        }
+
     }
 
     fun updatePhoneNumLocally(id : String, newPhoneNum: String) {
         val user = userDao.getUserFromId(id)
-        val newUserWithNewPhoneNum = UserInfo(id, user.eMail, user.firstname, user.lastname, user.hasOnboarded, newPhoneNum)
-
         runBlocking {
-            userDao.update(newUserWithNewPhoneNum)
+            userDao.updatePhoneNum(newPhoneNum, id)
         }
         Log.d("User phone num updated", user.eMail)
     }
 
     fun updateNameLocally(id : String, firstname: String, lastname: String) {
         val user = userDao.getUserFromId(id)
-        val newUserWithNewName = UserInfo(id, user.eMail, firstname, lastname, user.hasOnboarded, user.phoneNum)
-
         runBlocking {
-            userDao.update(newUserWithNewName)
+            userDao.updateFirstName(firstname,id)
+            userDao.updateLastName(lastname,id)
         }
         Log.d("User name updated", user.eMail)
     }

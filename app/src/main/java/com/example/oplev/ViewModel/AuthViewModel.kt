@@ -47,19 +47,22 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
         return userDataService.getFullName()
     }
 
-    suspend fun updateName(fullname: String){
+    suspend fun updateName(fullname: String, activity: Activity){
         var str = fullname
         var delimiter1 = " "
 
         val parts = str.split(delimiter1)
+        var firstname = ""
         var lastname = ""
 
         if (parts.size > 1){
-            var firstname = parts[0]
-            for (i in 1..parts.size){
-                lastname += i
+            firstname = parts[0]
+            for (i in 1 until parts.size){
+                lastname += parts[i]
             }
         }
+
+        userDataService.updateName(firstname,lastname, activity)
     }
 
 
@@ -87,16 +90,16 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
 
             if (parts.size > 1){
                 firstname = parts[0]
-                for (i in 1..parts.size){
+                for (i in 1 until parts.size){
                     lastname += parts[i]
                 }
             }
 
             var success = false
 
-            success = userDataService.createAccount(firstname,lastname,email,password,baseContext,activity)
+            success = userDataService.createAccount(firstname.toString(),lastname,email,password,baseContext,activity)
 
-            if(success) {
+            if (Firebase.auth.currentUser != null) {
                 categoryDataService.createCategory("Seneste", activity)
                 categoryDataService.createCategory("Favoritter", activity)
             }
