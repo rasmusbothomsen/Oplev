@@ -148,11 +148,13 @@ class UserDataService(
     }
 
     fun getFirstname(): String {
-        val user = Firebase.auth.currentUser
-        val userInfo = userDao.getUserFromId(user?.uid.toString())
-
-        return userInfo.firstname
-
+        return if(Firebase.auth.currentUser == null){
+            "Ingen bruger"
+        } else {
+            val user = Firebase.auth.currentUser
+            val userInfo = userDao.getUserFromId(user?.uid.toString())
+            userInfo.firstname
+        }
     }
 
     suspend fun updatePhoneNum(newPhoneNum : String, activity: Activity) {

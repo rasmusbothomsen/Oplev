@@ -49,7 +49,7 @@ data class sharedUiState(
 )
 
 @Composable
-fun NavController(application: Application) {
+fun NavController(application: Application, startRoute : String) {
     val navController = rememberNavController()
     var dependencyController = DependencyController()
     var context = LocalContext.current.applicationContext as android.content.Context
@@ -57,7 +57,7 @@ fun NavController(application: Application) {
 
 
 
-    NavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
+    NavHost(navController = navController, startDestination = startRoute) {
         composable(route = Screen.FrontPageScreen.route) {
             TotalView(frontpageViewModel = dependencyController.initFrontPageViewModel(context,application), navController)
         }
