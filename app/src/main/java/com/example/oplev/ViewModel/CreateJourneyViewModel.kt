@@ -35,7 +35,8 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
     }
 
     fun getCategories(): List<Category>{
-        val categories = categoryDataService.getAllCategories()
+        var id = Firebase.auth.currentUser?.uid
+        val categories = categoryDataService.getAllCategories(id.toString())
         return categories
     }
 

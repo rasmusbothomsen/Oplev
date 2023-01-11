@@ -10,8 +10,8 @@ import com.example.oplev.Model.UserInfo
 
 @Dao
 interface CategoryDao:BaseDao<Category> {
-    @Query("Select*from category")
-    fun getAll(): List<Category>
+    @Query("Select*from category where createdBy like :id ")
+    fun getAll(id: String): List<Category>
 
     @Query("select * from Journey where categoryID like :id")
     fun getJourneysRelatedToCategory(id:String): List<Journey>

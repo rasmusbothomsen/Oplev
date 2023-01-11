@@ -28,10 +28,12 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
     }
 
     fun getCategories(): List<CategoryDto> {
-        var categorylist = categoryDataService.getCategoryDto()
+        var id = Firebase.auth.currentUser?.uid
+        var categorylist = categoryDataService.getCategoryDto(id.toString())
 
         return categorylist
     }
+
     fun createNavBundleJourney(journey: Journey): Bundle {
         return bundleOf("journeyId" to journey.id)
     }
@@ -55,7 +57,7 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
         return userInfo["firstname"].toString()
     }
 
-    fun signOut(){
+    suspend fun signOut(){
         Firebase.auth.signOut()
     }
 

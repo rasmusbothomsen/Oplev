@@ -22,8 +22,9 @@ class CategoryDataService(
    suspend fun createCategory(title: String, activity: Activity) {
         val add = HashMap<String,Any>()
        val id = UUID.randomUUID().toString()
+       val createdBy = Firebase.auth.currentUser?.uid.toString()
 
-        add["createdBy"] = Firebase.auth.currentUser?.uid.toString()
+        add["createdBy"] = createdBy
         add["categoryTitle"] = title
        add["id"] = id
 
@@ -38,25 +39,25 @@ class CategoryDataService(
                 }
             }.await()
 
-        addCategoryLocally(id, title)
+        addCategoryLocally(id, title, createdBy)
 
     }
 
-    fun addCategoryLocally(id : String, title: String){
+    fun addCategoryLocally(id : String, title: String, createdBy: String){
         val categoryId = id
-        var category = Category(categoryId, title)
+        var category = Category(categoryId, title, createdBy)
         categoryDao.addCategory(category)
         Log.w(AuthViewModel.TAG,"CategoryAdded")
     }
 
-    fun getAllCategories(): List<Category>{
+    fun getAllCategories(id: String): List<Category>{
 
-        var categories = categoryDao.getAll()
+        var categories = categoryDao.getAll(id)
 
         return categories
     }
-    fun getCategoryDto():List<CategoryDto>{
-        var categories = categoryDao.getAll()
+    fun getCategoryDto(id: String):List<CategoryDto>{
+        var categories = categoryDao.getAll(id)
         var dtos = mutableListOf<CategoryDto>()
 
         for (i in 0..categories.size-1){

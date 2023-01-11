@@ -34,7 +34,7 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
     val state: State<States> = _state
 
 
-        fun createNewUser(fullname: String, email: String, password: String, baseContext: Context, activity: Activity){
+        suspend fun createNewUser(fullname: String, email: String, password: String, baseContext: Context, activity: Activity){
             var str = fullname
             var delimiter1 = " "
 
@@ -53,10 +53,11 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
 
             success = userDataService.createAccount(firstname,lastname,email,password,baseContext,activity)
 
-            runBlocking {
+            if(success) {
                 categoryDataService.createCategory("Seneste", activity)
                 categoryDataService.createCategory("Favoritter", activity)
             }
+
 
         val user = Firebase.auth.currentUser
         if (success){

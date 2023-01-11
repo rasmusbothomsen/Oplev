@@ -7,6 +7,8 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.oplev.Model.*
 import com.example.oplev.data.roomDao.*
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Database(entities = [Category::class, Journey::class, Folder::class, Idea::class, UserInfo::class,QueueItem::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
@@ -50,6 +52,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
         fun CreateDummyData(){
             instance?.clearAllTables()
+            var userId = Firebase.auth.currentUser?.uid.toString()
 
             val idea1 = Idea(
                 id = "1",
@@ -110,12 +113,14 @@ abstract class AppDatabase : RoomDatabase() {
 
             val category1 = Category(
                 id = "1",
-                title = "Category 1"
+                title = "Category 1",
+                createdBy = userId
             )
 
             val category2 = Category(
                 id = "2",
-                title = "Category 2"
+                title = "Category 2",
+                createdBy = userId
             )
 
             val journey1 = Journey(

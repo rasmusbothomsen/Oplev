@@ -33,6 +33,7 @@ import com.example.oplev.Model.States
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.FrontPageViewModel
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -162,10 +163,12 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         tint = Color.Cyan
                     )
                     TextButton(onClick = {
-
-                        frontpageViewModel.signOut()
-
-                        navController.navigate(Screen.LoginScreen.route)
+                        runBlocking {
+                            frontpageViewModel.signOut()
+                        }
+                        if (FirebaseAuth.getInstance().currentUser == null) {
+                            navController.navigate(Screen.LoginScreen.route)
+                        }
                     }) {
                         Text(
                             text = "Sign out",
