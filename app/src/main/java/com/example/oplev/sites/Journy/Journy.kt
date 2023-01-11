@@ -135,8 +135,10 @@ fun folderCreator(folder: Folder, onFolderClick:(Folder)-> Unit){
     Column(
         modifier = Modifier.size(100.dp)
     ) {
-        IconButton(onClick = {onFolderClick(folder)}) {
-            Icon(imageVector = Icons.Default.MailOutline, contentDescription = "Folder", modifier = Modifier.size(80.dp))
+        IconButton(onClick = {onFolderClick(folder)}, Modifier.align(Alignment.CenterHorizontally)) {
+            Icon(painter = painterResource(id = R.drawable.ic_baseline_folder_24),
+                contentDescription = "Folder",
+                modifier = Modifier.size(80.dp))
         }
         Text(text = folder.title, modifier = Modifier.align(Alignment.CenterHorizontally))
     }
@@ -147,8 +149,10 @@ fun ideaCreator(idea: Idea, onIdeaClick:(Idea)-> Unit){
     Column(
         modifier = Modifier.size(100.dp)
     ){
-        IconButton(onClick = {onIdeaClick(idea)}) {
-            Icon(imageVector = Icons.Default.Menu, contentDescription = "Idea", modifier = Modifier.size(80.dp))
+        IconButton(onClick = {onIdeaClick(idea)}, Modifier.align(Alignment.CenterHorizontally)) {
+            Icon(painter = painterResource(id = R.drawable.ic_baseline_lightbulb_24),
+                contentDescription = "Idea",
+                modifier = Modifier.size(80.dp))
         }
         Text(text = idea.title, modifier = Modifier.align(Alignment.CenterHorizontally))
     }
