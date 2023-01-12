@@ -11,6 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Bottom
+import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
@@ -33,10 +35,13 @@ import com.example.oplev.Model.States
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.FrontPageViewModel
+import com.example.oplev.ui.theme.Farvekombi032
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import com.example.oplev.ui.theme.OplevFarve2
+import com.example.oplev.ui.theme.Farvekombi033
 
 
 @Preview
@@ -78,22 +83,14 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         painter = painterResource(id = R.drawable.oplev300dpi),
                         contentDescription = "Bare et logo",
                         modifier = Modifier
-                                .size(85.dp, 85.dp)
-                                .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                            .size(85.dp, 85.dp)
+                            .padding(0.dp, 0.dp, 0.dp, 0.dp)
                     )
                     Text(
                         text = "OPLEV Menu",
                         modifier = Modifier.padding(0.dp, 25.dp, 0.dp, 0.dp),
                         fontSize = 20.sp
                     )
-                    IconButton(
-                        onClick = { },
-                        modifier = Modifier.padding(40.dp, 15.dp, 0.dp, 0.dp)
-                    )
-                    {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
-
-                    }
 
                 }
                 Row(Modifier.padding(20.dp, 20.dp, 0.dp, 0.dp)) {
@@ -101,13 +98,14 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         imageVector = Icons.Default.AccountCircle,
                         contentDescription = "",
                         modifier = Modifier
-                                .size(45.dp, 45.dp)
-                                .padding(0.dp, 5.dp, 0.dp, 0.dp)
-                        , tint = Color.Cyan
+                            .size(45.dp, 45.dp)
+                            .padding(0.dp, 5.dp, 0.dp, 0.dp)
+                        , tint = Farvekombi033
                     )
 
                     TextButton(onClick = { navController.navigate(Screen.ProfileScreen.route)}) {
                         Text(text = "Profil",
+                            color = Color.Black,
                             fontSize = 18.sp,
                             modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp))
 
@@ -119,23 +117,24 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                 }
                 Row(Modifier.padding(20.dp, 20.dp, 0.dp, 0.dp)) {
                     Icon(
-                        imageVector = Icons.Default.Warning,
+                        painterResource(id = R.drawable.ic_baseline_group_add_24) ,
                         contentDescription = "",
                         modifier = Modifier
-                                .size(45.dp, 45.dp)
-                                .padding(0.dp, 5.dp, 0.dp, 0.dp), tint = Color.Cyan
+                            .size(45.dp, 45.dp)
+                            .padding(0.dp, 5.dp, 0.dp, 0.dp), tint = Farvekombi033
                     )
 
                     TextButton(onClick = { /*TODO*/ }) {
                         Text(
                             text = "Inviter Venner",
+                            color = Color.Black,
                             fontSize = 18.sp,
                             modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)
                         )
                     }
                 }
 
-                Row(Modifier.padding(20.dp, 20.dp, 0.dp, 0.dp)) {
+                /*Row(Modifier.padding(20.dp, 20.dp, 0.dp, 0.dp)) {
                     Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = "",
@@ -147,20 +146,22 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                     TextButton(onClick = { /*TODO*/ }) {
                         Text(
                             text = "Indstillinger",
+                            color = Color.Black
+
                             fontSize = 18.sp,
                             modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)
                         )
                     }
-                }
+                }*/
                 Row(Modifier.padding(20.dp, 20.dp, 0.dp, 0.dp)) {
                     Icon(
-                        imageVector = Icons.Default.MoreVert,
+                        painterResource(id = R.drawable.ic_baseline_logout_24),
                         contentDescription = "",
                         modifier = Modifier
-                                .size(45.dp, 45.dp)
-                                .padding(0.dp, 5.dp, 0.dp, 0.dp)
-                                .rotate(90f),
-                        tint = Color.Cyan
+                            .size(45.dp, 45.dp)
+                            .padding(0.dp, 5.dp, 0.dp, 0.dp)
+                            .rotate(90f),
+                        tint = Farvekombi033
                     )
                     TextButton(onClick = {
                         runBlocking {
@@ -172,30 +173,31 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                     }) {
                         Text(
                             text = "Sign out",
+                            color = Color.Black,
                             fontSize = 18.sp,
                             modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)
                         )
                     }
                 }
-                Row(verticalAlignment = Alignment.Bottom, modifier = Modifier.padding(55.dp, 200.dp, 0.dp, 0.dp)) {
+                /*Row(verticalAlignment = Bottom, horizontalArrangement = Arrangement.Center) {
                     Button(
                         onClick = {
                             scope.launch{
                                 scaffoldstate.drawerState.close()}
                         },
                         colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.Unspecified,
-                            contentColor = Color.Black
+                            backgroundColor = OplevFarve2,
+                            contentColor = Color.White
                         ),
                         modifier = Modifier.size(240.dp, 40.dp),
                         shape = RoundedCornerShape(50)
                     ) {
                         Text(
-                            text = "Luk", fontSize = 20.sp
+                            text = "Luk", fontSize = 18.sp
                         )
 
                     }
-                }
+                }*/
         },
         drawerGesturesEnabled = true,
         topBar = {
@@ -441,7 +443,8 @@ fun TopBar(title: String) {
 @Composable
 fun BottomBar(scope: CoroutineScope, scaffoldState: ScaffoldState){
     BottomAppBar(modifier = Modifier
-        .height(65.dp) /*cutoutShape = CircleShape,*/) {
+        .height(65.dp),
+        backgroundColor = Farvekombi032 /*cutoutShape = CircleShape,*/) {
         BottomNavigation {
             BottomNavigationItem(
                 icon = {
