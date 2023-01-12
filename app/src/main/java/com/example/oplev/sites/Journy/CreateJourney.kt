@@ -59,7 +59,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
             runBlocking {
                 userName = createJourneyViewModel.getUserName(activity, context)
             }
-            com.example.oplev.sites.TopBar("Velkommen $userName")
+            com.example.oplev.sites.TopBar("Velkommen $userName", navController)
         },
         content = {
                   Column(modifier = Modifier

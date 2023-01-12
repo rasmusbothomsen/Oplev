@@ -28,9 +28,12 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavController
 import com.example.oplev.ViewModel.IdeaViewModel
 import com.example.oplev.sites.Journy.ComposableFun
 import com.example.oplev.sites.Journy.folderCreator
+
+
 
 
 @Composable
@@ -59,9 +62,9 @@ fun InspirationBottomBar(){
 
 
 @Composable
-fun InspirationScreen() {
+fun InspirationScreen(navController: NavController) {
     Scaffold(
-        topBar = { TopBar(title = "Inspirationer") },
+        topBar = { TopBar(title = "Inspirationer", navController) },
         content = {
 
         },
@@ -69,9 +72,9 @@ fun InspirationScreen() {
 }
 
 @Composable
-fun NotesScreen() {
+fun NotesScreen(navController: NavController) {
     Scaffold(
-        topBar = { TopBar(title = "Noter") },
+        topBar = { TopBar(title = "Noter", navController) },
         content = {
             Column(
                 modifier = Modifier
@@ -85,9 +88,9 @@ fun NotesScreen() {
 }
 
 @Composable
-fun LinksScreen() {
+fun LinksScreen(navController: NavController) {
     Scaffold(
-        topBar = { TopBar(title = "Links") },
+        topBar = { TopBar(title = "Links", navController) },
         content = {
 
 
@@ -119,9 +122,9 @@ fun PictureItem() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PictureScreen() {
+fun PictureScreen(navController: NavController) {
     Scaffold(
-        topBar = { TopBar(title = "Billeder") },
+        topBar = { TopBar(title = "Billeder", navController) },
         content = {
             val test: ComposableFun = {
                 Box(modifier = Modifier

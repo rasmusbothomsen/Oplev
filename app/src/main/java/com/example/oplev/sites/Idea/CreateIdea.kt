@@ -42,7 +42,7 @@ fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavContr
 
 
     Scaffold(
-        topBar = { TopBar(title = "Velkommen {user}") },
+        topBar = { TopBar(title = "Velkommen {user}", navController) },
         content = {
             Column(modifier = Modifier.fillMaxSize()) {
                 Box(modifier = Modifier.height(120.dp)) {

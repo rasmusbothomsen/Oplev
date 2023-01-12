@@ -67,7 +67,7 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
             runBlocking {
                 userName = journeyViewModel.getUserName(activity, context)
             }
-            TopBar("Velkommen $userName")},
+            TopBar("Velkommen $userName", navController)},
         content = {
             Column(modifier = Modifier
                 .fillMaxHeight()
@@ -128,14 +128,6 @@ navController: NavController) {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-            Button(onClick = {navController.navigate(Screen.CreateIdeaScreen.route)},
-                modifier = Modifier
-                    .align(alignment = Alignment.CenterEnd)
-                    .padding(2.dp)
-            ) {
-                Icon(LineAwesomeIcons.PlusSolid, "")
-            }
-
             }
          }
         }
