@@ -47,6 +47,35 @@ class JourneyDataService(
         super.insertRoom(item)
     }
 
+    suspend fun getJourneys(categoryDataService: CategoryDataService): List<Journey> {
+        var categoryDataService = categoryDataService
+        var journeys = mutableListOf<Journey>()
+        var journeyIds = categoryDataService.getSharedJourneyIds()
+        for( ids in journeyIds) {
+            db.collection("journeys")
+                .whereEqualTo("id", ids)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        journeys.add(
+                            Journey(
+                                document.data["id"] as String,
+                                document.data["tag"] as String,
+                                document.data["image"] as String,
+                                categoryDataService.getCategoryId("Delt med mig"),
+                                document.data["date"] as String,
+                                document.data["description"] as String,
+                                document.data["title"] as String
+                            )
+                        )
+                    }
+                }
+        }
+        return journeys
+    }
+
+
+
     fun getFolders(id: String): List<Folder> {
         return dao.getAllfoldersFromId(id)
     }

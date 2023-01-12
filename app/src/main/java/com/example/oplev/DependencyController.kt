@@ -20,16 +20,18 @@ class DependencyController() {
 
     fun initFrontPageViewModel(context: android.content.Context,application: Application): FrontPageViewModel {
         val appDb = AppDatabase.getInstance(context)
-        val categoryDataService = CategoryDataService(appDb.CategoryDao(), appDb.JourneyDao())
+        val queueDataService = QueueDataService(appDb)
+        val categoryDataService = CategoryDataService(appDb.CategoryDao())
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
-        return FrontPageViewModel(application, categoryDataService, userDataService)
+        val journeyDataService = JourneyDataService(appDb.JourneyDao(), queueDataService)
+        return FrontPageViewModel(application, categoryDataService, journeyDataService ,userDataService)
     }
 
     fun initCreateJourneyViewModel(context: android.content.Context,application: Application):CreateJourneyViewModel{
         val appDb = AppDatabase.getInstance(context)
         val queueDataService = QueueDataService(appDb)
         val journeyDataService = JourneyDataService(appDb.JourneyDao(),queueDataService)
-        val categoryDataService = CategoryDataService(appDb.CategoryDao(), appDb.JourneyDao())
+        val categoryDataService = CategoryDataService(appDb.CategoryDao())
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
         return CreateJourneyViewModel(journeyDataService, userDataService, categoryDataService, application)
 
@@ -44,7 +46,7 @@ class DependencyController() {
     fun initAuthViewModel(context: android.content.Context, application: Application):AuthViewModel{
         val appDb = AppDatabase.getInstance(context)
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
-        val categoryDataService = CategoryDataService(appDb.CategoryDao(), appDb.JourneyDao())
+        val categoryDataService = CategoryDataService(appDb.CategoryDao())
         return  AuthViewModel(userDataService, application, categoryDataService)
     }
 

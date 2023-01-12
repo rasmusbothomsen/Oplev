@@ -18,7 +18,7 @@ import kotlinx.coroutines.tasks.await
 import java.util.*
 
 class CategoryDataService(
-    val categoryDao:CategoryDao, val journeyDao: JourneyDao
+    val categoryDao:CategoryDao
 ) {
     private var db : FirebaseFirestore = FirebaseFirestore.getInstance()
 
@@ -60,41 +60,22 @@ class CategoryDataService(
         return categories
     }
 
-    suspend fun InsertAllSharedJourneys() {
+    suspend fun getSharedJourneyIds(): List<String> {
+        var journeyIds = mutableListOf<String>()
         db.collection("sharings")
             .whereEqualTo("collaboratorMail", Firebase.auth.currentUser?.email)
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
-                    db.collection("journeys")
-                        .whereEqualTo("journeyId", document.data["journeyId"] as String)
-                        .get()
-                        .addOnSuccessListener { documents ->
-                            for (document in documents) {
-                                var tempJourney = Journey(
-                                    document.data["id"] as String,
-                                    document.data["tag"] as String,
-                                    document.data["image"] as String,
-                                    getCategoryId("Delt med mig"),
-                                    document.data["date"] as String,
-                                    document.data["description"] as String,
-                                    document.data["title"] as String
-                                )
-
-                                runBlocking {
-                                    journeyDao.insert(tempJourney)
-                                }
-                            }
-                        }
-                        .addOnFailureListener { exception ->
-                            Log.w(AuthViewModel.TAG, "Error getting documents: ", exception)
-                        }
+                    journeyIds.add(document.data["journeyId"].toString())
                 }
             }
             .addOnFailureListener { exception ->
                 Log.w(AuthViewModel.TAG, "Error getting documents: ", exception)
             }.await()
+        return journeyIds
     }
+
 
     fun getCategoryDto(id: String):List<CategoryDto>{
         var categories = categoryDao.getAll(id)
