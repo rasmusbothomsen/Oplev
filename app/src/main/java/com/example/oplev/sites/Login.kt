@@ -48,6 +48,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import android.widget.VideoView
 import androidx.activity.ComponentActivity
@@ -62,6 +63,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.oplev.data.dataService.UserDataService
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
@@ -250,11 +252,19 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
             Button(
                 onClick = {
                     if (!email.isEmpty() && !password.isEmpty()) {
-                        runBlocking {
-                            authViewModel.signIn(email, password, context, activity)
-                        }
-                        if (FirebaseAuth.getInstance().currentUser != null) {
-                            navController.navigate(Screen.FrontPageScreen.route)
+                       val success = authViewModel.signIn(email, password, context, activity)
+                        when(success){
+                            is UserDataService.SignInResult.Success ->{
+                                if (FirebaseAuth.getInstance().currentUser != null) {
+                                    navController.navigate(Screen.FrontPageScreen.route)
+                                }
+                            }
+                            is UserDataService.SignInResult.WrongCredentials -> {
+                                Log.e("Failed login","Wrong credentials")
+                            }
+                            is UserDataService.SignInResult.Failed -> {
+                                Log.e("Failed login","FirebaseFailed")
+                            }
                         }
                     }
                 }, shape = CircleShape,

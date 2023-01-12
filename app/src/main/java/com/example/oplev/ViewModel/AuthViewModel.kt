@@ -114,16 +114,12 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
         }
 
     }
-    suspend fun signIn(email: String, password: String, baseContext: Context, activity: Activity) {
-        val success = userDataService.signIn(email,password,baseContext,activity)
-        val user = Firebase.auth.currentUser
-        if (success){
-            updateUI(user, true)
-        }
-        else{
-            updateUI(null, false)
-            return
-        }
+     fun signIn(email: String, password: String, baseContext: Context, activity: Activity):UserDataService.SignInResult {
+        val result:UserDataService.SignInResult
+         runBlocking {
+             result =  userDataService.signIn(email, password, baseContext, activity)
+         }
+         return  result
     }
 
     suspend fun sendPasswordReset(mail : String) {

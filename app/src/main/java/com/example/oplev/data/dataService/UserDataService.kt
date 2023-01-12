@@ -7,6 +7,7 @@ import android.util.Log
 import com.example.oplev.Model.UserInfo
 import com.example.oplev.ViewModel.AuthViewModel
 import com.example.oplev.data.roomDao.UserDao
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -223,17 +224,21 @@ class UserDataService(
     }
 
 
-    suspend fun signIn(email: String, password: String, baseContext: Context, activity: Activity) : Boolean {
-        var success = false
-        Firebase.auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(activity) { task ->
-                if (task.isSuccessful) {
-                    Log.d(AuthViewModel.TAG, "signInWithEmail:success")
-                    success = true
-                } else {
-                    Log.w(AuthViewModel.TAG, "signInWithEmail:failure", task.exception)
-                }
-            }.await()
-        return success
+    sealed class SignInResult {
+        object Success : SignInResult()
+        object WrongCredentials : SignInResult()
+        object Failed : SignInResult()
     }
+
+    suspend fun signIn(email: String, password: String, baseContext: Context, activity: Activity) : SignInResult {
+        return try {
+            Firebase.auth.signInWithEmailAndPassword(email, password).await()
+            SignInResult.Success
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            SignInResult.WrongCredentials
+        } catch (e: Exception) {
+            SignInResult.Failed
+        }
+    }
+
 }
