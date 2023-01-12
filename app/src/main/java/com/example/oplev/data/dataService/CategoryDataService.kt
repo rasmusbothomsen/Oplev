@@ -5,17 +5,20 @@ import android.util.Log
 import com.example.oplev.MainActivity
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.Idea
+import com.example.oplev.Model.Journey
 import com.example.oplev.ViewModel.AuthViewModel
 import com.example.oplev.data.dto.CategoryDto
 import com.example.oplev.data.roomDao.CategoryDao
+import com.example.oplev.data.roomDao.JourneyDao
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
 class CategoryDataService(
-    val categoryDao:CategoryDao
+    val categoryDao:CategoryDao, val journeyDao: JourneyDao
 ) {
     private var db : FirebaseFirestore = FirebaseFirestore.getInstance()
 
@@ -56,6 +59,43 @@ class CategoryDataService(
 
         return categories
     }
+
+    suspend fun InsertAllSharedJourneys() {
+        db.collection("sharings")
+            .whereEqualTo("collaboratorMail", Firebase.auth.currentUser?.email)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    db.collection("journeys")
+                        .whereEqualTo("journeyId", document.data["journeyId"] as String)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            for (document in documents) {
+                                var tempJourney = Journey(
+                                    document.data["id"] as String,
+                                    document.data["tag"] as String,
+                                    document.data["image"] as String,
+                                    getCategoryId("Delt med mig"),
+                                    document.data["date"] as String,
+                                    document.data["description"] as String,
+                                    document.data["title"] as String
+                                )
+
+                                runBlocking {
+                                    journeyDao.insert(tempJourney)
+                                }
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.w(AuthViewModel.TAG, "Error getting documents: ", exception)
+                        }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(AuthViewModel.TAG, "Error getting documents: ", exception)
+            }.await()
+    }
+
     fun getCategoryDto(id: String):List<CategoryDto>{
         var categories = categoryDao.getAll(id)
         var dtos = mutableListOf<CategoryDto>()

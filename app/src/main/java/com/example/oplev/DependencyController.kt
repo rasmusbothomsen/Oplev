@@ -20,7 +20,7 @@ class DependencyController() {
 
     fun initFrontPageViewModel(context: android.content.Context,application: Application): FrontPageViewModel {
         val appDb = AppDatabase.getInstance(context)
-        val categoryDataService = CategoryDataService(appDb.CategoryDao())
+        val categoryDataService = CategoryDataService(appDb.CategoryDao(), appDb.JourneyDao())
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
         return FrontPageViewModel(application, categoryDataService, userDataService)
     }
@@ -29,8 +29,9 @@ class DependencyController() {
         val appDb = AppDatabase.getInstance(context)
         val queueDataService = QueueDataService(appDb)
         val journeyDataService = JourneyDataService(appDb.JourneyDao(),queueDataService)
-        val categoryDataService = CategoryDataService(appDb.CategoryDao())
-        return CreateJourneyViewModel(journeyDataService, categoryDataService, application)
+        val categoryDataService = CategoryDataService(appDb.CategoryDao(), appDb.JourneyDao())
+        val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
+        return CreateJourneyViewModel(journeyDataService, userDataService, categoryDataService, application)
 
     }
     fun intiJourneyViewModel(context: android.content.Context, application: Application,journeyId: String):JourneyViewModel{
@@ -43,7 +44,7 @@ class DependencyController() {
     fun initAuthViewModel(context: android.content.Context, application: Application):AuthViewModel{
         val appDb = AppDatabase.getInstance(context)
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
-        val categoryDataService = CategoryDataService(appDb.CategoryDao())
+        val categoryDataService = CategoryDataService(appDb.CategoryDao(), appDb.JourneyDao())
         return  AuthViewModel(userDataService, application, categoryDataService)
     }
 

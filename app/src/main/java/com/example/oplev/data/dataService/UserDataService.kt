@@ -65,12 +65,40 @@ class UserDataService(
         return success
     }
 
+    suspend fun shareJourney(
+        ownerId : String,
+        journeyId : String,
+        collaboratorMail : String,
+        activity: Activity
+    )  {
+                    add["ownerId"] = ownerId
+                    add["journeyId"] = journeyId
+                    add["collaboratorMail"] = collaboratorMail
+                    add["isAccepted"] = false
+
+                    db.collection("sharings")
+                        .document()
+                        .set(add)
+                        .addOnCompleteListener(activity) { task ->
+                            if (task.isSuccessful) {
+                                Log.d(AuthViewModel.TAG, "sharing created :success")
+                            } else {
+                                Log.w(
+                                    AuthViewModel.TAG,
+                                    "sharing created :failure",
+                                    task.exception
+                                )
+                            }
+                        }.await()
+    }
+
+
     fun addUserLocally(firstname: String, lastname: String, email: String) {
         val userInfoId = Firebase.auth.currentUser?.uid.toString()
         var userInfo = UserInfo(userInfoId, email, firstname, lastname,false, "Intet nummer gemt.")
 
         val existUser = userDao.getUserFromId(userInfoId)
-        if (existUser.equals(null)){
+        if (existUser == null){
         userDao.addUserInfo(userInfo)
         Log.d("Useradded", userInfo.eMail)
         }else{

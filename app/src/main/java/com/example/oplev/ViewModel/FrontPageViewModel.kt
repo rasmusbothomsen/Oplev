@@ -15,6 +15,7 @@ import com.example.oplev.data.dto.CategoryDto
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
 class FrontPageViewModel(application: Application, val categoryDataService: CategoryDataService, val userDataService: UserDataService):BaseViewModel<Category>(
@@ -23,6 +24,12 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val _state = mutableStateOf(States())
     val state: State<States> = _state
+
+    init {
+        runBlocking {
+        categoryDataService.InsertAllSharedJourneys()
+        }
+    }
 
     suspend fun createCategory(title: String, activity: Activity) {
         categoryDataService.createCategory(title, activity)

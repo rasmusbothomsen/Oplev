@@ -49,6 +49,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
     var category by remember { mutableStateOf("") }
     var Description by remember { mutableStateOf("") }
     var Title by remember { mutableStateOf("") }
+    var collaboratorId by remember { mutableStateOf("") }
 
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
@@ -72,8 +73,8 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                           category = it.title
                       }
                       inputTextfield("Inviter Venner",80, imageVector = Icons.Default.Person, onValueChange = {
-                              /*TODO*/
-                          },"")
+                              collaboratorId = it
+                          },collaboratorId)
                       datePicker()
                       inputTextfield("Beskriv oplevelsen",height = 150,imageVector = Icons.Default.Menu, onValueChange = {
                           Description = it
@@ -97,7 +98,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                           }
                           Spacer(modifier = Modifier.width(40.dp))
                           Button(
-                              onClick = { createJourneyViewModel.createNewJourney(tag, Image, createJourneyViewModel.getCategoryIdFromTitle(category), Date, Description, Title)
+                              onClick = { createJourneyViewModel.createNewJourney(tag, Image, createJourneyViewModel.getCategoryIdFromTitle(category), Date, Description, Title, collaboratorId, activity)
                                   navController.navigate(Screen.FrontPageScreen.route)
                               },
                               colors = ButtonDefaults.buttonColors(

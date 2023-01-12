@@ -102,6 +102,7 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
             if (Firebase.auth.currentUser != null) {
                 categoryDataService.createCategory("Seneste", activity)
                 categoryDataService.createCategory("Favoritter", activity)
+                categoryDataService.createCategory("Delt med mig", activity)
             }
 
 
