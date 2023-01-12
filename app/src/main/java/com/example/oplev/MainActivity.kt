@@ -49,12 +49,11 @@ class MainActivity : ComponentActivity() {
         super.onStart()
 
         // Check if user is signed in (non-null) and update UI accordingly.
-        /*
+
         val currentUser = auth.currentUser
         if(currentUser != null){
             val user = database.UserDao().getUserFromId(currentUser.uid.toString())
-            if(user?.hasOnboarded == false) {
-
+            if(!database.UserDao().getOBStatus(user.userId)) {
                 startPage = Screen.Onboarding1.route
             }
             else {
@@ -62,7 +61,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-         */
+
     }
 }
 

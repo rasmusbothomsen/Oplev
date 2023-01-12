@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -41,13 +42,13 @@ fun OnboardingLayout1(navController: NavController, viewModel: OnboadringViewMod
 
         )
         {
-            Spacer(Modifier.height(120.dp))
+            Spacer(Modifier.height(20.dp))
             Image(
-                painterResource(R.drawable.oplev300dpi),
+                painterResource(R.drawable.oplev72dpi),
                 contentDescription = "",
                 modifier = Modifier.size(240.dp, 240.dp)
             )
-            Spacer(Modifier.height(30.dp))
+            Spacer(Modifier.height(10.dp))
 
 
             Text(
@@ -63,12 +64,12 @@ fun OnboardingLayout1(navController: NavController, viewModel: OnboadringViewMod
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(10.dp),
-                fontSize = 28.sp,
+                fontSize = 20.sp,
                 fontFamily = FontFamily.Default,
                 textAlign = TextAlign.Center
 
             )
-
+            val activity = LocalContext.current as Activity
 
             Row(modifier= Modifier
                 .fillMaxSize()
@@ -78,7 +79,8 @@ fun OnboardingLayout1(navController: NavController, viewModel: OnboadringViewMod
                     text = AnnotatedString("Spring Over"),
 
 
-                    onClick = {viewModel.onboadringComplete()
+                    onClick = {
+                        viewModel.onboadringComplete(activity)
                         navController.navigate(route = "frontpage") }
                 )
 
@@ -103,11 +105,11 @@ fun OnboardingLayout2(navController: NavController, viewModel: OnboadringViewMod
 
         )
         {
-            Spacer(Modifier.height(120.dp))
+            Spacer(Modifier.height(60.dp))
             Image(
                 painterResource(R.drawable.onboardingimg1),
                 contentDescription = "",
-                modifier = Modifier.size(240.dp, 240.dp)
+                modifier = Modifier.size(160.dp)
             )
             Spacer(Modifier.height(30.dp))
             /* Headline */
@@ -122,11 +124,11 @@ fun OnboardingLayout2(navController: NavController, viewModel: OnboadringViewMod
             )
             Spacer(Modifier.height(30.dp))
             Text(
-                text = "De næste sider du ser vil lære dig Oplev's kernefunktioner at kende.",
+                text = "De næste sider du ser, vil lære dig Oplev's kernefunktioner at kende.",
                 modifier = Modifier
                     .align(CenterHorizontally)
                     .padding(10.dp),
-                fontSize = 28.sp,
+                fontSize = 20.sp,
                 fontFamily = FontFamily.Default,
                 textAlign = TextAlign.Center
 
@@ -164,13 +166,13 @@ fun OnboardingLayout3(navController: NavController, viewModel: OnboadringViewMod
 
         )
         {
-            Spacer(Modifier.height(120.dp))
+            Spacer(Modifier.height(60.dp))
             Image(
-                painterResource(R.drawable.onboardingimg1),
+                painterResource(R.drawable.onboardingimg2),
                 contentDescription = "",
-                modifier = Modifier.size(240.dp, 240.dp)
+                modifier = Modifier.size(160.dp)
             )
-            Spacer(Modifier.height(30.dp))
+            Spacer(Modifier.height(20.dp))
             /* Headline */
 
             Text(
@@ -187,7 +189,7 @@ fun OnboardingLayout3(navController: NavController, viewModel: OnboadringViewMod
                 modifier = Modifier
                     .align(CenterHorizontally)
                     .padding(10.dp),
-                fontSize = 28.sp,
+                fontSize = 20.sp,
                 fontFamily = FontFamily.Default,
                 textAlign = TextAlign.Center
 
@@ -225,11 +227,11 @@ fun OnboardingLayout4(navController: NavController, viewModel: OnboadringViewMod
 
         )
         {
-            Spacer(Modifier.height(120.dp))
+            Spacer(Modifier.height(60.dp))
             Image(
-                painterResource(R.drawable.onboardingimg1),
+                painterResource(R.drawable.onboardingimg3),
                 contentDescription = "",
-                modifier = Modifier.size(240.dp, 240.dp)
+                modifier = Modifier.size(150.dp, 120.dp)
             )
             Spacer(Modifier.height(30.dp))
             /* Headline */
@@ -248,13 +250,13 @@ fun OnboardingLayout4(navController: NavController, viewModel: OnboadringViewMod
                 modifier = Modifier
                     .align(CenterHorizontally)
                     .padding(10.dp),
-                fontSize = 28.sp,
+                fontSize = 20.sp,
                 fontFamily = FontFamily.Default,
                 textAlign = TextAlign.Center
 
             )
 
-
+            val activity = LocalContext.current as Activity
             Row(modifier= Modifier
                 .fillMaxSize()
                 .padding(50.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
@@ -265,10 +267,8 @@ fun OnboardingLayout4(navController: NavController, viewModel: OnboadringViewMod
 
                     onClick = {navController.navigate(route = "onboarding3")},
                 )
-
-
                 ClickableText(
-                    text = AnnotatedString("Slut", ), onClick = { viewModel.onboadringComplete()
+                    text = AnnotatedString("Slut", ), onClick = { viewModel.onboadringComplete(activity)
                         navController.navigate(route = "frontpage")})
             }
         }

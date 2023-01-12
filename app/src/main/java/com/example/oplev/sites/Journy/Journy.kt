@@ -26,6 +26,7 @@ import com.example.oplev.R
 import androidx.compose.material.Text
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
@@ -36,6 +37,8 @@ import com.example.oplev.sites.*
 
 import com.example.oplev.ViewModel.JourneyViewModel
 import com.example.oplev.ui.theme.OplevFarve2
+import compose.icons.LineAwesomeIcons
+import compose.icons.lineawesomeicons.ArrowAltCircleLeft
 import kotlinx.coroutines.runBlocking
 
 // make an alias
@@ -61,6 +64,13 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
                 .fillMaxHeight()
                 .fillMaxWidth()
             ) {
+                IconButton(onClick = {journeyViewModel.goBackFromFolder()}){
+                    Icon(LineAwesomeIcons.ArrowAltCircleLeft, "")
+                
+                }
+
+
+
                 imageAndText(text = journeyViewModel.getJourneyTitle(), image = null, journeyViewModel = journeyViewModel)
                 gridForFoldersAndIdeas(uiState.folders, uiState.ideas,
                     onFolderClick = {it -> journeyViewModel.openNewFolder(it)},

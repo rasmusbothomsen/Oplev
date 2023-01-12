@@ -262,7 +262,7 @@ fun CreateUserContent(authViewModel: AuthViewModel, navController: NavController
                         authViewModel.createNewUser(fullname, email, password, context, activity)
                     }
                     if (FirebaseAuth.getInstance().currentUser != null) {
-                        navController.navigate(Screen.FrontPageScreen.route)
+                        navController.navigate(Screen.Onboarding1.route)
                     }
                     } else {
                         val toast = Toast.makeText(context, "Adgangskoderne er ikke ens. Prøv igen.", Toast.LENGTH_LONG)
