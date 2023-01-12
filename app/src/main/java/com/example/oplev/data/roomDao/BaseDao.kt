@@ -7,11 +7,13 @@ import kotlinx.coroutines.selects.select
 interface BaseDao<T> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(item:T)
+    suspend fun insert(item:T)
     @Update
     suspend fun update(item: T)
     @Delete
     fun delete(item: T)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg item:T)
+     fun insertAll(vararg item:T)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllAny(items:List<out T>)
 }

@@ -6,6 +6,7 @@ import com.example.oplev.data.roomDao.BaseDao
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.runBlocking
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.typeOf
@@ -40,7 +41,7 @@ open class BaseDataService<T> (
         return className to attributes
     }
 
-    open fun insertIntoFireBase(item :T){
+    open suspend fun insertIntoFireBase(item :T){
         val deconStructedItem = extractDataClassAttributes(item as Any)
         val collectionName = deconStructedItem.first
         val add = deconStructedItem.second
@@ -53,7 +54,9 @@ open class BaseDataService<T> (
                 if(task.isSuccessful){
                     Log.d("FirebaseInsert",  "STATUS: SUCCESS")
                 }else{
+                    runBlocking {
                     insertQueueItem(item,add["id"].toString())
+                    }
                 }
             }
 
@@ -64,7 +67,7 @@ open class BaseDataService<T> (
 
     }
 
-    open fun insertQueueItem(item:T, itemId:String){
+    open suspend fun insertQueueItem(item:T, itemId:String){
         queueDataService.insertItemToQue(item!!::class.simpleName!!,itemId)
     }
 

@@ -1,13 +1,16 @@
 package com.example.oplev.data.dataService
 
+import android.app.Activity
 import android.util.Log
-import com.example.oplev.Model.QueueItem
+import com.example.oplev.Model.*
 import com.example.oplev.data.AppDatabase
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.typeOf
 
 class QueueDataService(
 
@@ -17,14 +20,27 @@ class QueueDataService(
     val dao = appDatabase.QueDao()
     private var itemsSynced = 0
 
-    fun insertItemToQue(itemType:String,itemID:String){
+    suspend fun insertItemToQue(itemType:String,itemID:String){
         val item = QueueItem(0,itemType,itemID,true)
         dao.insert(item)
     }
     suspend fun syncDatabases():Deferred<Unit>{
         return GlobalScope.async(Dispatchers.IO) {
             upDateFirebaseFromQueue()
+            GlobalScope.async(Dispatchers.IO) {
+                getAllFirebaseObjects()
+            }
         }
+    }
+    suspend fun getAllFirebaseObjects(){
+        var ideas:List<Idea> = populateDatClass(typeOf<Idea>()) as List<Idea>
+        appDatabase.IdeaDao().insertAllAny(ideas)
+        var folders = populateDatClass(typeOf<Folder>()) as List<Folder>
+        appDatabase.FolderDao().insertAllAny(folders)
+        var category = populateDatClass(typeOf<Category>()) as List<Category>
+        appDatabase.CategoryDao().insertAllAny(category)
+        var journey = populateDatClass(typeOf<Journey>()) as List<Journey>
+        appDatabase.JourneyDao().insertAllAny(journey)
     }
     suspend fun upDateFirebaseFromQueue() {
         val items = dao.getAll()
@@ -80,8 +96,17 @@ class QueueDataService(
         return className to attributes
     }
 
-    fun <Any> populateDatClass(data:Any):List<Any>{
-        val dbCollection = db.collection(data!!::class.simpleName!!).document(Firebase.auth.currentUser)
+   suspend fun <T> populateDatClass(data:T):List<T>{
+        val dbCollection = db.collection("users").document(Firebase.auth.currentUser?.uid.toString())
+            .collection(data!!::class.simpleName!!).get().addOnCompleteListener(){task ->
+                if (task.isSuccessful){
+                 Log.d("FIREBASE SYNC","SUCCESS")
+                }else if(task.isComplete){
+                    Log.d("FIREBASE SYNC","SUCCESS")
+                }
+            }
+       val itemsToReturn = dbCollection.await().toObjects(data!!::class.java)
+       return itemsToReturn
     }
 
      fun insertIntoFireBase(deconStructedItem: Pair<String?, HashMap<String, Any>>){
