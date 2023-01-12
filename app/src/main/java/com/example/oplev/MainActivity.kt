@@ -7,6 +7,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.room.Room
 import com.example.oplev.data.AppDatabase
+import com.example.oplev.data.dataService.UserDataService
+import com.example.oplev.ui.components.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -41,10 +43,18 @@ class MainActivity : ComponentActivity() {
 
     public override fun onStart() {
         super.onStart()
+
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         if(currentUser != null){
-            startPage = Screen.FrontPageScreen.route
+            val user = database.UserDao().getUserFromId(currentUser.uid.toString())
+            if(user.hasOnboarded == false) {
+
+                startPage = Screen.Onboarding1.route
+            }
+            else {
+                startPage = Screen.FrontPageScreen.route
+            }
         }
     }
 }

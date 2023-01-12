@@ -96,7 +96,7 @@ fun OnboardingLayout2(navController: NavController, viewModel: OnboadringViewMod
     Surface (modifier = Modifier.fillMaxSize()){
 
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally ,
+            horizontalAlignment = CenterHorizontally ,
             modifier = Modifier
                 .background(color = OplevOnboard2)
                 .fillMaxWidth()
@@ -114,7 +114,7 @@ fun OnboardingLayout2(navController: NavController, viewModel: OnboadringViewMod
 
             Text(
                 text = "Lær lidt om appen inden du starter.",
-                modifier = Modifier.align(Alignment.CenterHorizontally),
+                modifier = Modifier.align(CenterHorizontally),
                 fontSize = 40.sp,
                 fontFamily = FontFamily.Default,
                 textAlign = TextAlign.Center
@@ -124,7 +124,7 @@ fun OnboardingLayout2(navController: NavController, viewModel: OnboadringViewMod
             Text(
                 text = "De næste sider du ser vil lære dig Oplev's kernefunktioner at kende.",
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
+                    .align(CenterHorizontally)
                     .padding(10.dp),
                 fontSize = 28.sp,
                 fontFamily = FontFamily.Default,
@@ -157,7 +157,7 @@ fun OnboardingLayout3(navController: NavController, viewModel: OnboadringViewMod
     Surface (modifier = Modifier.fillMaxSize()){
 
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally ,
+            horizontalAlignment = CenterHorizontally ,
             modifier = Modifier
                 .background(color = OplevOnboard3)
                 .fillMaxWidth()
@@ -175,7 +175,7 @@ fun OnboardingLayout3(navController: NavController, viewModel: OnboadringViewMod
 
             Text(
                 text = "Opret eventyr",
-                modifier = Modifier.align(Alignment.CenterHorizontally),
+                modifier = Modifier.align(CenterHorizontally),
                 fontSize = 40.sp,
                 fontFamily = FontFamily.Default,
                 textAlign = TextAlign.Center
@@ -185,7 +185,7 @@ fun OnboardingLayout3(navController: NavController, viewModel: OnboadringViewMod
             Text(
                 text = "Plus-ikonet i bunden af din side, er hvor du starter din egen rejse. Når du klikker på den, kan du oprette en rejse, eller en rejsekategori.",
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
+                    .align(CenterHorizontally)
                     .padding(10.dp),
                 fontSize = 28.sp,
                 fontFamily = FontFamily.Default,
@@ -218,7 +218,7 @@ fun OnboardingLayout4(navController: NavController, viewModel: OnboadringViewMod
     Surface (modifier = Modifier.fillMaxSize()){
 
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally ,
+            horizontalAlignment = CenterHorizontally ,
             modifier = Modifier
                 .background(color = OplevOnboard4)
                 .fillMaxWidth()
@@ -236,7 +236,7 @@ fun OnboardingLayout4(navController: NavController, viewModel: OnboadringViewMod
 
             Text(
                 text = "Del dine rejser.",
-                modifier = Modifier.align(Alignment.CenterHorizontally),
+                modifier = Modifier.align(CenterHorizontally),
                 fontSize = 40.sp,
                 fontFamily = FontFamily.Default,
                 textAlign = TextAlign.Center
@@ -246,7 +246,7 @@ fun OnboardingLayout4(navController: NavController, viewModel: OnboadringViewMod
             Text(
                 text = "Del dine rejser med andre brugere. Invitér dem du vil have med på dit eventyr. ",
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
+                    .align(CenterHorizontally)
                     .padding(10.dp),
                 fontSize = 28.sp,
                 fontFamily = FontFamily.Default,

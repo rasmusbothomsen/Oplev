@@ -3,6 +3,7 @@ package com.example.oplev.ui.components
 import android.app.Application
 import android.app.DatePickerDialog
 import android.content.Context
+import android.service.autofill.UserData
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -33,13 +34,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.oplev.DependencyController
 import com.example.oplev.Model.Journey
+import com.example.oplev.Model.UserInfo
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.JourneyViewModel
+import com.example.oplev.ViewModel.OnboadringViewModel
+import com.example.oplev.data.dataService.UserDataService
 import com.example.oplev.sites.*
 import com.example.oplev.sites.Idea.IdeaScreen
 import com.example.oplev.sites.Journy.JourneyScreen
 import com.example.oplev.sites.Journy.createJourneyComp
+import com.example.oplev.sites.Onboarding.OnboardingLayout1
+import com.example.oplev.sites.Onboarding.OnboardingLayout2
+import com.example.oplev.sites.Onboarding.OnboardingLayout3
+import com.example.oplev.sites.Onboarding.OnboardingLayout4
+import com.google.firebase.firestore.auth.User
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.*
@@ -82,6 +91,18 @@ fun NavController(application: Application, startRoute : String) {
         }
 
         */
+        composable(route = Screen.Onboarding1.route){
+            OnboardingLayout1(navController = navController, viewModel = dependencyController.initOnboardingViewModel(context, application))
+        }
+        composable(route = Screen.Onboarding2.route){
+            OnboardingLayout2(navController = navController, viewModel = dependencyController.initOnboardingViewModel(context, application))
+        }
+        composable(route = Screen.Onboarding3.route){
+            OnboardingLayout3(navController = navController, viewModel = dependencyController.initOnboardingViewModel(context, application))
+        }
+        composable(route = Screen.Onboarding4.route){
+            OnboardingLayout4(navController = navController, viewModel = dependencyController.initOnboardingViewModel(context, application))
+        }
     }
 
 
