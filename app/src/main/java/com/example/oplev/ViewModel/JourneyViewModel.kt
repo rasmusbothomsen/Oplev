@@ -26,6 +26,7 @@ class JourneyViewModel(val journeyDataService: JourneyDataService, application: 
     private val _state = MutableStateFlow(States())
     private val _uiState = MutableStateFlow(JourneyUiState())
     private val currentJourney:Journey
+    private var folderStack:Stack<Folder?> = MutableList(0){null}
 
     val uiState:StateFlow<JourneyUiState> = _uiState.asStateFlow()
     val state: StateFlow<States> = _state.asStateFlow()
@@ -51,8 +52,17 @@ class JourneyViewModel(val journeyDataService: JourneyDataService, application: 
             )
         }
     }
-
+    fun goBackFromFolder(){
+        _uiState.update {
+            currentState ->
+            currentState.copy(
+                openFolder = folderStack.pop()
+            )
+        }
+        updateOpenFolder()
+    }
     fun openNewFolder(folder: Folder){
+        folderStack.push(_uiState.value.openFolder)
         _uiState.update { currentState ->
             currentState.copy(
                 openFolder = folder,

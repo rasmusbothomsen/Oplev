@@ -4,10 +4,7 @@ import android.app.Application
 import com.example.oplev.Model.Journey
 import com.example.oplev.ViewModel.*
 import com.example.oplev.data.AppDatabase
-import com.example.oplev.data.dataService.CategoryDataService
-import com.example.oplev.data.dataService.JourneyDataService
-import com.example.oplev.data.dataService.QueueDataService
-import com.example.oplev.data.dataService.UserDataService
+import com.example.oplev.data.dataService.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -32,6 +29,8 @@ class DependencyController() {
         val queueDataService = QueueDataService(appDb)
         val journeyDataService = JourneyDataService(appDb.JourneyDao(),queueDataService)
         val categoryDataService = CategoryDataService(appDb.CategoryDao())
+        val folderDataService = FolderDataService(appDb.FolderDao(),queueDataService)
+        return CreateJourneyViewModel(journeyDataService, categoryDataService, application,folderDataService)
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
         return CreateJourneyViewModel(journeyDataService, userDataService, categoryDataService, application)
 
@@ -47,7 +46,8 @@ class DependencyController() {
         val appDb = AppDatabase.getInstance(context)
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
         val categoryDataService = CategoryDataService(appDb.CategoryDao())
-        return  AuthViewModel(userDataService, application, categoryDataService)
+        val queueDataService = QueueDataService(appDb)
+        return  AuthViewModel(userDataService, application, categoryDataService,queueDataService)
     }
 
     fun initOnboardingViewModel(context: android.content.Context, application: Application): OnboadringViewModel{

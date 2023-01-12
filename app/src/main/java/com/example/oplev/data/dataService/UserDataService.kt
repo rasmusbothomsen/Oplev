@@ -118,13 +118,28 @@ class UserDataService(
 
     }
 
-    suspend fun updateOnboarding() {
-        val user = Firebase.auth.currentUser?.uid
-        if (user != null) {
-            val userinfo = userDao.getUserFromId(user)
-            userinfo.hasOnboarded = true
-            userDao.update(userinfo)
+    suspend fun updateOnboarding(activity: Activity) {
+            val user = Firebase.auth.currentUser
+
+            db.collection("users")
+                .document(user?.uid.toString())
+                .update("hasOnboarded", true).addOnCompleteListener(activity) {
+                        task ->
+                    if (task.isSuccessful){
+                        Log.d(TAG, "User email address updated.")
+                    }
+                }
+
+        updateOBLocally(user?.uid.toString())
         }
+
+
+    fun updateOBLocally(id : String) {
+        val user = userDao.getUserFromId(id)
+        runBlocking {
+            userDao.updateOBStatus(true, id)
+        }
+        Log.d("User phone num updated", user.eMail)
     }
 
     suspend fun deleteUser() {

@@ -1,5 +1,6 @@
 package com.example.oplev.ViewModel
 
+import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.example.oplev.Model.Idea
@@ -13,10 +14,12 @@ import kotlinx.coroutines.launch
 class OnboadringViewModel(val dataService: UserDataService, application: Application):BaseViewModel<UserInfo>(
     application) {
 
-    fun onboadringComplete(){
+    fun onboadringComplete(activity: Activity){
         viewModelScope.launch(Dispatchers.IO) {
-            dataService.updateOnboarding()
+            dataService.updateOnboarding(activity)
         }
     }
+
+
 
 }
