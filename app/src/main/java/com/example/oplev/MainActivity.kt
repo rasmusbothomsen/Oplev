@@ -3,8 +3,10 @@ package com.example.oplev
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.core.internal.view.SupportMenuItem
 import androidx.room.Room
 import com.example.oplev.data.AppDatabase
 import com.example.oplev.data.dataService.UserDataService
@@ -28,6 +30,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        actionBar?.hide()
         auth = Firebase.auth
         runBlocking{
             context = applicationContext
@@ -35,6 +38,7 @@ class MainActivity : ComponentActivity() {
             //AppDatabase.CreateDummyData()
         }
         setContent {
+
             com.example.oplev.ui.components.NavController(application, startPage)
 
         }
