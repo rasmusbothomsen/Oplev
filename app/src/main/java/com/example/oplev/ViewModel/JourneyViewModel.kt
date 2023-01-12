@@ -70,7 +70,7 @@ class JourneyViewModel(val journeyDataService: JourneyDataService, application: 
         }
         updateOpenFolder()
     }
-
+    
 
 
     fun getJourneyTitle(): String{

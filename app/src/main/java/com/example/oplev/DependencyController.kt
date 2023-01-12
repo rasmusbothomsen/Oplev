@@ -56,5 +56,23 @@ class DependencyController() {
 
         return OnboadringViewModel(userDataService, application)
     }
+
+    fun initIdeaViewModel(context: android.content.Context, application: Application, ideaId: String):IdeaViewModel{
+        val appDb = AppDatabase.getInstance(context)
+        val queueDataService = QueueDataService(appDb)
+        val ideaDataService = IdeaDataService(appDb.IdeaDao(),queueDataService)
+        return IdeaViewModel(ideaDataService, application, ideaId)
+    }
+
+    fun initCreateIdeaViewModel(context: android.content.Context, application: Application,folderId:String):CreateIdeaViewModel{
+        val appDb = AppDatabase.getInstance(context)
+        val queueDataService = QueueDataService(appDb)
+        val ideaDataService = IdeaDataService(appDb.IdeaDao(),queueDataService)
+        return CreateIdeaViewModel(ideaDataService, application,folderId)
+
+    }
+
+
+
 }
 

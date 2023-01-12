@@ -3,6 +3,7 @@ package com.example.oplev.sites.Journy
 import android.app.Activity
 import android.media.Image
 import android.util.Log
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -24,21 +25,29 @@ import androidx.compose.ui.unit.sp
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import androidx.compose.material.Text
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.example.oplev.Model.Idea
 import com.example.oplev.Model.Folder
 import com.example.oplev.Screen
+import com.example.oplev.ViewModel.CreateIdeaViewModel
 import com.example.oplev.sites.*
 
 import com.example.oplev.ViewModel.JourneyViewModel
+import com.example.oplev.data.dataService.IdeaDataService
+import com.example.oplev.data.dataService.QueueDataService
+import com.example.oplev.data.roomDao.IdeaDao
 import com.example.oplev.ui.theme.OplevFarve2
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.ArrowAltCircleLeft
+import compose.icons.lineawesomeicons.PlusSolid
 import kotlinx.coroutines.runBlocking
 
 // make an alias
@@ -50,7 +59,6 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
     val uiState by journeyViewModel.uiState.collectAsState()
-
 
     Scaffold(
         topBar = {
@@ -71,21 +79,27 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
 
 
 
-                imageAndText(text = journeyViewModel.getJourneyTitle(), image = null, journeyViewModel = journeyViewModel)
+                imageAndText(text = journeyViewModel.getJourneyTitle(), image = null, journeyViewModel = journeyViewModel, navController = navController)
                 gridForFoldersAndIdeas(uiState.folders, uiState.ideas,
                     onFolderClick = {it -> journeyViewModel.openNewFolder(it)},
-                    onIdeaClick = {it -> /** nav controller**/})
+                    onIdeaClick = {it -> navController.navigate(Screen.IdeaScreen.route + "/$it")})
             }
                   },
-        bottomBar = { BottomBar()} )
+        bottomBar = { BottomBar()},
+        floatingActionButton = {
+            FloatingActionButton(onClick = { navController.navigate(Screen.CreateIdeaScreen.route+"/${uiState.openFolder!!.id}") }) {
+                Icon(LineAwesomeIcons.PlusSolid, "")
+            }
+        }
+        )
 }
-
 
 @Composable
 fun imageAndText(
     text: String,
     image: Image?,
-    journeyViewModel: JourneyViewModel) {
+    journeyViewModel: JourneyViewModel,
+navController: NavController) {
     Box(modifier = Modifier.height(180.dp)){
     Column(
         modifier = Modifier
@@ -113,14 +127,23 @@ fun imageAndText(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
+            Button(onClick = {navController.navigate(Screen.CreateIdeaScreen.route)},
+                modifier = Modifier
+                    .align(alignment = Alignment.CenterEnd)
+                    .padding(2.dp)
+            ) {
+                Icon(LineAwesomeIcons.PlusSolid, "")
+            }
+
+            }
          }
         }
     }
-}
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun gridForFoldersAndIdeas(folders: List<Folder>, ideas: List<Idea>, onFolderClick:(Folder)-> Unit, onIdeaClick:(Idea)-> Unit){
+fun gridForFoldersAndIdeas(folders: List<Folder>, ideas: List<Idea>, onFolderClick:(Folder)-> Unit, onIdeaClick:(String)-> Unit){
 
     LazyVerticalGrid(cells = GridCells.Fixed(3),horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -155,11 +178,11 @@ fun folderCreator(folder: Folder, onFolderClick:(Folder)-> Unit){
 }
 
 @Composable
-fun ideaCreator(idea: Idea, onIdeaClick:(Idea)-> Unit){
+fun ideaCreator(idea: Idea, onIdeaClick:(String)-> Unit){
     Column(
         modifier = Modifier.size(100.dp)
     ){
-        IconButton(onClick = {onIdeaClick(idea)}, Modifier.align(Alignment.CenterHorizontally)) {
+        IconButton(onClick = {onIdeaClick(idea.id)}, Modifier.align(Alignment.CenterHorizontally)) {
             Icon(painter = painterResource(id = R.drawable.ic_baseline_lightbulb_24),
                 contentDescription = "Idea",
                 modifier = Modifier.size(80.dp))
@@ -169,7 +192,7 @@ fun ideaCreator(idea: Idea, onIdeaClick:(Idea)-> Unit){
 }
 
 @Composable
-fun BottomBar(){
+fun BottomBar( /*createIdeaViewModel: CreateIdeaViewModel, navController: NavController */ ){
     BottomAppBar(modifier = Modifier.height(65.dp), cutoutShape = CircleShape,) {
         BottomNavigation() {
             BottomNavigationItem(
@@ -177,6 +200,15 @@ fun BottomBar(){
                 label = { Text(text = "Menu") },
                 selected = false,
                 onClick = {})
+
+            /*
+            BottomNavigationItem(
+                icon = { Icon(imageVector = LineAwesomeIcons.PlusSolid, "") },
+                label = { Text(text = "Ny Idea") },
+                selected = false,
+                onClick = { navController.navigate(Screen.CreateIdeaScreen.route) })
+            */
+
             BottomNavigationItem(
                 icon = { Icon(imageVector = Icons.Default.Search, "") },
                 label = { Text(text = "Søg") },

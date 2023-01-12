@@ -4,6 +4,8 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.example.oplev.Model.Folder
 import com.example.oplev.Model.Idea
+import com.example.oplev.Model.Journey
+
 @Dao
 interface IdeaDao:BaseDao<Idea> {
 
@@ -12,4 +14,6 @@ interface IdeaDao:BaseDao<Idea> {
     @Query("select * from ideas where id == :stringid")
     fun getfromId(stringid:String):List<Idea>
 
+    @Query("select * from ideas where id == :id")
+    fun findIdea(id:String): Idea
 }

@@ -10,7 +10,7 @@ data class Idea(
     var folderId:String,
     var title: String,
     var description: String,
-    var link: String?,
+    var link: String,
     var image: String?,
     var date: String,
 )
@@ -69,7 +69,6 @@ data class States(
     var phoneNumEditable : Boolean = false,
     var forgotpassworddialog : Boolean = false,
     var chosenJourneyState: Journey? = null,
-    var chosenIdeaState: Idea? = null,
     var emailDialogState : Boolean = false,
 )
 

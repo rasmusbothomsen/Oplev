@@ -82,7 +82,7 @@ abstract class AppDatabase : RoomDatabase() {
                 folderId = "2",
                 title = "Idea 3",
                 description = "This is the description for Idea 3",
-                link = null,
+                link = "www.google.com",
                 image = "img_japan",
                 date = "1"
             )
