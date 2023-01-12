@@ -34,7 +34,7 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
         viewModelScope.launch(Dispatchers.IO) {
             var journeys = journeyDataService.getJourneys(categoryDataService)
             for (Journey in journeys) {
-                journeyDataService.insertRoom(Journey)
+                journeyDataService.insertItem(Journey)
             }
         }
     }

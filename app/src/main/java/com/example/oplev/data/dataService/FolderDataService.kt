@@ -34,7 +34,7 @@ class FolderDataService(val dao:FolderDao,queueDataService: QueueDataService):Ba
                 }
             }
 
-        super.insertRoom(item)
+        super.insertItem(item)
     }
 
 
