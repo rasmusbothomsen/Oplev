@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -34,12 +35,14 @@ import com.example.oplev.Model.Idea
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.IdeaViewModel
+import com.example.oplev.ViewModel.JourneyViewModel
 import com.example.oplev.data.dataService.IdeaDataService
 import com.example.oplev.data.roomDao.IdeaDao
 import com.example.oplev.sites.Journy.BottomBar
 import com.example.oplev.sites.TopBar
 import com.example.oplev.ui.theme.OplevBlue
 import compose.icons.LineAwesomeIcons
+import compose.icons.lineawesomeicons.ArrowAltCircleLeft
 import compose.icons.lineawesomeicons.Lightbulb
 
 
@@ -214,4 +217,22 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
         },
         bottomBar = { BottomBar() }
     )
+}
+
+@Composable
+fun BottomBar(){
+    BottomAppBar(modifier = Modifier.height(65.dp), cutoutShape = CircleShape,) {
+        BottomNavigation() {
+            BottomNavigationItem(
+                icon = { Icon(imageVector = Icons.Default.Menu, "") },
+                label = { Text(text = "Menu") },
+                selected = false,
+                onClick = {})
+            BottomNavigationItem(
+                icon = { Icon(LineAwesomeIcons.ArrowAltCircleLeft, "") },
+                label = { Text(text = "Tilbage") },
+                selected = false,
+                onClick = {})
+        }
+    }
 }

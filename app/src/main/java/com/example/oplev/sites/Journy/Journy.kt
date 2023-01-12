@@ -2,6 +2,7 @@ package com.example.oplev.sites.Journy
 
 import android.app.Activity
 import android.media.Image
+import android.service.autofill.OnClickAction
 import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
@@ -72,12 +73,6 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
                 .fillMaxHeight()
                 .fillMaxWidth()
             ) {
-                IconButton(onClick = {journeyViewModel.goBackFromFolder()}){
-                    Icon(LineAwesomeIcons.ArrowAltCircleLeft, "")
-                
-                }
-
-
 
                 imageAndText(text = journeyViewModel.getJourneyTitle(), image = null, journeyViewModel = journeyViewModel, navController = navController)
                 gridForFoldersAndIdeas(uiState.folders, uiState.ideas,
@@ -85,13 +80,9 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
                     onIdeaClick = {it -> navController.navigate(Screen.IdeaScreen.route + "/$it")})
             }
                   },
-        bottomBar = { BottomBar()},
-        floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate(Screen.CreateIdeaScreen.route+"/${uiState.openFolder!!.id}") }) {
-                Icon(LineAwesomeIcons.PlusSolid, "")
-            }
-        }
-        )
+        bottomBar = { BottomBar(viewModel = journeyViewModel, navController = navController)})
+
+
 }
 
 @Composable
@@ -192,7 +183,7 @@ fun ideaCreator(idea: Idea, onIdeaClick:(String)-> Unit){
 }
 
 @Composable
-fun BottomBar( /*createIdeaViewModel: CreateIdeaViewModel, navController: NavController */ ){
+fun BottomBar(viewModel: JourneyViewModel, navController: NavController){
     BottomAppBar(modifier = Modifier.height(65.dp), cutoutShape = CircleShape,) {
         BottomNavigation() {
             BottomNavigationItem(
@@ -200,26 +191,16 @@ fun BottomBar( /*createIdeaViewModel: CreateIdeaViewModel, navController: NavCon
                 label = { Text(text = "Menu") },
                 selected = false,
                 onClick = {})
-
-            /*
             BottomNavigationItem(
-                icon = { Icon(imageVector = LineAwesomeIcons.PlusSolid, "") },
-                label = { Text(text = "Ny Idea") },
+                icon = { Icon(LineAwesomeIcons.ArrowAltCircleLeft, "") },
+                label = { Text(text = "Tilbage") },
                 selected = false,
-                onClick = { navController.navigate(Screen.CreateIdeaScreen.route) })
-            */
-
-            BottomNavigationItem(
-                icon = { Icon(imageVector = Icons.Default.Search, "") },
-                label = { Text(text = "Søg") },
-                selected = false,
-                onClick = {})
+                onClick = {if(viewModel.checkIfPopIsNull()){
+                    navController.navigate("frontpage")
+                } else viewModel.goBackFromFolder()})
         }
     }
 }
-
-
-
 
 
 

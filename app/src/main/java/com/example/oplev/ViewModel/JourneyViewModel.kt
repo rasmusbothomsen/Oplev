@@ -52,12 +52,19 @@ class JourneyViewModel(val journeyDataService: JourneyDataService, application: 
             )
         }
     }
+
+    fun checkIfPopIsNull(): Boolean{
+        return folderStack.peek() == null
+    }
+
     fun goBackFromFolder(){
-        _uiState.update {
-            currentState ->
-            currentState.copy(
-                openFolder = folderStack.pop()
-            )
+        if(folderStack.peek() != null) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    openFolder = folderStack.pop()
+                )
+
+            }
         }
         updateOpenFolder()
     }

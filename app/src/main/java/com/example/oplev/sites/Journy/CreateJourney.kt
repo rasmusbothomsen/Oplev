@@ -113,7 +113,6 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                       }
                   }
         },
-        bottomBar = { BottomBar()}
     )
 }
 
