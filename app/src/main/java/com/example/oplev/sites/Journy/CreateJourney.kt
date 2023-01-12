@@ -76,10 +76,10 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                               collaboratorId = it
                           },collaboratorId)
                       datePicker()
-                      inputTextfield("Beskriv oplevelsen",height = 150,imageVector = Icons.Default.Menu, onValueChange = {
+                      inputTextfield("Beskriv oplevelsen",height = 80,imageVector = Icons.Default.Menu, onValueChange = {
                           Description = it
                       },Description)
-                      Row(modifier = Modifier.padding(60.dp,20.dp,0.dp,80.dp)) {
+                      Row(modifier = Modifier.padding(60.dp,10.dp,0.dp,80.dp)) {
                           //Nedenstående buttons skal være composables
                           Button(
                               onClick = {
@@ -122,7 +122,7 @@ fun inputTextfield(label: String, height: Int, imageVector: ImageVector, onValue
     Row(modifier = Modifier
         .fillMaxWidth()
         .height(height.dp)
-        .padding(10.dp, 0.dp, 0.dp, 10.dp)){
+        .padding(10.dp, 0.dp, 0.dp, 5.dp)){
         Icon(
             imageVector = imageVector,
             contentDescription = "",
@@ -132,7 +132,7 @@ fun inputTextfield(label: String, height: Int, imageVector: ImageVector, onValue
             label = { Text(text = label) },
             modifier = Modifier
                 .height(height.dp)
-                .fillMaxWidth(),
+                .width(300.dp),
             onValueChange = onValueChange
         )
     }
@@ -144,7 +144,7 @@ fun inputFieldNoRow(label: String, height: Int, imageVector: ImageVector){
     Icon(
         imageVector = imageVector,
         contentDescription = "",
-        modifier = Modifier.padding(10.dp,15.dp,15.dp,20.dp))
+        modifier = Modifier.padding(10.dp,15.dp,15.dp,5.dp))
     OutlinedTextField(
         value = input,
         label = { Text(text = label) },
@@ -251,8 +251,8 @@ fun ExposedDropdownMenu(list: List<Category>, imageVector: ImageVector, selected
                 readOnly = true,
                 onValueChange = {selectedOptionlocal = it},
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 0.dp, 0.dp, 20.dp),
+                    .width(300.dp)
+                    .padding(0.dp, 0.dp, 0.dp, 5.dp),
                 label = { Text(text = "Kategori") },
                 trailingIcon = {
                     Icon(icon, "", Modifier.clickable { expanded = !expanded })

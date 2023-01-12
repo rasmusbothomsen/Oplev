@@ -44,6 +44,7 @@ import com.example.oplev.ViewModel.JourneyViewModel
 import com.example.oplev.data.dataService.IdeaDataService
 import com.example.oplev.data.dataService.QueueDataService
 import com.example.oplev.data.roomDao.IdeaDao
+import com.example.oplev.ui.theme.Farvekombi032
 import com.example.oplev.ui.theme.OplevFarve2
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.ArrowAltCircleLeft
@@ -192,14 +193,15 @@ fun ideaCreator(idea: Idea, onIdeaClick:(String)-> Unit){
 }
 
 @Composable
-fun BottomBar( /*createIdeaViewModel: CreateIdeaViewModel, navController: NavController */ ){
-    BottomAppBar(modifier = Modifier.height(65.dp), cutoutShape = CircleShape,) {
+fun BottomBar(){
+    BottomAppBar(modifier = Modifier.height(65.dp), cutoutShape = CircleShape,
+        backgroundColor = Farvekombi032) {
         BottomNavigation() {
             BottomNavigationItem(
                 icon = { Icon(imageVector = Icons.Default.Menu, "") },
                 label = { Text(text = "Menu") },
                 selected = false,
-                onClick = {})
+                onClick = {},
 
             /*
             BottomNavigationItem(
@@ -209,11 +211,13 @@ fun BottomBar( /*createIdeaViewModel: CreateIdeaViewModel, navController: NavCon
                 onClick = { navController.navigate(Screen.CreateIdeaScreen.route) })
             */
 
+                modifier = Modifier.background(color= Farvekombi032))
             BottomNavigationItem(
                 icon = { Icon(imageVector = Icons.Default.Search, "") },
                 label = { Text(text = "Søg") },
                 selected = false,
-                onClick = {})
+                onClick = {},
+                modifier = Modifier.background(color= Farvekombi032))
         }
     }
 }

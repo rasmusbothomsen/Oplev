@@ -445,7 +445,8 @@ fun TopBar(title: String) {
 fun BottomBar(scope: CoroutineScope, scaffoldState: ScaffoldState, frontPageViewModel: FrontPageViewModel){
     BottomAppBar(modifier = Modifier
         .height(65.dp),
-        backgroundColor = Farvekombi032 /*cutoutShape = CircleShape,*/) {
+        backgroundColor = Farvekombi032
+    ) {
         BottomNavigation {
             BottomNavigationItem(
                 icon = {
@@ -454,7 +455,8 @@ fun BottomBar(scope: CoroutineScope, scaffoldState: ScaffoldState, frontPageView
                 selected = false,
                 onClick = { scope.launch{
                     scaffoldState.drawerState.open()
-                } })
+                } },
+            modifier = Modifier.background(color= Farvekombi032))
             BottomNavigationItem(
                 icon = {
                     Icon(
@@ -467,7 +469,8 @@ fun BottomBar(scope: CoroutineScope, scaffoldState: ScaffoldState, frontPageView
                     runBlocking {
                         frontPageViewModel.updateFrontPage()
                     }
-                })
+                },
+                modifier = Modifier.background(color= Farvekombi032))
         }
     }
 }
