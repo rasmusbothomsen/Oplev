@@ -205,7 +205,7 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
             runBlocking {
                 userName = frontpageViewModel.getUserName(activity, context)
             }
-            TopBar("Velkommen $userName")
+            TopBar("Velkommen $userName", navController)
         },
         content = { paddingValues -> FrontPageColumn(frontpageViewModel.getCategories(), navController, frontpageViewModel, state) },
         bottomBar = { BottomBar(scope,scaffoldstate, frontpageViewModel) },
@@ -418,7 +418,7 @@ fun JourneyCard(journey: Journey, navController: NavController,frontPageViewMode
     }
 
 @Composable
-fun TopBar(title: String) {
+fun TopBar(title: String, navController: NavController) {
     val col = ("#E3C5A0").toColorInt()
     //E3C5A0
     TopAppBar( modifier = Modifier.height(65.dp),
@@ -428,6 +428,7 @@ fun TopBar(title: String) {
         navigationIcon = {
             IconButton(
                 onClick = {
+                    navController.navigate(Screen.FrontPageScreen.route)
                 }
             )
             {

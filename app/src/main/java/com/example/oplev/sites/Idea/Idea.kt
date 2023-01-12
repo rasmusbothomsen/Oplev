@@ -46,35 +46,6 @@ import compose.icons.lineawesomeicons.ArrowAltCircleLeft
 import compose.icons.lineawesomeicons.Lightbulb
 
 
-// Undersøg om en box kan være clickable eller lav box om til button.
-// Få indkorporeret items på journeypageLazyGrid
-// find ud af hvordan folders og ideas skal vises
-@Composable
-fun IdeaGridItem(viewModel: IdeaViewModel) {
-
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .aspectRatio(1f)
-            .clip(RoundedCornerShape(30.dp)),
-        contentAlignment = Alignment.BottomCenter,
-
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
-            contentDescription = "Idea Image",
-            modifier = Modifier
-                .fillMaxSize()
-                .aspectRatio(1f)
-                .clip(RoundedCornerShape(30.dp))
-        )
-
-    }
-}
-
-
-
 @Composable
 fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
     val context = LocalContext.current
@@ -83,7 +54,8 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
 
 
     Scaffold(
-        topBar = { TopBar(title = "{journeyName}") },
+        topBar = { TopBar(title = "Tur til København", navController)
+                 },
         content = {
             Column() {
                 Image(
@@ -92,7 +64,7 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
                     contentDescription = "Idea name",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
+                        .fillMaxHeight(0.275f)
                 )
                 Box(
                     modifier = Modifier

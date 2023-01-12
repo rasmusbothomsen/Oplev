@@ -46,7 +46,7 @@ fun ProfileView(authViewModel: AuthViewModel, navController: NavController) {
     val state = authViewModel.state.value
     Scaffold(
         scaffoldState = scaffoldstate,
-        topBar = { TopBar("") },
+        topBar = { TopBar("",navController) },
         content = { ProfileContent(authViewModel, navController, state) },
     )
 }
