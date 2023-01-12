@@ -29,7 +29,8 @@ class FolderDataService(val dao:FolderDao,queueDataService: QueueDataService):Ba
                 if(task.isSuccessful){
                     Log.d("FirebaseInsert",  "STATUS: SUCCESS")
                 }else{
-                    insertQueueItem(item,item.id)
+
+                   // insertQueueItem(item,item.id)
                 }
             }
 

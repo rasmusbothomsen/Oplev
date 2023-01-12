@@ -33,13 +33,13 @@ class QueueDataService(
         }
     }
     suspend fun getAllFirebaseObjects(){
-        var ideas = populateDatClass(typeOf<Idea>())
+        var ideas:List<Idea> = populateDatClass(typeOf<Idea>()) as List<Idea>
         appDatabase.IdeaDao().insertAllAny(ideas)
-        var folders = populateDatClass(typeOf<Folder>())
+        var folders = populateDatClass(typeOf<Folder>()) as List<Folder>
         appDatabase.FolderDao().insertAllAny(folders)
-        var category = populateDatClass(typeOf<Category>())
+        var category = populateDatClass(typeOf<Category>()) as List<Category>
         appDatabase.CategoryDao().insertAllAny(category)
-        var journey = populateDatClass(typeOf<Journey>())
+        var journey = populateDatClass(typeOf<Journey>()) as List<Journey>
         appDatabase.JourneyDao().insertAllAny(journey)
     }
     suspend fun upDateFirebaseFromQueue() {
@@ -96,7 +96,7 @@ class QueueDataService(
         return className to attributes
     }
 
-   suspend fun <Any> populateDatClass(data:Any):List<Any>{
+   suspend fun <T> populateDatClass(data:T):List<T>{
         val dbCollection = db.collection("users").document(Firebase.auth.currentUser?.uid.toString())
             .collection(data!!::class.simpleName!!).get().addOnCompleteListener(){task ->
                 if (task.isSuccessful){

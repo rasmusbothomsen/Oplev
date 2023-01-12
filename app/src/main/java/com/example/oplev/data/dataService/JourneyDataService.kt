@@ -33,7 +33,7 @@ class JourneyDataService(
                 if(task.isSuccessful){
                     Log.d("FirebaseInsert",  "STATUS: SUCCESS")
                 }else{
-                    insertQueueItem(item,item.id)
+                    // insertQueueItem(item,item.id)
                 }
             }
 
