@@ -45,6 +45,7 @@ import com.example.oplev.ViewModel.JourneyViewModel
 import com.example.oplev.data.dataService.IdeaDataService
 import com.example.oplev.data.dataService.QueueDataService
 import com.example.oplev.data.roomDao.IdeaDao
+import com.example.oplev.ui.theme.Farvekombi032
 import com.example.oplev.ui.theme.OplevFarve2
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.ArrowAltCircleLeft
@@ -184,7 +185,8 @@ fun ideaCreator(idea: Idea, onIdeaClick:(String)-> Unit){
 
 @Composable
 fun BottomBar(viewModel: JourneyViewModel, navController: NavController){
-    BottomAppBar(modifier = Modifier.height(65.dp), cutoutShape = CircleShape,) {
+    BottomAppBar(modifier = Modifier.height(65.dp), cutoutShape = CircleShape,
+        backgroundColor = Farvekombi032) {
         BottomNavigation() {
             BottomNavigationItem(
                 icon = { Icon(imageVector = Icons.Default.Menu, "") },
@@ -197,10 +199,14 @@ fun BottomBar(viewModel: JourneyViewModel, navController: NavController){
                 selected = false,
                 onClick = {if(viewModel.checkIfPopIsNull()){
                     navController.navigate("frontpage")
-                } else viewModel.goBackFromFolder()})
-        }
+                } else viewModel.goBackFromFolder()},
+                modifier = Modifier.background(color= Farvekombi032))
+                        }
     }
 }
+
+
+
 
 
 
