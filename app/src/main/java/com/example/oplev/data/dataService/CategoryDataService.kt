@@ -18,32 +18,15 @@ import kotlinx.coroutines.tasks.await
 import java.util.*
 
 class CategoryDataService(
-    val categoryDao:CategoryDao
-) {
-    private var db : FirebaseFirestore = FirebaseFirestore.getInstance()
+    val categoryDao:CategoryDao,queueDataService: QueueDataService
+): BaseDataService<Category>(categoryDao, queueDataService ) {
 
    suspend fun createCategory(title: String, activity: Activity) {
-        val add = HashMap<String,Any>()
        val id = UUID.randomUUID().toString()
        val createdBy = Firebase.auth.currentUser?.uid.toString()
+       val tempCategory = Category(id, title, createdBy)
 
-        add["createdBy"] = createdBy
-        add["categoryTitle"] = title
-       add["id"] = id
-
-        db.collection("category")
-            .add(add)
-            .addOnCompleteListener(activity){
-                    task ->
-                if (task.isSuccessful){
-                    Log.d(AuthViewModel.TAG, "createUserInFirestore:success")
-                } else {
-                    Log.w(AuthViewModel.TAG, "createUserInFirestore:failure")
-                }
-            }.await()
-
-        addCategoryLocally(id, title, createdBy)
-
+       categoryDao.insert(tempCategory)
     }
 
     fun addCategoryLocally(id : String, title: String, createdBy: String){

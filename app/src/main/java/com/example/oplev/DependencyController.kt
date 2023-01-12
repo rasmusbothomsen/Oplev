@@ -18,7 +18,7 @@ class DependencyController() {
     fun initFrontPageViewModel(context: android.content.Context,application: Application): FrontPageViewModel {
         val appDb = AppDatabase.getInstance(context)
         val queueDataService = QueueDataService(appDb)
-        val categoryDataService = CategoryDataService(appDb.CategoryDao())
+        val categoryDataService = CategoryDataService(appDb.CategoryDao(), queueDataService)
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
         val journeyDataService = JourneyDataService(appDb.JourneyDao(), queueDataService)
         return FrontPageViewModel(application, categoryDataService, journeyDataService ,userDataService)
@@ -28,7 +28,7 @@ class DependencyController() {
         val appDb = AppDatabase.getInstance(context)
         val queueDataService = QueueDataService(appDb)
         val journeyDataService = JourneyDataService(appDb.JourneyDao(),queueDataService)
-        val categoryDataService = CategoryDataService(appDb.CategoryDao())
+        val categoryDataService = CategoryDataService(appDb.CategoryDao(), queueDataService)
         val folderDataService = FolderDataService(appDb.FolderDao(),queueDataService)
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
         return CreateJourneyViewModel(journeyDataService, categoryDataService, userDataService, application, folderDataService)
@@ -45,8 +45,8 @@ class DependencyController() {
     fun initAuthViewModel(context: android.content.Context, application: Application):AuthViewModel{
         val appDb = AppDatabase.getInstance(context)
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
-        val categoryDataService = CategoryDataService(appDb.CategoryDao())
         val queueDataService = QueueDataService(appDb)
+        val categoryDataService = CategoryDataService(appDb.CategoryDao(), queueDataService )
         return  AuthViewModel(userDataService, application, categoryDataService,queueDataService)
     }
 

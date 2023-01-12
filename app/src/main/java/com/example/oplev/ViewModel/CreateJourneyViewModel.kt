@@ -29,9 +29,10 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
         val tempJourney = Journey(UUID.randomUUID().toString(), tag, img, CategoryID, Date, Description, Title)
         val baseFolderId = UUID.randomUUID().toString()
         val baseFolderOfJourney = Folder(baseFolderId,tempJourney.id,baseFolderId,"Basefolder")
+
         viewModelScope.launch(Dispatchers.IO) {
-            journeydataService.insertRoom(tempJourney)
-            folderDataService.insertRoom(baseFolderOfJourney)
+            journeydataService.createJourney(tempJourney)
+            folderDataService.createFolder(baseFolderOfJourney)
 
             if (!collaboratorMail.isEmpty()) {
                 viewModelScope.launch(Dispatchers.IO) {

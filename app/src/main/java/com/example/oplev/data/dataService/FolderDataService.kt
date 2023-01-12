@@ -36,4 +36,10 @@ class FolderDataService(val dao:FolderDao,queueDataService: QueueDataService):Ba
         super.insertRoom(item)
     }
 
+
+    suspend fun createFolder(item : Folder) {
+        dao.insert(item)
+    }
+
+
 }

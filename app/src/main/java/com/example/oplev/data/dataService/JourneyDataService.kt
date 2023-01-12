@@ -3,6 +3,7 @@ package com.example.oplev.data.dataService
 import android.app.Activity
 import android.util.Log
 import com.example.oplev.MainActivity
+import com.example.oplev.Model.Category
 import com.example.oplev.Model.Folder
 import com.example.oplev.Model.Idea
 import com.example.oplev.Model.Journey
@@ -16,6 +17,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.runBlocking
+import java.util.*
+import kotlin.collections.HashMap
 
 class JourneyDataService(
     val dao:JourneyDao, queueDataService: QueueDataService
@@ -24,14 +27,6 @@ class JourneyDataService(
 
     override suspend fun insertRoom(item: Journey) {
         val add = HashMap<String, Any>()
-        add["id"] = item.id
-        add["tag"] = item.tag
-        add["image"] = item.image.toString()
-        add["category"] = item.categoryID
-        add["date"] = item.date.toString()
-        add["description"] = item.description
-        add["lastEdit"] = Firebase.auth.currentUser?.uid.toString()
-        add["createdBy"] = Firebase.auth.currentUser?.uid.toString()
 
         db.collection("journeys")
             .document(Firebase.auth.currentUser?.uid.toString())
@@ -46,6 +41,11 @@ class JourneyDataService(
 
         super.insertRoom(item)
     }
+
+    suspend fun createJourney(item : Journey) {
+        dao.insert(item)
+    }
+
 
     suspend fun getJourneys(categoryDataService: CategoryDataService): List<Journey> {
         var categoryDataService = categoryDataService

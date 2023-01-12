@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.os.bundleOf
+import androidx.lifecycle.viewModelScope
 import com.example.oplev.Model.*
 import com.example.oplev.data.dataService.CategoryDataService
 import com.example.oplev.data.dataService.JourneyDataService
@@ -16,20 +17,23 @@ import com.example.oplev.data.dto.CategoryDto
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
-class FrontPageViewModel(application: Application, val categoryDataService: CategoryDataService, journeyDataService: JourneyDataService ,val userDataService: UserDataService):BaseViewModel<Category>(
+class FrontPageViewModel(application: Application, val categoryDataService: CategoryDataService, val journeyDataService: JourneyDataService ,val userDataService: UserDataService):BaseViewModel<Category>(
     application
 ) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val _state = mutableStateOf(States())
     val state: State<States> = _state
 
-    init {
-        runBlocking {
+
+    suspend fun updateFrontPage() {
+        viewModelScope.launch(Dispatchers.IO) {
             var journeys = journeyDataService.getJourneys(categoryDataService)
-            for (Journey in journeys){
+            for (Journey in journeys) {
                 journeyDataService.insertRoom(Journey)
             }
         }

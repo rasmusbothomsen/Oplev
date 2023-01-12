@@ -208,7 +208,7 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
             TopBar("Velkommen $userName")
         },
         content = { paddingValues -> FrontPageColumn(frontpageViewModel.getCategories(), navController, frontpageViewModel, state) },
-        bottomBar = { BottomBar(scope,scaffoldstate) },
+        bottomBar = { BottomBar(scope,scaffoldstate, frontpageViewModel) },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
         floatingActionButton = {
@@ -427,7 +427,8 @@ fun TopBar(title: String) {
         ) },
         navigationIcon = {
             IconButton(
-                onClick = {}
+                onClick = {
+                }
             )
             {
                 Icon(
@@ -441,7 +442,7 @@ fun TopBar(title: String) {
 }
 
 @Composable
-fun BottomBar(scope: CoroutineScope, scaffoldState: ScaffoldState){
+fun BottomBar(scope: CoroutineScope, scaffoldState: ScaffoldState, frontPageViewModel: FrontPageViewModel){
     BottomAppBar(modifier = Modifier
         .height(65.dp),
         backgroundColor = Farvekombi032 /*cutoutShape = CircleShape,*/) {
@@ -457,12 +458,16 @@ fun BottomBar(scope: CoroutineScope, scaffoldState: ScaffoldState){
             BottomNavigationItem(
                 icon = {
                     Icon(
-                        imageVector = Icons.Default.Search,
+                        imageVector = Icons.Default.Refresh,
                         "")
                        },
-                label = { Text(text = "Søg") },
+                label = { Text(text = "Opdater") },
                 selected = false,
-                onClick = {})
+                onClick = {
+                    runBlocking {
+                        frontPageViewModel.updateFrontPage()
+                    }
+                })
         }
     }
 }
