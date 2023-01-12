@@ -7,10 +7,14 @@ import android.view.Gravity
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -67,19 +71,20 @@ fun CreateUserContent(authViewModel: AuthViewModel, navController: NavController
     val buttonCol = Color(("#ECC5C9").toColorInt())
 
     Column(modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.White)) {
+        .fillMaxSize()
+        .background(color = Color.White)
+        .verticalScroll(rememberScrollState())) {
 
         Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(160.dp)) {
+            .fillMaxWidth()
+            .height(160.dp)) {
 
             Image(
                     painter = painterResource(id = R.drawable.top_blob),
                     contentDescription = null,
                     modifier = Modifier
-                            .fillMaxWidth()
-                            .align(androidx.compose.ui.Alignment.TopEnd)
+                        .fillMaxWidth()
+                        .align(androidx.compose.ui.Alignment.TopEnd)
             )
 
             Box(modifier = Modifier
@@ -92,9 +97,9 @@ fun CreateUserContent(authViewModel: AuthViewModel, navController: NavController
 
                     }, shape = CircleShape,
                     modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp)
-                            .padding(60.dp, 0.dp, 60.dp, 0.dp),
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .padding(60.dp, 0.dp, 60.dp, 0.dp),
                     colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color.White,
                             contentColor = Color.DarkGray
