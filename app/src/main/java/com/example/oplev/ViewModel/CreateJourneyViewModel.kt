@@ -21,10 +21,10 @@ import kotlinx.coroutines.tasks.await
 import java.util.*
 
 
-class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val categoryDataService:CategoryDataService, application: Application, val folderDataService: FolderDataService): BaseViewModel<Journey>(application) {
+class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val categoryDataService:CategoryDataService, val userDataService: UserDataService, application: Application, val folderDataService: FolderDataService): BaseViewModel<Journey>(application) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    fun createNewJourney( tag: String, Image: String?, CategoryID: String, Date: String?, Description: String, Title: String){
+    fun createNewJourney( tag: String, Image: String?, CategoryID: String, Date: String?, Description: String, Title: String, collaboratorMail: String, activity: Activity){
         var img = "img_paris"
         val tempJourney = Journey(UUID.randomUUID().toString(), tag, img, CategoryID, Date, Description, Title)
         val baseFolderId = UUID.randomUUID().toString()
