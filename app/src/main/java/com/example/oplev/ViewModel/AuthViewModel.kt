@@ -119,6 +119,12 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
          runBlocking {
              result =  userDataService.signIn(email, password, baseContext, activity)
          }
+         if(result == UserDataService.SignInResult.Success){
+             runBlocking {
+             userDataService.addFirebaseuserInRoom(activity)
+             }
+         }
+
          return  result
     }
 

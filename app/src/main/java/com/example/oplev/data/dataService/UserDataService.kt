@@ -69,8 +69,13 @@ class UserDataService(
         val userInfoId = Firebase.auth.currentUser?.uid.toString()
         var userInfo = UserInfo(userInfoId, email, firstname, lastname,false, "Intet nummer gemt.")
 
+        val existUser = userDao.getUserFromId(userInfoId)
+        if (existUser.equals(null)){
         userDao.addUserInfo(userInfo)
         Log.d("Useradded", userInfo.eMail)
+        }else{
+            Log.d("UserAddWarning","User already exist")
+        }
     }
 
     fun sendEmailVerification(activity: Activity) {
@@ -157,6 +162,26 @@ class UserDataService(
             userInfo.firstname
         }
     }
+
+   suspend fun addFirebaseuserInRoom(activity:Activity) {
+       val docRef = db.collection("users").document(Firebase.auth.currentUser?.uid.toString())
+       val userInfo = docRef.get()
+           .addOnCompleteListener(activity) { task ->
+               if (task.isSuccessful) {
+                   Log.d(AuthViewModel.TAG, "retrieveUserName:success")
+
+               } else {
+                   Log.d(AuthViewModel.TAG, "retrieveUserName:failed")
+               }
+           }.await()
+       val currentUser = Firebase.auth.currentUser
+
+           addUserLocally(
+               userInfo["firstname"].toString(),
+               userInfo["lastname"].toString(),
+               currentUser?.email!!
+           )
+   }
 
     suspend fun updatePhoneNum(newPhoneNum : String, activity: Activity) {
         val user = Firebase.auth.currentUser
