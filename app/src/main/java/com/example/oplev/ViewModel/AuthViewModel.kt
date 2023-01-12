@@ -99,7 +99,7 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
             if (parts.size > 1){
                 firstname = parts[0]
                 for (i in 1 until parts.size){
-                    lastname += parts[i]
+                    lastname += parts[i] + " "
                 }
             }
 
