@@ -35,6 +35,7 @@ import com.example.oplev.Model.States
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.FrontPageViewModel
+import com.example.oplev.ui.theme.Farvekombi032
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -442,7 +443,8 @@ fun TopBar(title: String) {
 @Composable
 fun BottomBar(scope: CoroutineScope, scaffoldState: ScaffoldState){
     BottomAppBar(modifier = Modifier
-        .height(65.dp) /*cutoutShape = CircleShape,*/) {
+        .height(65.dp),
+        backgroundColor = Farvekombi032 /*cutoutShape = CircleShape,*/) {
         BottomNavigation {
             BottomNavigationItem(
                 icon = {
