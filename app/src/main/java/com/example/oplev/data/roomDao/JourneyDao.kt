@@ -23,5 +23,7 @@ interface JourneyDao:BaseDao<Journey> {
 
     @Query("select * from Journey where id == :id")
     fun findSingle(id:String):Journey
+    @Query("select * from Journey where id == :stringid")
+    fun getfromId(stringid:String):List<Journey>
 
 }

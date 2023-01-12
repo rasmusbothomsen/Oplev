@@ -86,7 +86,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                                   navController.navigate(Screen.FrontPageScreen.route)
                               },
                               colors = ButtonDefaults.buttonColors(
-                                  backgroundColor = Color.Transparent,
+                                  backgroundColor = Farvekombi032,
                                   contentColor = Color.Black
                               ),
                               modifier = Modifier.size(130.dp, 40.dp),
@@ -103,7 +103,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                               },
                               colors = ButtonDefaults.buttonColors(
                                   backgroundColor = OplevFarve2,
-                                  contentColor = Color.Black
+                                  contentColor = Color.White
                               ),
                               modifier = Modifier.size(130.dp, 40.dp),
                               shape = RoundedCornerShape(50)

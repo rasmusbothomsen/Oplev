@@ -22,6 +22,9 @@ class IdeaViewModel (val dataService: IdeaDataService, application: Application)
         }
         return ""
     }
+    fun createnewIdea(){
+        dataService
+    }
     fun getIdeaDescription(): String{
         idea?.description.let {
             return it!!

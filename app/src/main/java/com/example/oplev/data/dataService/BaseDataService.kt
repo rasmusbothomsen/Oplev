@@ -45,8 +45,8 @@ open class BaseDataService<T> (
         val collectionName = deconStructedItem.first
         val add = deconStructedItem.second
 
-        db.collection(collectionName!!)
-            .document(Firebase.auth.currentUser?.uid.toString())
+        db.collection("users").document(Firebase.auth.currentUser?.uid.toString()).collection(collectionName!!)
+            .document(add["id"].toString())
             .set(add)
             .addOnCompleteListener(){
                     task ->
@@ -56,8 +56,13 @@ open class BaseDataService<T> (
                     insertQueueItem(item,add["id"].toString())
                 }
             }
-    }
 
+    }
+    open suspend fun insertItem(item: T){
+        insertIntoFireBase(item)
+        insertRoom(item)
+
+    }
 
     open fun insertQueueItem(item:T, itemId:String){
         queueDataService.insertItemToQue(item!!::class.simpleName!!,itemId)

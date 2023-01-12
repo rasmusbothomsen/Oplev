@@ -9,5 +9,7 @@ interface IdeaDao:BaseDao<Idea> {
 
     @Query("Select * from ideas where folderId == :folderId")
     fun getIdeaFromFolderID(folderId:Int):List<Idea>
+    @Query("select * from ideas where id == :stringid")
+    fun getfromId(stringid:String):List<Idea>
 
 }
