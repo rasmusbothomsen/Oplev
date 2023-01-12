@@ -38,8 +38,9 @@ class DependencyController() {
     fun intiJourneyViewModel(context: android.content.Context, application: Application,journeyId: String):JourneyViewModel{
         val appDb = AppDatabase.getInstance(context)
         val queueDataService = QueueDataService(appDb)
+        val folderDataService = FolderDataService(appDb.FolderDao(),queueDataService)
         val journeyDataService = JourneyDataService(appDb.JourneyDao(),queueDataService)
-        return JourneyViewModel(journeyDataService, application,journeyId)
+        return JourneyViewModel(journeyDataService, folderDataService ,application,journeyId)
     }
 
     fun initAuthViewModel(context: android.content.Context, application: Application):AuthViewModel{

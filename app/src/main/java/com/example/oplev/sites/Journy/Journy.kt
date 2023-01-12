@@ -37,13 +37,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.example.oplev.Model.Idea
 import com.example.oplev.Model.Folder
+import com.example.oplev.Model.States
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.CreateIdeaViewModel
+import com.example.oplev.ViewModel.FrontPageViewModel
+import com.example.oplev.ViewModel.JourneyUiState
 import com.example.oplev.sites.*
 
 import com.example.oplev.ViewModel.JourneyViewModel
 import com.example.oplev.data.dataService.IdeaDataService
 import com.example.oplev.data.dataService.QueueDataService
+import com.example.oplev.data.dto.CategoryDto
 import com.example.oplev.data.roomDao.IdeaDao
 import com.example.oplev.ui.theme.Farvekombi032
 import com.example.oplev.ui.theme.OplevFarve2
@@ -62,6 +66,8 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
     val activity = LocalContext.current as Activity
     val uiState by journeyViewModel.uiState.collectAsState()
 
+    val state = journeyViewModel.stateFolder.value
+
     Scaffold(
         topBar = {
             var userName = ""
@@ -74,17 +80,129 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
                 .fillMaxHeight()
                 .fillMaxWidth()
             ) {
-
+                if(state.dialogState) {
+                    NewCategoryDialog(journeyViewModel, uiState)
+                }
                 imageAndText(text = journeyViewModel.getJourneyTitle(), image = null, journeyViewModel = journeyViewModel, navController = navController)
                 gridForFoldersAndIdeas(uiState.folders, uiState.ideas,
                     onFolderClick = {it -> journeyViewModel.openNewFolder(it)},
                     onIdeaClick = {it -> navController.navigate(Screen.IdeaScreen.route + "/$it")})
             }
                   },
-        bottomBar = { BottomBar(viewModel = journeyViewModel, navController = navController)})
+        bottomBar = { BottomBar(viewModel = journeyViewModel, navController = navController)},
+        floatingActionButtonPosition = FabPosition.Center,
+        isFloatingActionButtonDocked = true,
+        floatingActionButton = {
+            Column() {
+                val alpha: Float by animateFloatAsState(if (state.fabExpanded) 315f else 0f)
+                var x : Float = 0f
+                var y : Float = 0f
 
+                if (state.fabExpanded) {
+                    Row(modifier = Modifier
+                        .graphicsLayer {
+                            translationX = 90f
+                            translationY = -180f}) {
+                        FloatingActionButton(
+                            onClick = { journeyViewModel.changeDialogVal() },
+                            modifier = Modifier.size(50.dp)) {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(30.dp),
+                                tint = Color.White
+                            )
+                        }
+                        Text(text = "Ny mappe")
+                    }
+                    Row(modifier = Modifier.graphicsLayer {
+                        translationX = 90f
+                        translationY = -160f
+                    }) {
+                        FloatingActionButton(onClick = {
+                            navController.navigate(Screen.CreateIdeaScreen.route+"/${uiState.openFolder!!.id}")
+                        }, modifier = Modifier.size(50.dp)) {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(30.dp),
+                                tint = Color.White
+                            )
+                        }
+                        Text(text = "Ny ide")
+                    }
 
+                    x = 60f
+                    y = -140f
+                }
+
+                FloatingActionButton(shape = CircleShape,
+                    modifier = Modifier
+                        .size(width = 75.dp, height = 75.dp)
+                        .graphicsLayer {
+                            translationX = x
+                            translationY = y
+                        }
+                    ,
+                    onClick = {
+                        journeyViewModel.expandFab()
+                    }) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(38.dp)
+                            .rotate(alpha),
+                        tint = Color.White
+                    )
+                }
+            }
+        },
+    )
 }
+
+@Composable
+fun NewCategoryDialog(journeyViewModel: JourneyViewModel, uiState: JourneyUiState){
+    var folderTitle by remember { mutableStateOf("") }
+    val activity = LocalContext.current as Activity
+    AlertDialog(
+        onDismissRequest = { /*TODO*/ },
+        title = { Text(text = "Indtast navnet på den nye mappe")},
+        text = {
+            OutlinedTextField(
+                value = folderTitle,
+                label = { Text(text = "mappe", textAlign = TextAlign.Center) },
+                modifier = Modifier
+                    .width(130.dp),
+                onValueChange = {
+                    folderTitle = it
+                },
+                singleLine = true
+            )
+        },
+        confirmButton = {
+            Button(onClick = {
+                runBlocking {
+                    journeyViewModel.createFolder(folderTitle, uiState.openFolder!!.journeyId ,uiState.openFolder!!.id ,activity)
+                }
+                journeyViewModel.changeDialogVal()
+            }) {
+                Text(text = "Gem")
+            }
+        },
+        dismissButton = {
+            Button(onClick = {
+                journeyViewModel.changeDialogVal()
+                journeyViewModel.expandFab()
+            }) {
+                Text(text = "Annuller")
+            }
+        }
+    )
+}
+
 
 @Composable
 fun imageAndText(
@@ -177,7 +295,7 @@ fun ideaCreator(idea: Idea, onIdeaClick:(String)-> Unit){
 
 @Composable
 fun BottomBar(viewModel: JourneyViewModel, navController: NavController){
-    BottomAppBar(modifier = Modifier.height(65.dp), cutoutShape = CircleShape,
+    BottomAppBar(modifier = Modifier.height(65.dp),
         backgroundColor = Farvekombi032) {
         BottomNavigation() {
             BottomNavigationItem(
@@ -218,67 +336,6 @@ fun BottomBar(viewModel: JourneyViewModel, navController: NavController){
 
 
 
-/*
-
-@Composable
-fun folderCreator2(ideas: List<Idea>?){
-    Box(modifier = Modifier
-        .size(100.dp)
-        .clip(RoundedCornerShape(20.dp))
-        .background(Color.LightGray)){
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .align(Alignment.Center)){
-            Row(modifier = Modifier.align(Alignment.CenterHorizontally)){
-                Image(
-                    painter = painterResource(id = R.drawable.img_denmark),
-                    modifier = Modifier
-                        .size(50.dp)
-                        .padding(5.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                    alignment = Alignment.TopStart,
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.img_denmark),
-                    modifier = Modifier
-                        .size(50.dp)
-                        .padding(5.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                    alignment = Alignment.TopEnd,
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop
-                )
-            }
-            Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Image(
-                    painter = painterResource(id = R.drawable.img_denmark),
-                    modifier = Modifier
-                        .size(50.dp)
-                        .padding(5.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                    alignment = Alignment.BottomStart,
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.img_denmark),
-                    modifier = Modifier
-                        .size(50.dp)
-                        .padding(5.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                    alignment = Alignment.BottomEnd,
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop
-                )
-            }
-        }
-    }
-}
-
-
-*/
 
 @Preview(showBackground = true)
 @Composable

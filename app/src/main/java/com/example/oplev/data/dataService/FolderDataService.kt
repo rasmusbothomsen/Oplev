@@ -13,8 +13,6 @@ import com.google.firebase.ktx.Firebase
 
 class FolderDataService(val dao:FolderDao,queueDataService: QueueDataService):BaseDataService<Folder>(dao,queueDataService) {
 
-
-
     suspend fun createFolder(item : Folder) {
         dao.insert(item)
     }
