@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.oplev.Model.*
 import com.example.oplev.data.dataService.CategoryDataService
+import com.example.oplev.data.dataService.FolderDataService
 import com.example.oplev.data.dataService.JourneyDataService
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,14 +18,18 @@ import kotlinx.coroutines.tasks.await
 import java.util.*
 
 
-class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val categoryDataService:CategoryDataService, application: Application): BaseViewModel<Journey>(application) {
+class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val categoryDataService:CategoryDataService, application: Application, val folderDataService: FolderDataService): BaseViewModel<Journey>(application) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     fun createNewJourney( tag: String, Image: String?, CategoryID: String, Date: String?, Description: String, Title: String){
         var img = "img_paris"
         val tempJourney = Journey(UUID.randomUUID().toString(), tag, img, CategoryID, Date, Description, Title)
+        val baseFolderId = UUID.randomUUID().toString()
+        val baseFolderOfJourney = Folder(baseFolderId,tempJourney.id,baseFolderId,"Basefolder")
         viewModelScope.launch(Dispatchers.IO) {
             journeydataService.insertRoom(tempJourney)
+            folderDataService.insertRoom(baseFolderOfJourney)
+
         }
     }
 

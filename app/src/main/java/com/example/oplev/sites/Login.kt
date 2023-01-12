@@ -3,17 +3,14 @@ package com.example.oplev.sites
 
 import android.app.Activity
 import android.content.Context
-import android.location.GnssAntennaInfo
-import android.media.metrics.PlaybackStateEvent.STATE_ENDED
 import android.net.Uri
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.WindowInsets
 import android.widget.FrameLayout
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -22,16 +19,19 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -42,8 +42,6 @@ import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.AuthViewModel
 import com.example.oplev.ui.theme.fonts
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -64,19 +62,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.oplev.data.dataService.UserDataService
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.ui.StyledPlayerView
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun LoginView(authViewModel: AuthViewModel, navController: NavController) {
@@ -116,6 +112,9 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val state = authViewModel.state.value
+    val loading = authViewModel.isLoading.value
+    val syncDone = authViewModel.syncdone.value
+
 
     //https://www.youtube.com/watch?v=-oT9-IbPQWY&ab_channel=JurajKusnier
     val rawId = context.resources.getIdentifier("clouds", "raw", context.packageName)
@@ -125,6 +124,11 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
     val exoPlayer = remember { context.buildExoPlayer(videoUri) }
     exoPlayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
     // exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
+
+
+    if(syncDone){
+        navController.navigate(Screen.FrontPageScreen.route)
+    }
 
     DisposableEffect(
         AndroidView(
@@ -138,11 +142,12 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
     }
 
     ProvideWindowInsets {
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
+        if (loading){
+            LoadingAnimation()
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize().verticalScroll(rememberScrollState())
 
             ) {
                 Spacer(modifier = Modifier.height(150.dp))
@@ -263,7 +268,7 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
                             when (success) {
                                 is UserDataService.SignInResult.Success -> {
                                     if (FirebaseAuth.getInstance().currentUser != null) {
-                                        navController.navigate(Screen.FrontPageScreen.route)
+                                        authViewModel.syncDatabases()
                                     }
                                 }
                                 is UserDataService.SignInResult.WrongCredentials -> {
@@ -323,3 +328,54 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
         }
     }
 
+@Composable
+fun LoadingAnimation(
+    indicatorSize: Dp = 100.dp,
+    circleColors: List<Color> = listOf(
+        Color(0xFF5851D8),
+        Color(0xFF833AB4),
+        Color(0xFFC13584),
+        Color(0xFFE1306C),
+        Color(0xFFFD1D1D),
+        Color(0xFFF56040),
+        Color(0xFFF77737),
+        Color(0xFFFCAF45),
+        Color(0xFFFFDC80),
+        Color(0xFF5851D8)
+    ),
+    animationDuration: Int = 360
+) {
+
+    val infiniteTransition = rememberInfiniteTransition()
+
+    val rotateAnimation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = animationDuration,
+                easing = LinearEasing
+            )
+        )
+    )
+
+    CircularProgressIndicator(
+        modifier = Modifier
+            .size(size = indicatorSize)
+            .rotate(degrees = rotateAnimation)
+            .border(
+                width = 4.dp,
+                brush = Brush.sweepGradient(circleColors),
+                shape = CircleShape
+            ),
+        progress = 1f,
+        strokeWidth = 1.dp,
+        color = MaterialTheme.colors.background // Set background color
+    )
+}
+
+@Preview
+@Composable
+fun loadingTest(){
+    LoadingAnimation()
+}

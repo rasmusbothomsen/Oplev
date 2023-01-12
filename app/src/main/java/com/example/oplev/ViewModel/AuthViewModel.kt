@@ -4,35 +4,33 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.States
 import com.example.oplev.data.dataService.CategoryDataService
+import com.example.oplev.data.dataService.QueueDataService
 import com.example.oplev.data.dataService.UserDataService
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
 
-class AuthViewModel(val userDataService: UserDataService, application: Application, val categoryDataService: CategoryDataService):
+class AuthViewModel(val userDataService: UserDataService, application: Application, val categoryDataService: CategoryDataService, val queueDataService: QueueDataService):
     BaseViewModel<Category>(
     application
 ) {
     private val _state = mutableStateOf(States())
     val state: State<States> = _state
+    val isLoading = mutableStateOf(false)
+    val syncdone = mutableStateOf(false)
 
 
     suspend fun deleteUser(){
@@ -45,6 +43,16 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
 
     suspend fun getFullName() : String{
         return userDataService.getFullName()
+    }
+
+     fun syncDatabases(){
+        viewModelScope.launch(Dispatchers.IO) {
+            isLoading.value = true
+        queueDataService.syncDatabases().await()
+            isLoading.value = false
+            syncdone.value = true
+        }
+         isLoading.value = true
     }
 
     suspend fun updateName(fullname: String, activity: Activity){
@@ -116,6 +124,7 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
     }
      fun signIn(email: String, password: String, baseContext: Context, activity: Activity):UserDataService.SignInResult {
         val result:UserDataService.SignInResult
+        isLoading.value = true
          runBlocking {
              result =  userDataService.signIn(email, password, baseContext, activity)
          }
@@ -124,7 +133,6 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
              userDataService.addFirebaseuserInRoom(activity)
              }
          }
-
          return  result
     }
 

@@ -16,7 +16,6 @@ import com.google.firebase.ktx.Firebase
 class JourneyDataService(
     val dao:JourneyDao, queueDataService: QueueDataService,
 ): BaseDataService<Journey>(dao, queueDataService) {
-    private var db : FirebaseFirestore = FirebaseFirestore.getInstance()
 
     override suspend fun insertRoom(item: Journey) {
         val add = HashMap<String,Any>()
@@ -56,6 +55,7 @@ class JourneyDataService(
     fun findSingle(id:String):Journey{
         return dao.findSingle(id)
     }
+
 
 
 }
