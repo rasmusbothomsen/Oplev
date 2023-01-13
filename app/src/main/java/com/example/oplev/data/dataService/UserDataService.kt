@@ -7,6 +7,7 @@ import android.util.Log
 import com.example.oplev.Model.UserInfo
 import com.example.oplev.ViewModel.AuthViewModel
 import com.example.oplev.data.roomDao.UserDao
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -37,6 +38,7 @@ class UserDataService(
 
                     add["firstname"] = firstname
                     add["lastname"] = lastname
+                    add["email"] = email
                     add["hasOnboarded"] = false
                     add["phoneNum"] = "Intet nummer gemt."
 
@@ -76,6 +78,7 @@ class UserDataService(
                     add["collaboratorMail"] = collaboratorMail
                     add["isAccepted"] = false
 
+
                     db.collection("sharings")
                         .document()
                         .set(add)
@@ -90,6 +93,21 @@ class UserDataService(
                                 )
                             }
                         }.await()
+    }
+
+    suspend fun gerUserIdFromMail(activity: Activity, mail: String): String {
+        var id = ""
+        var query = db.collection("users")
+            .whereEqualTo("email", mail)
+            .get()
+            .addOnSuccessListener {
+
+            }
+            .await()
+
+        id = query.documents[0].id
+
+        return id
     }
 
 

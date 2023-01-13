@@ -30,21 +30,21 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
     val state: State<States> = _state
 
 
-    suspend fun updateFrontPage() {
-        viewModelScope.launch(Dispatchers.IO) {
+     suspend fun updateFrontPage() {
             var journeys = journeyDataService.getJourneys(categoryDataService)
             for (Journey in journeys) {
-                journeyDataService.insertItem(Journey)
+                journeyDataService.insertRoom(Journey)
             }
-        }
+         changeupdatedStat()
     }
 
     suspend fun createCategory(title: String, activity: Activity) {
         categoryDataService.createCategory(title, activity)
     }
 
-    fun getCategories(): List<CategoryDto> {
+    suspend fun getCategories(): List<CategoryDto> {
         var id = Firebase.auth.currentUser?.uid
+        updateFrontPage()
         var categorylist = categoryDataService.getCategoryDto(id.toString())
 
         return categorylist
@@ -75,6 +75,11 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
     fun changeDialogVal(){
         val currentValue = state.value.dialogState
         _state.value = _state.value.copy(dialogState = !currentValue)
+    }
+
+    fun changeupdatedStat(){
+        val currentValue = state.value.frontPageUpdated
+        _state.value = _state.value.copy(frontPageUpdated = !currentValue)
     }
 
 }

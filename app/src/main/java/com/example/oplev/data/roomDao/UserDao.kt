@@ -13,6 +13,8 @@ interface UserDao:BaseDao<UserInfo> {
       fun getAll():List<UserInfo>
       @Query("select*from user_info where userId == :id")
       fun getUserFromId(id:String):UserInfo
+      @Query("select*from user_info where eMail == :mail")
+      fun getUserFromMail(mail:String):UserInfo
       @Query("select phoneNum from user_info where userId == :id")
       fun getPhoneNum(id:String):String
   @Query("select hasOnboarded from user_info where userId == :id")

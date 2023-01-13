@@ -13,6 +13,7 @@ import com.example.oplev.Model.UserInfo
 interface CategoryDao:BaseDao<Category> {
     @Query("Select*from category where createdBy like :id ")
     fun getAll(id: String): List<Category>
+
     @Query("select * from category where id == :stringid")
     fun getfromId(stringid:String):List<Category>
 

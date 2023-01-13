@@ -1,6 +1,7 @@
 package com.example.oplev.sites
 
 import android.app.Activity
+import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -72,6 +73,7 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
     val state = frontpageViewModel.state.value
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
+    var categories : List<CategoryDto>
 
 
     Scaffold(
@@ -207,8 +209,54 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
             }
             TopBar("Velkommen $userName")
         },
-        content = { paddingValues -> FrontPageColumn(frontpageViewModel.getCategories(), navController, frontpageViewModel, state) },
-        bottomBar = { BottomBar(scope,scaffoldstate, frontpageViewModel) },
+        content = { paddingValues ->
+            runBlocking {
+                categories = frontpageViewModel.getCategories()
+            }
+            FrontPageColumn(
+            categories, navController, frontpageViewModel, state)
+                  },
+        bottomBar = {
+            var context = LocalContext.current
+            var pageIsUpdated = state.frontPageUpdated
+
+            BottomAppBar(modifier = Modifier
+                .height(65.dp),
+                backgroundColor = Farvekombi032
+            ) {
+                BottomNavigation {
+                    BottomNavigationItem(
+                        icon = {
+                            Icon(imageVector = Icons.Default.Menu, contentDescription = "" )},
+                        label = { Text(text = "Menu") },
+                        selected = false,
+                        onClick = { scope.launch{
+                            scaffoldstate.drawerState.open()
+                        } },
+                        modifier = Modifier.background(color= Farvekombi032))
+                    BottomNavigationItem(
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                "")
+                        },
+                        label = { Text(text = "Opdater") },
+                        selected = false,
+                        onClick = {
+                            runBlocking {
+                                categories = frontpageViewModel.getCategories()
+                            }
+                            if (pageIsUpdated) {
+                                Toast.makeText(context, "Rejser opdateret!", Toast.LENGTH_SHORT)
+                                    .show()
+                                frontpageViewModel.changeupdatedStat()
+                            }
+                        },
+                        modifier = Modifier.background(color= Farvekombi032))
+                }
+            }
+
+                    },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
         floatingActionButton = {

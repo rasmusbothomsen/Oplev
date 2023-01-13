@@ -2,16 +2,12 @@ package com.example.oplev.data.dataService
 
 import android.app.Activity
 import android.util.Log
-import com.example.oplev.MainActivity
 import com.example.oplev.Model.Category
-import com.example.oplev.Model.Idea
 import com.example.oplev.Model.Journey
 import com.example.oplev.ViewModel.AuthViewModel
 import com.example.oplev.data.dto.CategoryDto
 import com.example.oplev.data.roomDao.CategoryDao
-import com.example.oplev.data.roomDao.JourneyDao
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
@@ -26,7 +22,7 @@ class CategoryDataService(
        val createdBy = Firebase.auth.currentUser?.uid.toString()
        val tempCategory = Category(id, title, createdBy)
 
-       categoryDao.insert(tempCategory)
+       insertItem(tempCategory)
     }
 
     fun addCategoryLocally(id : String, title: String, createdBy: String){
@@ -59,12 +55,26 @@ class CategoryDataService(
         return journeyIds
     }
 
+    suspend fun getCategoryIdFromTitle(title: String, userId: String, activity: Activity) : String{
+        var id = ""
+        var query = db.collection("users").document(userId).collection("Category")
+            .whereEqualTo("title", title)
+            .get()
+            .addOnSuccessListener {
+
+            }
+            .await()
+
+        id = query.documents[0].id
+
+        return id
+    }
 
     fun getCategoryDto(id: String):List<CategoryDto>{
         var categories = categoryDao.getAll(id)
         var dtos = mutableListOf<CategoryDto>()
 
-        for (i in 0..categories.size-1){
+        for (i in categories.indices){
             var tempDto = CategoryDto(categories[i])
             tempDto.journeys.addAll(categoryDao.getJourneysRelatedToCategory(categories[i].id))
             dtos.add(tempDto)
@@ -80,8 +90,18 @@ class CategoryDataService(
         return dtos
     }
 
-    fun getCategoryId(Title: String): String{
+    suspend fun getCategoryId(Title: String): String{
+        var id = ""
+        var query = db.collection("users").document(Firebase.auth.currentUser?.uid.toString()).collection("Category")
+            .whereEqualTo("title", Title)
+            .get()
+            .addOnSuccessListener {
 
-        return categoryDao.getCategoryId(Title)
+            }
+            .await()
+
+        id = query.documents[0].id
+
+        return id
     }
 }

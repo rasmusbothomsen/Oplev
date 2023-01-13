@@ -71,6 +71,7 @@ data class States(
     var chosenJourneyState: Journey? = null,
     var chosenIdeaState: Idea? = null,
     var emailDialogState : Boolean = false,
+    var frontPageUpdated: Boolean = false
 )
 
 

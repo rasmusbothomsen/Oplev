@@ -43,13 +43,20 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
                         activity
                     )
                 }
+        runBlocking {
+            journeydataService.insertItem(tempJourney)
+            folderDataService.insertItem(baseFolderOfJourney)
+            if (collaboratorMail.isNotEmpty()) {
+                shareJourney(Firebase.auth.currentUser?.uid.toString(), tempJourney.id, collaboratorMail, activity, tempJourney)
             }
         }
     }
 
     fun getCategoryIdFromTitle(Title: String): String{
-        val categoryID = categoryDataService.getCategoryId(Title)
-
+        var categoryID = " "
+        runBlocking {
+            categoryID = categoryDataService.getCategoryId(Title)
+        }
         return categoryID
     }
 
@@ -59,17 +66,11 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
         return categories
     }
 
-    fun shareJourney(ownerId : String,
-                     journeyId : String,
-                     collaboratorMail : String,
-                     activity: Activity) {
+    fun shareJourney(ownerId : String, journeyId : String, collaboratorMail : String, activity: Activity, tempJourney : Journey) {
         runBlocking {
-            userDataService.shareJourney(
-                ownerId,
-                journeyId,
-                collaboratorMail,
-                activity
-            )
+            userDataService.shareJourney(ownerId, journeyId, collaboratorMail, activity)
+            val collaboratorId = userDataService.gerUserIdFromMail(activity, collaboratorMail)
+            journeydataService.insertSharedJourneyToFirebase(tempJourney, collaboratorId, categoryDataService, activity)
         }
     }
 
