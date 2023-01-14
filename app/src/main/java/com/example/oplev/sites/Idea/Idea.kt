@@ -33,7 +33,6 @@ import com.example.oplev.Model.Idea
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.IdeaViewModel
-import com.example.oplev.ViewModel.JourneyViewModel
 import com.example.oplev.data.dataService.IdeaDataService
 import com.example.oplev.data.roomDao.IdeaDao
 import com.example.oplev.sites.Journy.BottomBar

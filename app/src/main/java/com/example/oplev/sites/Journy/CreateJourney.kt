@@ -1,5 +1,6 @@
 package com.example.oplev.sites.Journy
 
+import CreateJourneyViewModel
 import android.app.Activity
 import android.app.LauncherActivity
 import android.content.Context
@@ -35,7 +36,6 @@ import androidx.navigation.NavController
 import com.example.oplev.Model.Category
 import com.example.oplev.R
 import com.example.oplev.Screen
-import com.example.oplev.ViewModel.CreateJourneyViewModel
 import com.example.oplev.data.dto.CategoryDto
 import kotlinx.coroutines.runBlocking
 import com.example.oplev.ui.theme.*

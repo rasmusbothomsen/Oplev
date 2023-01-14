@@ -1,5 +1,7 @@
 package com.example.oplev.sites.Journy
 
+import JourneyUiState
+import JourneyViewModel
 import android.app.Activity
 import android.media.Image
 import android.service.autofill.OnClickAction
@@ -41,10 +43,8 @@ import com.example.oplev.Model.States
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.CreateIdeaViewModel
 import com.example.oplev.ViewModel.FrontPageViewModel
-import com.example.oplev.ViewModel.JourneyUiState
 import com.example.oplev.sites.*
 
-import com.example.oplev.ViewModel.JourneyViewModel
 import com.example.oplev.data.dataService.IdeaDataService
 import com.example.oplev.data.dataService.QueueDataService
 import com.example.oplev.data.dto.CategoryDto

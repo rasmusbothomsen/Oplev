@@ -1,5 +1,7 @@
 package com.example.oplev
 
+import CreateJourneyViewModel
+import JourneyViewModel
 import android.app.Application
 import com.example.oplev.Model.Journey
 import com.example.oplev.ViewModel.*
