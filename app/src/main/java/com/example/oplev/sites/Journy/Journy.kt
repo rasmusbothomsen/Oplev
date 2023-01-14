@@ -14,8 +14,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,8 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.example.oplev.Model.Journey
 import com.example.oplev.R
 import androidx.compose.material.Text
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.draw.clip
@@ -237,6 +234,12 @@ navController: NavController) {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
+            IconButton(onClick = {
+                navController.navigate(Screen.CreateJourneyScreen.route+"/${journeyViewModel.getJourneyId()}")
+                journeyViewModel.setEditMode()}
+            ){
+                Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
+            }
             }
          }
         }

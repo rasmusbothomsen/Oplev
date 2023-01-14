@@ -41,7 +41,7 @@ import kotlinx.coroutines.runBlocking
 import com.example.oplev.ui.theme.*
 
 @Composable
-fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navController: NavController){
+fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, journeyId: String? ,navController: NavController){
 
     var tag by remember { mutableStateOf("") }
     var Image by remember { mutableStateOf("") }
@@ -50,6 +50,8 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
     var Description by remember { mutableStateOf("") }
     var Title by remember { mutableStateOf("") }
     var collaboratorId by remember { mutableStateOf("") }
+    var editMode = createJourneyViewModel.state.value.editMode
+    var currentJourney = createJourneyViewModel.getJourney(journeyId!!)
 
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
@@ -68,17 +70,23 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                       topScreenLayout(context)
                       inputTextfield("Destination",80,imageVector = Icons.Default.LocationOn, onValueChange = {
                           Title = it
-                      }, Title)
+                      }, if(editMode){
+                          currentJourney.title
+                      }else Title)
                       ExposedDropdownMenu(list = createJourneyViewModel.getCategories(), imageVector = Icons.Default.Info, category) {
                           category = it.title
                       }
-                      inputTextfield("Inviter Venner",80, imageVector = Icons.Default.Person, onValueChange = {
+                      if(!editMode){
+                          inputTextfield("Inviter Venner",80, imageVector = Icons.Default.Person, onValueChange = {
                               collaboratorId = it
                           },collaboratorId)
+                      }
                       datePicker()
                       inputTextfield("Beskriv oplevelsen",height = 80,imageVector = Icons.Default.Menu, onValueChange = {
                           Description = it
-                      },Description)
+                      }, if(editMode){
+                          currentJourney.description
+                      }else Description)
                       Row(modifier = Modifier.padding(60.dp,10.dp,0.dp,80.dp)) {
                           //Nedenstående buttons skal være composables
                           Button(
@@ -98,7 +106,10 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                           }
                           Spacer(modifier = Modifier.width(40.dp))
                           Button(
-                              onClick = { createJourneyViewModel.createNewJourney(tag, Image, createJourneyViewModel.getCategoryIdFromTitle(category), Date, Description, Title, collaboratorId, activity)
+                              onClick = {
+                                  if(editMode){
+                                      createJourneyViewModel.updateJourney(Title, Description, createJourneyViewModel.getCategoryIdFromTitle(category))
+                                  }else createJourneyViewModel.createNewJourney(tag, Image, createJourneyViewModel.getCategoryIdFromTitle(category), Date, Description, Title, collaboratorId, activity)
                                   navController.navigate(Screen.FrontPageScreen.route)
                               },
                               colors = ButtonDefaults.buttonColors(

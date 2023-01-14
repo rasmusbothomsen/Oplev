@@ -22,7 +22,7 @@ open class BaseDataService<T> (
         baseDao.insert(item)
     }
 
-    open suspend fun updateItem(item:T){
+    open suspend fun updateRoom(item:T){
         baseDao.update(item)
     }
     open suspend fun deleteItem(item:T){
@@ -65,10 +65,19 @@ open class BaseDataService<T> (
         }
 
     }
+
+    open suspend fun updateInFirebase(item: T){
+
+    }
+
     open suspend fun insertItem(item: T){
         insertIntoFireBase(item)
         insertRoom(item)
+    }
 
+    open suspend fun updateItem(item: T){
+        updateInFirebase(item)
+        updateRoom(item)
     }
 
     open suspend fun insertQueueItem(item:T, itemId:String){

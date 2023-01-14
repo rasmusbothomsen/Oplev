@@ -5,6 +5,8 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.oplev.Model.*
 import com.example.oplev.data.dataService.CategoryDataService
@@ -24,6 +26,8 @@ import java.util.*
 
 class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val categoryDataService:CategoryDataService, val userDataService: UserDataService, application: Application, val folderDataService: FolderDataService): BaseViewModel<Journey>(application) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    val _state = mutableStateOf(States())
+    val state: State<States> = _state
 
     fun createNewJourney( tag: String, Image: String?, CategoryID: String, Date: String?, Description: String, Title: String, collaboratorMail: String, activity: Activity){
         var img = "img_paris"
@@ -44,6 +48,15 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
                 )
             }
         }
+    }
+
+    fun getJourney(journeyId: String): Journey{
+        var currentJourney = journeydataService.findSingle(journeyId)
+        return currentJourney
+    }
+
+    fun updateJourney(Title: String, Description: String, category: String){
+
     }
 
     fun getCategoryIdFromTitle(Title: String): String{

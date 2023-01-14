@@ -71,7 +71,11 @@ fun NavController(application: Application, startRoute : String) {
             TotalView(frontpageViewModel = dependencyController.initFrontPageViewModel(context,application), navController)
         }
         composable(route = Screen.CreateJourneyScreen.route) {
-            createJourneyComp(createJourneyViewModel = dependencyController.initCreateJourneyViewModel(context,application), navController )
+            createJourneyComp(createJourneyViewModel = dependencyController.initCreateJourneyViewModel(context,application), null ,navController )
+        }
+        composable(route = Screen.CreateJourneyScreen.route+"/{id}"){navBackStack ->
+            val journeyID = navBackStack.arguments?.getString("id")
+            createJourneyComp(createJourneyViewModel = dependencyController.initCreateJourneyViewModel(context, application), journeyId = journeyID, navController = navController)
         }
         composable(route = Screen.JourneyScreen.route+"/{id}"){navBackStack ->
             val journeyID = navBackStack.arguments?.getString("id")
