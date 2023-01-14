@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
         runBlocking{
             context = applicationContext
             database = AppDatabase.getInstance(context)
-            //AppDatabase.CreateDummyData()
+            // AppDatabase.CreateDummyData()
         }
         setContent {
 

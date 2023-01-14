@@ -12,8 +12,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -46,14 +48,16 @@ fun ProfileView(authViewModel: AuthViewModel, navController: NavController) {
     val state = authViewModel.state.value
     Scaffold(
         scaffoldState = scaffoldstate,
-        topBar = { TopBar("") },
+        topBar = { TopBar("",navController) },
         content = { ProfileContent(authViewModel, navController, state) },
     )
 }
 
 @Composable
 fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, states: States) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .verticalScroll(rememberScrollState())) {
         Box(modifier = Modifier
             .fillMaxWidth()
             .height(200.dp)) {

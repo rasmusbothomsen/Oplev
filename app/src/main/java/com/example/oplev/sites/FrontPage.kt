@@ -207,7 +207,7 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
             runBlocking {
                 userName = frontpageViewModel.getUserName(activity, context)
             }
-            TopBar("Velkommen $userName")
+            TopBar("Velkommen $userName", navController)
         },
         content = { paddingValues ->
             runBlocking {
@@ -466,7 +466,7 @@ fun JourneyCard(journey: Journey, navController: NavController,frontPageViewMode
     }
 
 @Composable
-fun TopBar(title: String) {
+fun TopBar(title: String, navController: NavController) {
     val col = ("#E3C5A0").toColorInt()
     //E3C5A0
     TopAppBar( modifier = Modifier.height(65.dp),
@@ -476,6 +476,7 @@ fun TopBar(title: String) {
         navigationIcon = {
             IconButton(
                 onClick = {
+                    navController.navigate(Screen.FrontPageScreen.route)
                 }
             )
             {
@@ -493,7 +494,8 @@ fun TopBar(title: String) {
 fun BottomBar(scope: CoroutineScope, scaffoldState: ScaffoldState, frontPageViewModel: FrontPageViewModel){
     BottomAppBar(modifier = Modifier
         .height(65.dp),
-        backgroundColor = Farvekombi032 /*cutoutShape = CircleShape,*/) {
+        backgroundColor = Farvekombi032
+    ) {
         BottomNavigation {
             BottomNavigationItem(
                 icon = {
@@ -502,7 +504,8 @@ fun BottomBar(scope: CoroutineScope, scaffoldState: ScaffoldState, frontPageView
                 selected = false,
                 onClick = { scope.launch{
                     scaffoldState.drawerState.open()
-                } })
+                } },
+            modifier = Modifier.background(color= Farvekombi032))
             BottomNavigationItem(
                 icon = {
                     Icon(
@@ -515,7 +518,8 @@ fun BottomBar(scope: CoroutineScope, scaffoldState: ScaffoldState, frontPageView
                     runBlocking {
                         frontPageViewModel.updateFrontPage()
                     }
-                })
+                },
+                modifier = Modifier.background(color= Farvekombi032))
         }
     }
 }

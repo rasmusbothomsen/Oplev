@@ -28,23 +28,6 @@ class JourneyDataService(
 ): BaseDataService<Journey>(dao, queueDataService) {
     //private var db : FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    override suspend fun insertRoom(item: Journey) {
-        val add = HashMap<String, Any>()
-
-        db.collection("journeys")
-            .document(Firebase.auth.currentUser?.uid.toString())
-            .set(add)
-            .addOnCompleteListener() { task ->
-                if (task.isSuccessful) {
-                    Log.d("FirebaseInsert", "STATUS: SUCCESS")
-                } else {
-                    runBlocking {
-                    insertQueueItem(item, item.id)
-                    }
-                }
-            }
-        super.insertItem(item)
-    }
 
                 suspend fun createJourney(item: Journey) {
                     dao.insert(item)

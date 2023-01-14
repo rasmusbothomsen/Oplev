@@ -37,10 +37,10 @@ import com.example.oplev.Model.Journey
 import com.example.oplev.Model.UserInfo
 import com.example.oplev.R
 import com.example.oplev.Screen
-import com.example.oplev.ViewModel.JourneyViewModel
 import com.example.oplev.ViewModel.OnboadringViewModel
 import com.example.oplev.data.dataService.UserDataService
 import com.example.oplev.sites.*
+import com.example.oplev.sites.Idea.CreateIdea
 import com.example.oplev.sites.Idea.IdeaScreen
 import com.example.oplev.sites.Journy.JourneyScreen
 import com.example.oplev.sites.Journy.createJourneyComp
@@ -86,11 +86,16 @@ fun NavController(application: Application, startRoute : String) {
         composable(route = Screen.ProfileScreen.route){
             ProfileView(authViewModel = dependencyController.initAuthViewModel(context, application), navController = navController)
         }
-       /*composable(route = Screen.IdeaScreen.route){
-               IdeaScreen(ideaViewModel = dependencyController.initIdeaViewModel(context,application), navController = navController)
+        composable(route = Screen.IdeaScreen.route+"/{id}"){navBackStack ->
+            val ideaId = navBackStack.arguments?.getString("id")
+            IdeaScreen(ideaViewModel = dependencyController.initIdeaViewModel(context, application,ideaId!!), navController)
+        }
+        composable(route = Screen.CreateIdeaScreen.route+"/{id}"){navBackStack ->
+            val folderId = navBackStack.arguments?.getString("id")
+            CreateIdea(createIdeaViewModel = dependencyController.initCreateIdeaViewModel(context, application,folderId!!), navController)
         }
 
-        */
+
         composable(route = Screen.Onboarding1.route){
             OnboardingLayout1(navController = navController, viewModel = dependencyController.initOnboardingViewModel(context, application))
         }
@@ -129,32 +134,6 @@ fun Button(text: String, width: Int, height: Int, hexCode: String, onClick: Unit
     }
 }
 
-/*
-@Preview
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun IdeaGridd(padding: Int) {
-    LazyVerticalGrid(
-        //Beslut mellem .Adaptive/.Fixed - kun nødvendigt hvis appen skal kunne ses horisontalt
-        cells = GridCells.Adaptive(100.dp),
-        content = {
-            items(10) { i ->
-                Box(
-                    modifier = Modifier
-                        .padding(padding.dp)
-                        .aspectRatio(1f)
-                        .clip(RoundedCornerShape(30.dp))
-                        .background(Color.Blue),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = "Idea $i")
-                }
-
-            }
-        })
-}
-
- */
 
 @Composable
 fun FolderGrid() {
@@ -216,12 +195,12 @@ fun TextFieldString (text: String, width: Int, height: Int) {
 
 @Composable
 fun VerticalScroll( ){
-        Column(modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxWidth()
-            .fillMaxHeight()){
-            Image(painterResource(id = R.drawable.img_norway), "cd" )
-            Image(painterResource(id = R.drawable.img_norway), "cd" )
+    Column(modifier = Modifier
+        .verticalScroll(rememberScrollState())
+        .fillMaxWidth()
+        .fillMaxHeight()){
+        Image(painterResource(id = R.drawable.img_norway), "cd" )
+        Image(painterResource(id = R.drawable.img_norway), "cd" )
     }
 }
 

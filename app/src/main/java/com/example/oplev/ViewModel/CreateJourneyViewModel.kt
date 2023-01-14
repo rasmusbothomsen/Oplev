@@ -1,4 +1,5 @@
-package com.example.oplev.ViewModel
+import com.example.oplev.ViewModel.AuthViewModel
+import com.example.oplev.ViewModel.BaseViewModel
 
 import android.app.Activity
 import android.app.Application
@@ -24,15 +25,16 @@ import java.util.*
 class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val categoryDataService:CategoryDataService, val userDataService: UserDataService, application: Application, val folderDataService: FolderDataService): BaseViewModel<Journey>(application) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    fun createNewJourney( tag: String, Image: String?, CategoryID: String, Date: String?, Description: String, Title: String, collaboratorMail: String, activity: Activity){
+    fun createNewJourney( tag: String, Image: String?, CategoryID: String, Date: String?, Description: String, Title: String, collaboratorMail: String, activity: Activity) {
         var img = "img_paris"
-        val tempJourney = Journey(UUID.randomUUID().toString(), tag, img, CategoryID, Date, Description, Title)
+        val tempJourney =
+            Journey(UUID.randomUUID().toString(), tag, img, CategoryID, Date, Description, Title)
         val baseFolderId = UUID.randomUUID().toString()
-        val baseFolderOfJourney = Folder(baseFolderId,tempJourney.id,baseFolderId,"Basefolder")
+        val baseFolderOfJourney = Folder(baseFolderId, tempJourney.id, baseFolderId, "Basefolder")
 
-        viewModelScope.launch(Dispatchers.IO) {
-            journeydataService.createJourney(tempJourney)
-            folderDataService.createFolder(baseFolderOfJourney)
+        runBlocking {
+            journeydataService.insertItem(tempJourney)
+            folderDataService.insertItem(baseFolderOfJourney)
 
             if (!collaboratorMail.isEmpty()) {
                 viewModelScope.launch(Dispatchers.IO) {
@@ -40,14 +42,24 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
                         Firebase.auth.currentUser?.uid.toString(),
                         tempJourney.id,
                         collaboratorMail,
-                        activity
+                        activity,
+                        tempJourney
                     )
                 }
-        runBlocking {
-            journeydataService.insertItem(tempJourney)
-            folderDataService.insertItem(baseFolderOfJourney)
-            if (collaboratorMail.isNotEmpty()) {
-                shareJourney(Firebase.auth.currentUser?.uid.toString(), tempJourney.id, collaboratorMail, activity, tempJourney)
+                runBlocking {
+                    journeydataService.insertItem(tempJourney)
+                    folderDataService.insertItem(baseFolderOfJourney)
+                    if (collaboratorMail.isNotEmpty()) {
+                        shareJourney(
+                            Firebase.auth.currentUser?.uid.toString(),
+                            tempJourney.id,
+                            collaboratorMail,
+                            activity,
+                            tempJourney
+                        )
+
+                    }
+                }
             }
         }
     }

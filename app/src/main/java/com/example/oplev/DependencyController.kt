@@ -1,5 +1,7 @@
 package com.example.oplev
 
+import CreateJourneyViewModel
+import JourneyViewModel
 import android.app.Application
 import com.example.oplev.Model.Journey
 import com.example.oplev.ViewModel.*
@@ -38,8 +40,9 @@ class DependencyController() {
     fun intiJourneyViewModel(context: android.content.Context, application: Application,journeyId: String):JourneyViewModel{
         val appDb = AppDatabase.getInstance(context)
         val queueDataService = QueueDataService(appDb)
+        val folderDataService = FolderDataService(appDb.FolderDao(),queueDataService)
         val journeyDataService = JourneyDataService(appDb.JourneyDao(),queueDataService)
-        return JourneyViewModel(journeyDataService, application,journeyId)
+        return JourneyViewModel(journeyDataService, folderDataService ,application,journeyId)
     }
 
     fun initAuthViewModel(context: android.content.Context, application: Application):AuthViewModel{
@@ -56,5 +59,23 @@ class DependencyController() {
 
         return OnboadringViewModel(userDataService, application)
     }
+
+    fun initIdeaViewModel(context: android.content.Context, application: Application, ideaId: String):IdeaViewModel{
+        val appDb = AppDatabase.getInstance(context)
+        val queueDataService = QueueDataService(appDb)
+        val ideaDataService = IdeaDataService(appDb.IdeaDao(),queueDataService)
+        return IdeaViewModel(ideaDataService, application, ideaId)
+    }
+
+    fun initCreateIdeaViewModel(context: android.content.Context, application: Application,folderId:String):CreateIdeaViewModel{
+        val appDb = AppDatabase.getInstance(context)
+        val queueDataService = QueueDataService(appDb)
+        val ideaDataService = IdeaDataService(appDb.IdeaDao(),queueDataService)
+        return CreateIdeaViewModel(ideaDataService, application,folderId)
+
+    }
+
+
+
 }
 

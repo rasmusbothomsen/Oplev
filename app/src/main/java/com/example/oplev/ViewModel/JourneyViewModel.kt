@@ -1,5 +1,5 @@
-package com.example.oplev.ViewModel
 
+import com.example.oplev.ViewModel.*
 import android.app.Activity
 import android.app.Application
 import android.content.Context
@@ -10,6 +10,7 @@ import com.example.oplev.Model.Folder
 import com.example.oplev.Model.Idea
 import com.example.oplev.Model.Journey
 import com.example.oplev.Model.States
+import com.example.oplev.data.dataService.FolderDataService
 import com.example.oplev.data.dataService.JourneyDataService
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -18,10 +19,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import java.util.UUID
 
 
-class JourneyViewModel(val journeyDataService: JourneyDataService, application: Application, journeyID: String): BaseViewModel<Journey>(application) {
+class JourneyViewModel(val journeyDataService: JourneyDataService, val folderDataService: FolderDataService, application: Application, journeyID: String): BaseViewModel<Journey>(application) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val _state = MutableStateFlow(States())
     private val _uiState = MutableStateFlow(JourneyUiState())
@@ -30,6 +33,8 @@ class JourneyViewModel(val journeyDataService: JourneyDataService, application: 
 
     val uiState:StateFlow<JourneyUiState> = _uiState.asStateFlow()
     val state: StateFlow<States> = _state.asStateFlow()
+    val _stateFolder = mutableStateOf(States())
+    val stateFolder: State<States> = _stateFolder
 
 
     init {
@@ -52,12 +57,19 @@ class JourneyViewModel(val journeyDataService: JourneyDataService, application: 
             )
         }
     }
+
+    fun checkIfPopIsNull(): Boolean{
+        return folderStack.peek() == null
+    }
+
     fun goBackFromFolder(){
-        _uiState.update {
-            currentState ->
-            currentState.copy(
-                openFolder = folderStack.pop()
-            )
+        if(folderStack.peek() != null) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    openFolder = folderStack.pop()
+                )
+
+            }
         }
         updateOpenFolder()
     }
@@ -100,6 +112,29 @@ class JourneyViewModel(val journeyDataService: JourneyDataService, application: 
 
         return userInfo["firstname"].toString()
 
+    }
+
+    fun createFolder(folderTitle: String, journeyID: String, folderId: String, activity: Activity){
+        var tempFolder = Folder(
+            UUID.randomUUID().toString(),
+            journeyID,
+            folderId,
+            folderTitle
+        )
+        runBlocking {
+            folderDataService.insertItem(tempFolder)
+        }
+        updateOpenFolder()
+    }
+
+    fun expandFab(){
+        val currentValue = stateFolder.value.fabExpanded
+        _stateFolder.value = _stateFolder.value.copy(fabExpanded = !currentValue)
+    }
+
+    fun changeDialogVal(){
+        val currentValue = stateFolder.value.dialogState
+        _stateFolder.value = _stateFolder.value.copy(dialogState = !currentValue)
     }
 
 

@@ -13,31 +13,6 @@ import com.google.firebase.ktx.Firebase
 
 class FolderDataService(val dao:FolderDao,queueDataService: QueueDataService):BaseDataService<Folder>(dao,queueDataService) {
 
-    override suspend fun insertRoom(item: Folder) {
-        val add = HashMap<String,Any>()
-        add["id"] = item.id
-        add["journeyId"] = item.journeyId
-        add["parentFolderId"] = item.parentFolderId
-        add["title"] = item.title
-        add["lastEdit"] = Firebase.auth.currentUser?.uid.toString()
-
-        db.collection("folders")
-            .document(Firebase.auth.currentUser?.uid.toString())
-            .set(add)
-            .addOnCompleteListener(){
-                    task ->
-                if(task.isSuccessful){
-                    Log.d("FirebaseInsert",  "STATUS: SUCCESS")
-                }else{
-
-                   // insertQueueItem(item,item.id)
-                }
-            }
-
-        super.insertItem(item)
-    }
-
-
     suspend fun createFolder(item : Folder) {
         dao.insert(item)
     }

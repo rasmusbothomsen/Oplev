@@ -2,7 +2,9 @@ package com.example.oplev.sites.Idea
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
@@ -18,22 +20,35 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.oplev.data.dto.JourneyDto
 import com.example.oplev.R
+import com.example.oplev.Screen
 import com.example.oplev.ViewModel.*
 import com.example.oplev.sites.TopBar
+import com.example.oplev.ui.components.DateandTimePicker
+import compose.icons.LineAwesomeIcons
+import compose.icons.lineawesomeicons.Calendar
 
 
 @Composable
-fun CreateIdea(CreateIdeaViewModel: CreateIdeaViewModel /*, navController: NavController*/) {
+fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavController) {
 
     var titel by remember{ mutableStateOf("") }
     var beskrivelse by remember { mutableStateOf("") }
     var link by remember{ mutableStateOf("") }
+    var image by remember{ mutableStateOf("") }
+    var folderId by remember{ mutableStateOf("") }
+    var date by remember { mutableStateOf("")
+    }
+
+
     Scaffold(
-        topBar = { TopBar(title = "Velkommen {user}") },
+        topBar = { TopBar(title = "Velkommen {user}", navController) },
         content = {
-            Column(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())) {
                 Box(modifier = Modifier.height(120.dp)) {
                     Column(
                         modifier = Modifier
@@ -61,44 +76,16 @@ fun CreateIdea(CreateIdeaViewModel: CreateIdeaViewModel /*, navController: NavCo
                 inputTextfield(label = "Titel", height = 80, imageVector = Icons.Filled.LocationOn, onValueChange = {titel = it}, input = titel)
                 inputTextfield(label = "Beskriv ideen", height = 200, imageVector = Icons.Filled.LocationOn, onValueChange = {beskrivelse = it}, input = beskrivelse)
                 inputTextfield(label = "Indsæt link", height = 80, imageVector = Icons.Filled.LocationOn, onValueChange = {link = it}, input = link)
-                //Nedenstående rows skal i en composable
+
                 Row(modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)
                     .padding(10.dp)) {
-
-
-                    /* Skal være en datepicker*/ com.example.oplev.sites.Journy.inputFieldNoRow(
-                    "Fra Dato",
-                    80,
-                    imageVector = Icons.Filled.Warning
-                )
-                    Spacer(modifier = Modifier.width(20.dp))
-                    /* Skal være en "time picker"*/ com.example.oplev.sites.Journy.inputFieldNoRow(
-                    "Fra kl.",
-                    80,
-                    imageVector = Icons.Filled.Warning
-                )
-                }
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-                    .padding(10.dp)) {
-                    /* Skal være en datepicker*/ com.example.oplev.sites.Journy.inputFieldNoRow(
-                    "Til Dato",
-                    80,
-                    imageVector = Icons.Filled.Warning
-                )
-                    Spacer(modifier = Modifier.width(20.dp))
-                    /* Skal være en "time picker"*/ com.example.oplev.sites.Journy.inputFieldNoRow(
-                    "Til kl.",
-                    80,
-                    imageVector = Icons.Filled.Warning
-                )
+                    DateandTimePicker()
                 }
                 Row(modifier = Modifier.padding(60.dp,20.dp,0.dp,80.dp)){
                     Button(
-                        onClick = { /* TODO */ },
+                        onClick = { navController.navigate(Screen.FrontPageScreen.route) },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color.Transparent,
                             contentColor = Color.Black
@@ -112,7 +99,16 @@ fun CreateIdea(CreateIdeaViewModel: CreateIdeaViewModel /*, navController: NavCo
                     }
                     Spacer(modifier = Modifier.width(40.dp))
                     Button(
-                        onClick = { CreateIdeaViewModel.createNewIdea(titel, beskrivelse, link)},
+                        onClick = {
+                            createIdeaViewModel.createNewIdea(
+                                titel,
+                                beskrivelse,
+                                link,
+                                image,
+                                date
+                            )
+                            navController.navigate(Screen.FrontPageScreen.route)
+                             },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color.Green,
                             contentColor = Color.Black

@@ -7,6 +7,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.typeOf
@@ -45,6 +46,7 @@ open class BaseDataService<T> (
         val deconStructedItem = extractDataClassAttributes(item as Any)
         val collectionName = deconStructedItem.first
         val add = deconStructedItem.second
+        var sucess = false
 
         db.collection("users").document(Firebase.auth.currentUser?.uid.toString()).collection(collectionName!!)
             .document(add["id"].toString())
@@ -52,13 +54,15 @@ open class BaseDataService<T> (
             .addOnCompleteListener(){
                     task ->
                 if(task.isSuccessful){
-                    Log.d("FirebaseInsert",  "STATUS: SUCCESS")
+                    Log.d("FirebaseInsert",  "STATUS: SUCCESS$collectionName")
+                    sucess = true
                 }else{
-                    runBlocking {
-                    insertQueueItem(item,add["id"].toString())
-                    }
+
                 }
-            }
+            }.await()
+        if (!sucess){
+            insertQueueItem(item,add["id"].toString())
+        }
 
     }
     open suspend fun insertItem(item: T){
