@@ -39,8 +39,8 @@ fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavContr
     var link by remember{ mutableStateOf("") }
     var image by remember{ mutableStateOf("") }
     var folderId by remember{ mutableStateOf("") }
-    var date by remember { mutableStateOf("")
-    }
+    var date by remember { mutableStateOf("") }
+
 
 
     Scaffold(

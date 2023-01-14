@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -42,6 +43,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import com.example.oplev.ui.theme.OplevFarve2
 import com.example.oplev.ui.theme.Farvekombi033
+import com.example.oplev.ui.theme.OplevBlue
 
 
 @Preview
@@ -224,7 +226,8 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                                     translationY = -180f}) {
                             FloatingActionButton(
                                 onClick = { frontpageViewModel.changeDialogVal() },
-                                modifier = Modifier.size(50.dp)) {
+                                modifier = Modifier.size(50.dp),
+                                backgroundColor = Farvekombi033) {
                                 Icon(
                                     imageVector = Icons.Filled.Add,
                                     contentDescription = "",
@@ -241,13 +244,15 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                                 }) {
                             FloatingActionButton(onClick = {
                                 navController.navigate(Screen.CreateJourneyScreen.route)
-                            }, modifier = Modifier.size(50.dp)) {
+                            }, modifier = Modifier.size(50.dp), backgroundColor = Farvekombi033) {
                                 Icon(
                                     imageVector = Icons.Filled.Add,
                                     contentDescription = "",
+
                                     modifier = Modifier
                                         .size(30.dp),
                                     tint = Color.White
+
                                 )
                             }
                             Text(text = "Ny Rejse")
@@ -259,11 +264,13 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
 
                     FloatingActionButton(shape = CircleShape,
                         modifier = Modifier
-                                .size(width = 75.dp, height = 75.dp)
-                                .graphicsLayer {
-                                    translationX = x
-                                    translationY = y
-                                }
+                            .size(width = 75.dp, height = 75.dp)
+                            .graphicsLayer {
+                                translationX = x
+                                translationY = y
+                            },
+                        backgroundColor = Farvekombi033
+
                             ,
                         onClick = {
                             frontpageViewModel.expandFab()
@@ -273,8 +280,8 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                             imageVector = Icons.Filled.Add,
                             contentDescription = "",
                             modifier = Modifier
-                                    .size(38.dp)
-                                    .rotate(alpha),
+                                .size(38.dp)
+                                .rotate(alpha),
                             tint = Color.White
                         )
                     }
@@ -286,8 +293,8 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
 @Composable
 fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController, frontPageViewModel: FrontPageViewModel, state: States) {
     Column(modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxSize()
+        .verticalScroll(rememberScrollState())
+        .fillMaxSize()
     )
     {
         val max = categories.size-1
@@ -378,12 +385,12 @@ fun JourneyCard(journey: Journey, navController: NavController,frontPageViewMode
     }
 
         Card(modifier = Modifier
-                .clickable {
-                    val journeyId = journey.id
-                    navController.navigate(Screen.JourneyScreen.route + "/$journeyId")
-                }
-                /** Tror at nedstående skal ændres. Vi vil gerne have default paddings på hele projektet. */
-                .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
+            .clickable {
+                val journeyId = journey.id
+                navController.navigate(Screen.JourneyScreen.route + "/$journeyId")
+            }
+            /** Tror at nedstående skal ændres. Vi vil gerne have default paddings på hele projektet. */
+            .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
 
             Column() {
                 Box(modifier = Modifier

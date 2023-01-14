@@ -6,9 +6,13 @@ import com.example.oplev.Model.Folder
 import com.example.oplev.data.dto.JourneyDto
 import com.example.oplev.Model.Idea
 import com.example.oplev.Model.Journey
+import com.example.oplev.Model.States
 import com.example.oplev.data.dataService.IdeaDataService
 import com.example.oplev.data.dataService.QueueDataService
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
