@@ -65,7 +65,6 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
     val uiState by journeyViewModel.uiState.collectAsState()
-
     val state = journeyViewModel.stateFolder.value
 
     Scaffold(
@@ -79,6 +78,7 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
             Column(modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
             ) {
                 if(state.dialogState) {
                     NewCategoryDialog(journeyViewModel, uiState)

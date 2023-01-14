@@ -4,9 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.text.style.ClickableSpan
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -57,7 +55,7 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
         topBar = { TopBar(title = "Tur til København", navController)
                  },
         content = {
-            Column() {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                 Image(
                     // Placeholder image - skal ændres til image fra databasen
                     painter = painterResource(id = R.drawable.img_denmark),
