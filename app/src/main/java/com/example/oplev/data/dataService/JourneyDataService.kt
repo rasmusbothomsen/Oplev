@@ -40,15 +40,15 @@ class JourneyDataService(
                     var jdocuments = arrayListOf<QueryDocumentSnapshot>()
                     var journeyIds = categoryDataService.getSharedJourneyIds()
 
-                        var query = db.collection("users")
-                            .document(Firebase.auth.currentUser?.uid.toString())
-                            .collection("Journey")
-                            .get()
-                            .addOnSuccessListener { documents ->
-                                for (document in documents) {
-                                  jdocuments.add(document)
-                                }
-                            }.await()
+                                 var query =db.collection("users")
+                                     .document(Firebase.auth.currentUser?.uid.toString())
+                                     .collection("Journey").get()
+                                .addOnSuccessListener { documents ->
+                                    for (document in documents) {
+                                        jdocuments.add(document)
+                                    }
+                                }.await()
+
 
                     for (i in 0 until query.size()){
                         journeys.add(
@@ -64,50 +64,27 @@ class JourneyDataService(
                         )
                     }
 
+                    val roomJourneys = dao.getAll()
+                    if(roomJourneys.size != journeys.size){
+                        queueDataService.syncDatabases()
+                        Log.d("Change in firebase","Syncing firebase")
+                    }
+
                     return journeys
                 }
 
     suspend fun insertSharedJourneyToFirebase(item : Journey, collaboratorId : String, categoryDataService: CategoryDataService, activity: Activity ){
-        val categoryDataService = categoryDataService
+        var journey = item
+        val categoryId = categoryDataService.getCategoryIdFromTitle("Delt med mig",collaboratorId,activity)
+        journey = journey.copy(categoryID = categoryId)
+        val baseFolder = dao.getAbseluteParentFolder(item.id)
 
-        val add = HashMap<String, Any>()
+        val serializedJourney = extractDataClassAttributes(journey)
+        val serializedBaseFodler = extractDataClassAttributes(baseFolder)
 
-        val id = item.id
-        val tag = item.tag
-        val image = item.image.toString()
-        val categoryID = categoryDataService.getCategoryIdFromTitle("Delt med mig", collaboratorId, activity)
-        val date = item.date.toString()
-        val description = item.description
-        val title = item.title
+        db.collection("users").document(collaboratorId).collection(serializedJourney.first!!).document(serializedJourney.second["id"].toString()).set(serializedJourney.second).await()
+        db.collection("users").document(collaboratorId).collection(serializedBaseFodler.first!!).document(serializedBaseFodler.second["id"].toString()).set(serializedBaseFodler.second).await()
 
-        add["id"] = id
-        add["tag"] = tag
-        add["image"] = image
-        add["categoryID"] = categoryID
-        add["date"] = date
-        add["description"] = description
-        add["title"] = title
-
-        //var sucess = false
-
-        db.collection("users").document(collaboratorId).collection("Journey")
-            .document(id)
-            .set(add)
-            .addOnCompleteListener(activity) { task ->
-                if (task.isSuccessful) {
-                    Log.d(AuthViewModel.TAG, "sharing created :success")
-                } else {
-                    Log.w(
-                        AuthViewModel.TAG,
-                        "sharing created :failure",
-                        task.exception
-                    )
-                }
-            }.await()
-
-       // if (!sucess){
-         //   insertQueueItem(item,add["id"].toString())
-        //}
 
     }
 

@@ -32,11 +32,10 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
 
      suspend fun updateFrontPage() {
             var journeys = journeyDataService.getJourneys(categoryDataService)
-            for (Journey in journeys) {
-                journeyDataService.insertRoom(Journey)
-            }
-         changeupdatedStat()
-    }
+             changeupdatedStat()
+         Log.d("FrontPageUpdate","Called")
+
+     }
 
     suspend fun createCategory(title: String, activity: Activity) {
         categoryDataService.createCategory(title, activity)
@@ -44,7 +43,7 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
 
     suspend fun getCategories(): List<CategoryDto> {
         var id = Firebase.auth.currentUser?.uid
-        updateFrontPage()
+       // updateFrontPage()
         var categorylist = categoryDataService.getCategoryDto(id.toString())
 
         return categorylist

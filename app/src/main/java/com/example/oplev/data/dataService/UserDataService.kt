@@ -77,8 +77,6 @@ class UserDataService(
                     add["journeyId"] = journeyId
                     add["collaboratorMail"] = collaboratorMail
                     add["isAccepted"] = false
-
-
                     db.collection("sharings")
                         .document()
                         .set(add)

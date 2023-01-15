@@ -25,19 +25,6 @@ import java.util.*
 class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val categoryDataService:CategoryDataService, val userDataService: UserDataService, application: Application, val folderDataService: FolderDataService): BaseViewModel<Journey>(application) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    fun createNewJourney(
-        tag: String,
-        Image: String?,
-        CategoryID: String,
-        Date: String?,
-        Description: String,
-        Title: String,
-        collaboratorMail: String,
-        activity: Activity
-    ) {
-        var img = "img_paris"
-        val tempJourney =
-            Journey(UUID.randomUUID().toString(), tag, img, CategoryID, Date, Description, Title)
 
         fun createNewJourney(
             tag: String,
@@ -77,24 +64,10 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
                             tempJourney
                         )
                     }
-                    runBlocking {
-                        journeydataService.insertItem(tempJourney)
-                        folderDataService.insertItem(baseFolderOfJourney)
-                        if (collaboratorMail.isNotEmpty()) {
-                            shareJourney(
-                                Firebase.auth.currentUser?.uid.toString(),
-                                tempJourney.id,
-                                collaboratorMail,
-                                activity,
-                                tempJourney
-                            )
 
-                        }
-                    }
                 }
             }
         }
-    }
 
         fun getCategoryIdFromTitle(Title: String): String {
             var categoryID = " "

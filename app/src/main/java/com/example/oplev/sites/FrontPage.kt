@@ -262,6 +262,7 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         onClick = {
                             runBlocking {
                                 categories = frontpageViewModel.getCategories()
+                                frontpageViewModel.updateFrontPage()
                             }
                             if (pageIsUpdated) {
                                 Toast.makeText(context, "Rejser opdateret!", Toast.LENGTH_SHORT)
