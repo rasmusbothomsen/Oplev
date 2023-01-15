@@ -29,16 +29,19 @@ import com.example.oplev.sites.TopBar
 import com.example.oplev.ui.components.DateandTimePicker
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.Calendar
+import compose.icons.lineawesomeicons.Comment
+import compose.icons.lineawesomeicons.Lightbulb
+import compose.icons.lineawesomeicons.LinkSolid
 
 
 @Composable
 fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavController) {
 
-    var titel by remember{ mutableStateOf("") }
+    var titel by remember { mutableStateOf("") }
     var beskrivelse by remember { mutableStateOf("") }
-    var link by remember{ mutableStateOf("") }
-    var image by remember{ mutableStateOf("") }
-    var folderId by remember{ mutableStateOf("") }
+    var link by remember { mutableStateOf("") }
+    var image by remember { mutableStateOf("") }
+    var folderId by remember { mutableStateOf("") }
     var date by remember { mutableStateOf("") }
 
 
@@ -46,9 +49,11 @@ fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavContr
     Scaffold(
         topBar = { TopBar(title = "Velkommen {user}", navController) },
         content = {
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
                 Box(modifier = Modifier.height(120.dp)) {
                     Column(
                         modifier = Modifier
@@ -65,64 +70,88 @@ fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavContr
                             contentDescription = "PlaceholderImage",
                             contentScale = ContentScale.FillBounds
                         )
-                        }
-                    IconButton(onClick = { /*TODO*/ },  modifier = Modifier
-                        .align(Alignment.BottomEnd)) {
-                        Icon(imageVector = Icons.Default.AddCircle, contentDescription ="",
-                            tint= Color.White
-                        )
                     }
                 }
-                inputTextfield(label = "Titel", height = 80, imageVector = Icons.Filled.LocationOn, onValueChange = {titel = it}, input = titel)
-                inputTextfield(label = "Beskriv ideen", height = 200, imageVector = Icons.Filled.LocationOn, onValueChange = {beskrivelse = it}, input = beskrivelse)
-                inputTextfield(label = "Indsæt link", height = 80, imageVector = Icons.Filled.LocationOn, onValueChange = {link = it}, input = link)
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-                    .padding(10.dp)) {
-                    DateandTimePicker()
-                }
-                Row(modifier = Modifier.padding(60.dp,20.dp,0.dp,80.dp)){
-                    Button(
-                        onClick = { navController.navigate(Screen.FrontPageScreen.route) },
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.Transparent,
-                            contentColor = Color.Black
-                        ),
-                        modifier = Modifier.size(130.dp, 40.dp),
-                        shape = RoundedCornerShape(50)
-                    ){
-                        Text(
-                            text = "Annuller", fontSize = 18.sp
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(40.dp))
-                    Button(
-                        onClick = {
-                            createIdeaViewModel.createNewIdea(
-                                titel,
-                                beskrivelse,
-                                link,
-                                image,
-                                date
+
+                    inputTextfield(
+                        label = "Titel",
+                        height = 80,
+                        imageVector = LineAwesomeIcons.Lightbulb,
+                        onValueChange = { titel = it },
+                        input = titel
+                    )
+                    inputTextfield(
+                        label = "Beskriv ideen",
+                        height = 200,
+                        imageVector = LineAwesomeIcons.Comment,
+                        onValueChange = { beskrivelse = it },
+                        input = beskrivelse
+                    )
+                    inputTextfield(
+                        label = "Indsæt link",
+                        height = 80,
+                        imageVector = LineAwesomeIcons.LinkSolid,
+                        onValueChange = { link = it },
+                        input = link
+                    )
+                    inputTextfield(
+                        label = "Indsæt dato",
+                        height = 80,
+                        imageVector = LineAwesomeIcons.Calendar,
+                        onValueChange = { date = it },
+                        input = date
+                    )
+
+
+                    Row(modifier = Modifier.padding(20.dp, 20.dp, 30.dp, 80.dp)) {
+                        Button(
+                            onClick = { navController.navigate(Screen.FrontPageScreen.route) },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Color.Transparent,
+                                contentColor = Color.Black
+                            ),
+                            modifier = Modifier.size(130.dp, 40.dp),
+                            shape = RoundedCornerShape(50)
+                        ) {
+                            Text(
+                                text = "Annuller", fontSize = 18.sp
                             )
-                            navController.navigate(Screen.FrontPageScreen.route)
-                             },
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.Green,
-                            contentColor = Color.Black
-                        ),
-                        modifier = Modifier.size(130.dp, 40.dp),
-                        shape = RoundedCornerShape(50)
-                    ){
-                        Text(
-                            text = "Gem", fontSize = 18.sp
-                        )
+                        }
+                        Spacer(modifier = Modifier.width(40.dp))
+                        Button(
+                            onClick = {
+                                createIdeaViewModel.createNewIdea(
+                                    titel,
+                                    beskrivelse,
+                                    link,
+                                    image,
+                                    date
+                                )
+                                navController.navigate(Screen.FrontPageScreen.route)
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Color.Green,
+                                contentColor = Color.Black
+                            ),
+                            modifier = Modifier.size(130.dp, 40.dp),
+                            shape = RoundedCornerShape(50)
+                        ) {
+                            Text(
+                                text = "Gem", fontSize = 18.sp
+                            )
+                        }
                     }
                 }
             }
-            }
+        }
     )
 }
 
