@@ -2,6 +2,10 @@ package com.example.oplev.sites
 
 import android.app.Activity
 import android.widget.Toast
+import android.content.Context
+import android.net.Uri
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -21,15 +25,19 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
+import com.example.oplev.MainActivity
 import com.example.oplev.Model.Category
 import com.example.oplev.data.dto.CategoryDto
 import com.example.oplev.Model.Journey
@@ -37,7 +45,7 @@ import com.example.oplev.Model.States
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.FrontPageViewModel
-import com.example.oplev.ui.theme.Farvekombi032
+import com.example.oplev.ui.theme.*
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -45,6 +53,13 @@ import kotlinx.coroutines.runBlocking
 import com.example.oplev.ui.theme.OplevFarve2
 import com.example.oplev.ui.theme.Farvekombi033
 import com.example.oplev.ui.theme.OplevBlue
+import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
+import com.google.android.exoplayer2.ui.StyledPlayerView
 
 
 @Preview
@@ -338,22 +353,73 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
     )
 }
 
+private fun Context.buildExoPlayer(uri: Uri) =
+    ExoPlayer.Builder(this).build().apply {
+        setMediaItem(MediaItem.fromUri(uri))
+        repeatMode = Player.REPEAT_MODE_ALL
+        playWhenReady = true
+        videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
+        prepare()
+    }
+
+private fun Context.buildPlayerView(exoPlayer: ExoPlayer) =
+    StyledPlayerView(this).apply {
+        player = exoPlayer
+        layoutParams = FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        useController = false
+        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+    }
+
 @Composable
 fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController, frontPageViewModel: FrontPageViewModel, state: States) {
-    Column(modifier = Modifier
-        .verticalScroll(rememberScrollState())
-        .fillMaxSize()
+    val rawId = MainActivity.context.resources.getIdentifier(
+        "blob",
+        "raw",
+        MainActivity.context.packageName
     )
-    {
-        val max = categories.size-1
-        for (i in 0..max) {
-            Spacer(modifier = Modifier
-                .height(15.dp))
-            CategoryRow(categories[i], navController = navController,frontPageViewModel)
+    val video = "android.resource://${MainActivity.context}.packageName/$rawId"
+    val videoUri = Uri.parse(video)
+
+    val exoPlayer = remember { MainActivity.context.buildExoPlayer(videoUri) }
+    exoPlayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
+
+    // exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
+
+
+    DisposableEffect(
+        AndroidView(
+            factory = { it.buildPlayerView(exoPlayer) },
+            modifier = Modifier.fillMaxSize()
+        )
+    ) {
+        onDispose {
+            exoPlayer.release()
         }
     }
-    if(state.dialogState) {
-        NewCategoryDialog(frontPageViewModel = frontPageViewModel)
+
+    ProvideWindowInsets {
+
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxSize()
+        )
+        {
+            val max = categories.size - 1
+            for (i in 0..max) {
+                Spacer(
+                    modifier = Modifier
+                        .height(15.dp)
+                )
+                CategoryRow(categories[i], navController = navController, frontPageViewModel)
+            }
+        }
+        if (state.dialogState) {
+            NewCategoryDialog(frontPageViewModel = frontPageViewModel)
+        }
     }
 }
 
@@ -403,7 +469,7 @@ fun CategoryRow(category: CategoryDto, navController: NavController, frontPageVi
     Text(
         text = category.baseObject?.title.toString(),
         fontSize = 20.sp,
-        fontFamily = FontFamily.Default,
+        fontFamily = fontsmedium,
         fontWeight = FontWeight.Medium,
         modifier = Modifier
             .padding(5.dp, 0.dp, 0.dp, 0.dp)
@@ -415,7 +481,7 @@ fun CategoryRow(category: CategoryDto, navController: NavController, frontPageVi
             JourneyCard(category.journeys[i], navController = navController,frontPageViewModel)
         }
         if (category.journeys.size < 1) {
-                Text(text = "Ingen rejser oprettet", color = Color.LightGray, fontSize = 30.sp)
+                Text(text = "Ingen rejser oprettet", color = Color.LightGray, fontSize = 18.sp, modifier = Modifier.padding(5.dp, 0.dp, 0.dp, 35.dp))
         }
     }
 }
@@ -438,12 +504,11 @@ fun JourneyCard(journey: Journey, navController: NavController,frontPageViewMode
                 navController.navigate(Screen.JourneyScreen.route + "/$journeyId")
             }
             /** Tror at nedstående skal ændres. Vi vil gerne have default paddings på hele projektet. */
-            .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
-
+            .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Farvekombi033) {
             Column() {
                 Box(modifier = Modifier
-                        .padding()
-                        .fillMaxSize()) {
+                    .padding()
+                    .fillMaxSize()) {
                     Image(
                         painter = painterResource(id = drawableId),
                         contentDescription = "Image Denmark",
@@ -451,16 +516,19 @@ fun JourneyCard(journey: Journey, navController: NavController,frontPageViewMode
                     )
                     Box(
                         modifier = Modifier
-                                //.fillMaxWidth().height(23.dp)
-                                .align(Alignment.BottomCenter)
-                                .background(Color.Black.copy(alpha = 0.6f))
+                            .width(145.dp)
+                            .align(Alignment.BottomCenter)
+                            .background(Farvekombi033.copy(alpha = 0.6f))
                     ) {
                         Text(
-                            fontSize = 18.sp,
+                            fontSize = 16.sp,
                             text = journey.title,
-                            modifier = Modifier.align(Alignment.BottomCenter),
-
-                            color = Color.White
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            fontFamily = fonts1,
+                            color = Color.Black
                         )
                     }
 
