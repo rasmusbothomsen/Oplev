@@ -10,7 +10,7 @@ import com.example.oplev.data.roomDao.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-@Database(entities = [Category::class, Journey::class, Folder::class, Idea::class, UserInfo::class,QueueItem::class], version = 2)
+@Database(entities = [Category::class, Journey::class, Folder::class, Idea::class, UserInfo::class,QueueItem::class], version = 3)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun CategoryDao(): CategoryDao
     abstract fun JourneyDao(): JourneyDao
@@ -56,6 +56,7 @@ abstract class AppDatabase : RoomDatabase() {
 
             val idea1 = Idea(
                 id = "1",
+                journeyId = "123",
                 folderId = "1",
                 title = "Idea 1",
                 description = "This is the description for Idea 1",
@@ -68,17 +69,20 @@ abstract class AppDatabase : RoomDatabase() {
             val idea2 = Idea(
                 id = "2",
                 folderId = "2",
+                journeyId = "123",
                 title = "Idea 2",
                 description = "This is the description for Idea 2",
                 link = "www.idea2.com",
                 image = "img_india",
                 date = "1"
 
+
             )
 
 
             val idea3 = Idea(
                 id = "3",
+                journeyId = "123",
                 folderId = "2",
                 title = "Idea 3",
                 description = "This is the description for Idea 3",

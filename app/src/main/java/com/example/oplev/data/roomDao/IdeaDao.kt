@@ -16,4 +16,7 @@ interface IdeaDao:BaseDao<Idea> {
 
     @Query("select * from ideas where id == :id")
     fun findIdea(id:String): Idea
+
+    @Query("select journeyId from Folder where id == :id")
+    fun getJourneyFromFolderId(id:String):String
 }

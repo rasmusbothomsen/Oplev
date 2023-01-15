@@ -1,5 +1,6 @@
 package com.example.oplev.data.dataService
 
+import android.app.Activity
 import android.util.Log
 import com.example.oplev.Model.Journey
 import com.example.oplev.data.roomDao.BaseDao
@@ -41,6 +42,41 @@ open class BaseDataService<T> (
         }
         return className to attributes
     }
+    suspend fun gerUserIdFromMail(mail: String): String {
+        var id = ""
+        var query = db.collection("users")
+            .whereEqualTo("email", mail)
+            .get()
+            .addOnSuccessListener {
+
+            }
+            .await()
+
+        id = query.documents[0].id
+
+        return id
+    }
+
+    open suspend fun checkAndInsertIfShared(item :T){
+        val map = extractDataClassAttributes(item as Any)
+        val journeyId = map.second.get("journeyId") ?: return
+        val sharedJourney = db.collection("sharings").whereEqualTo("journeyId",journeyId).get().await()?:return
+        val collabmail = sharedJourney.documents[0].get("collaboratorMail")
+        val add = map.second
+        val currentUser = gerUserIdFromMail(collabmail as String)
+        db.collection("users").document(currentUser).collection(map.first!!)
+            .document(add["id"].toString())
+            .set(add)
+            .addOnCompleteListener(){
+                    task ->
+                if(task.isSuccessful){
+                    Log.d("FirebaseInsert",  "STATUS: SUCCESS")
+                }else{
+
+                }
+            }.await()
+
+    }
 
     open suspend fun insertIntoFireBase(item :T){
         val deconStructedItem = extractDataClassAttributes(item as Any)
@@ -48,6 +84,7 @@ open class BaseDataService<T> (
         val add = deconStructedItem.second
         var sucess = false
 
+        checkAndInsertIfShared(item)
         db.collection("users").document(Firebase.auth.currentUser?.uid.toString()).collection(collectionName!!)
             .document(add["id"].toString())
             .set(add)

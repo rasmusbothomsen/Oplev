@@ -21,8 +21,10 @@ class CreateIdeaViewModel (val dataService: IdeaDataService, application: Applic
     application) {
 
     fun createNewIdea(title: String, description: String, link: String, image: String, date: String) {
+        val journeyId = dataService.getJourneyId(folderId)
         val idea = Idea(
             UUID.randomUUID().toString(),
+            journeyId,
             folderId,
             title,
             description,

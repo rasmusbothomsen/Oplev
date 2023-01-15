@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseUser
 @Entity(tableName = "ideas" )
 data class Idea(
     @PrimaryKey val id:String,
+    val journeyId: String,
     var folderId:String,
     var title: String,
     var description: String,

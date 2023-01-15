@@ -17,6 +17,10 @@ class IdeaDataService(
         return dao.findIdea(id)
     }
 
+    fun getJourneyId(id:String):String{
+        return dao.getJourneyFromFolderId(id)
+    }
+
 
 }
 
