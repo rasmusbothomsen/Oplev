@@ -1,6 +1,5 @@
 package com.example.oplev.data.dataService
 
-import android.app.Activity
 import android.util.Log
 import com.example.oplev.Model.*
 import com.example.oplev.data.AppDatabase
@@ -9,7 +8,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
+import java.lang.reflect.Type
+import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.javaType
 import kotlin.reflect.typeOf
 
 class QueueDataService(
@@ -27,22 +29,23 @@ class QueueDataService(
     suspend fun syncDatabases():Deferred<Unit>{
         return GlobalScope.async(Dispatchers.IO) {
             upDateFirebaseFromQueue()
-            GlobalScope.async(Dispatchers.IO) {
                 getAllFirebaseObjects()
-            }
         }
     }
     suspend fun getAllFirebaseObjects(){
-        var ideas:List<Idea> = populateDatClass(typeOf<Idea>()) as List<Idea>
+        var ideas:List<Idea> = populateDatClass(Idea::class as KClass<Any>) as List<Idea>
+
         appDatabase.IdeaDao().insertAllAny(ideas)
-        var folders = populateDatClass(typeOf<Folder>()) as List<Folder>
+        var folders = populateDatClass(Folder::class as KClass<Any>) as List<Folder>
         appDatabase.FolderDao().insertAllAny(folders)
-        var category = populateDatClass(typeOf<Category>()) as List<Category>
+        var category = populateDatClass(Category::class as KClass<Any>) as List<Category>
         appDatabase.CategoryDao().insertAllAny(category)
-        var journey = populateDatClass(typeOf<Journey>()) as List<Journey>
+        var journey = populateDatClass(Journey::class as KClass<Any>) as List<Journey>
         appDatabase.JourneyDao().insertAllAny(journey)
+
+
     }
-    suspend fun upDateFirebaseFromQueue() {
+     fun upDateFirebaseFromQueue() {
         val items = dao.getAll()
         for (item in items){
             when(item.type)
@@ -64,7 +67,7 @@ class QueueDataService(
     }
 
 
-    fun processIdea(objectId:String){
+     fun processIdea(objectId:String){
        val items  = appDatabase.IdeaDao().getfromId(objectId)
         for (item in items){
             insertIntoFireBase(extractDataClassAttributes(item))
@@ -96,17 +99,20 @@ class QueueDataService(
         return className to attributes
     }
 
-   suspend fun <T> populateDatClass(data:T):List<T>{
-        val dbCollection = db.collection("users").document(Firebase.auth.currentUser?.uid.toString())
-            .collection(data!!::class.simpleName!!).get().addOnCompleteListener(){task ->
-                if (task.isSuccessful){
-                 Log.d("FIREBASE SYNC","SUCCESS")
-                }else if(task.isComplete){
-                    Log.d("FIREBASE SYNC","SUCCESS")
-                }
-            }
-       val itemsToReturn = dbCollection.await().toObjects(data!!::class.java)
-       return itemsToReturn
+
+   suspend fun  populateDatClass(clazz:KClass<Any>):List<Any>{
+       var returnItems = ArrayList<Any>()
+
+       val dbCollection = db.collection("users").document(Firebase.auth.currentUser?.uid.toString())
+           .collection(clazz.simpleName!!).get().addOnSuccessListener {  }.await()
+       val items = dbCollection.documents
+       for (item in items){
+           returnItems.add(item.toObject(clazz.java)!!)
+       }
+       Log.d("TranslatedItem",returnItems.toString())
+       Log.d("dataClassName",clazz.simpleName!!)
+
+       return returnItems
     }
 
      fun insertIntoFireBase(deconStructedItem: Pair<String?, HashMap<String, Any>>){

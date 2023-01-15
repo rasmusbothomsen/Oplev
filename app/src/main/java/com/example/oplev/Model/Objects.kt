@@ -6,40 +6,40 @@ import com.google.firebase.auth.FirebaseUser
 
 @Entity(tableName = "ideas" )
 data class Idea(
-    @PrimaryKey val id:String,
-    val journeyId: String,
-    var folderId:String,
-    var title: String,
-    var description: String,
-    var link: String,
-    var image: String?,
-    var date: String,
+    @PrimaryKey val id:String = "",
+    val journeyId: String= "",
+    var folderId:String= "",
+    var title: String= "",
+    var description: String= "",
+    var link: String= "",
+    var image: String?= "",
+    var date: String= "",
 )
 
 @Entity
 data class Folder(
-    @PrimaryKey val id:String,
-    var journeyId:String,
-    var parentFolderId:String,
-    var title: String,
+    @PrimaryKey val id:String= "",
+    var journeyId:String= "",
+    var parentFolderId:String= "",
+    var title: String= "",
     )
 
 @Entity
 data class Category(
-    @PrimaryKey val id: String,
-    var title: String,
-    var createdBy: String
+    @PrimaryKey val id: String= "",
+    var title: String= "",
+    var createdBy: String= ""
 )
 
 @Entity
 data class Journey(
-    @PrimaryKey val id:String,
-    var tag: String,
-    var image: String?,
-    val categoryID: String,
-    var date: String?,
-    var description: String,
-    var title: String,
+    @PrimaryKey val id:String= "",
+    var tag: String= "",
+    var image: String?= "",
+    val categoryID: String= "",
+    var date: String?= "",
+    var description: String= "",
+    var title: String= "",
 
     )
 
@@ -54,10 +54,10 @@ data class UserInfo(
 )
 @Entity(tableName = "queue_table")
 data class QueueItem(
-    @PrimaryKey(autoGenerate = true) val id: Long,
-    val type: String,
-    val objectId: String,
-    val firstInsert: Boolean
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val type: String= "",
+    val objectId: String= "",
+    val firstInsert: Boolean= false
 )
 
 

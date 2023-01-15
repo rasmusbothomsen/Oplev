@@ -61,6 +61,9 @@ open class BaseDataService<T> (
         val map = extractDataClassAttributes(item as Any)
         val journeyId = map.second.get("journeyId") ?: return
         val sharedJourney = db.collection("sharings").whereEqualTo("journeyId",journeyId).get().await()?:return
+        if(sharedJourney.size() == 0){
+            return
+        }
         val collabmail = sharedJourney.documents[0].get("collaboratorMail")
         val add = map.second
         val currentUser = gerUserIdFromMail(collabmail as String)
