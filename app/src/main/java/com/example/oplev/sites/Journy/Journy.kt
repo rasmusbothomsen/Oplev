@@ -75,7 +75,7 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
             Column(modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
+                
             ) {
                 if(state.dialogState) {
                     NewCategoryDialog(journeyViewModel, uiState)

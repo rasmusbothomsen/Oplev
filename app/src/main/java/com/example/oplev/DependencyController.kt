@@ -26,14 +26,14 @@ class DependencyController() {
         return FrontPageViewModel(application, categoryDataService, journeyDataService,userDataService)
     }
 
-    fun initCreateJourneyViewModel(context: android.content.Context,application: Application):CreateJourneyViewModel{
+    fun initCreateJourneyViewModel(context: android.content.Context,application: Application, journeyId: String?):CreateJourneyViewModel{
         val appDb = AppDatabase.getInstance(context)
         val queueDataService = QueueDataService(appDb)
         val journeyDataService = JourneyDataService(appDb.JourneyDao(),queueDataService)
         val categoryDataService = CategoryDataService(appDb.CategoryDao(), queueDataService)
         val folderDataService = FolderDataService(appDb.FolderDao(),queueDataService)
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
-        return CreateJourneyViewModel(journeyDataService, categoryDataService, userDataService, application, folderDataService)
+        return CreateJourneyViewModel(journeyDataService, categoryDataService, userDataService, application, folderDataService,journeyId)
 
 
     }
