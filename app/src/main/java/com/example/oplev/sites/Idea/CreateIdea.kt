@@ -39,9 +39,9 @@ fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavContr
     var link by remember{ mutableStateOf("") }
     var image by remember{ mutableStateOf("") }
     var folderId by remember{ mutableStateOf("") }
-    var date by remember { mutableStateOf("")
-    }
-
+    var date by remember { mutableStateOf("") }
+    var editIdea = createIdeaViewModel.state.value.editIdea
+    var currentIdea = createIdeaViewModel.getIdea(createIdeaViewModel.ideaId!!)
 
     Scaffold(
         topBar = { TopBar(title = "Velkommen {user}", navController) },
@@ -73,9 +73,15 @@ fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavContr
                         )
                     }
                 }
-                inputTextfield(label = "Titel", height = 80, imageVector = Icons.Filled.LocationOn, onValueChange = {titel = it}, input = titel)
-                inputTextfield(label = "Beskriv ideen", height = 200, imageVector = Icons.Filled.LocationOn, onValueChange = {beskrivelse = it}, input = beskrivelse)
-                inputTextfield(label = "Indsæt link", height = 80, imageVector = Icons.Filled.LocationOn, onValueChange = {link = it}, input = link)
+                inputTextfield(label = "Titel", height = 80, imageVector = Icons.Filled.LocationOn, onValueChange = {titel = it}, input = if(editIdea){
+                  currentIdea.title
+                } else titel)
+                inputTextfield(label = "Beskriv ideen", height = 200, imageVector = Icons.Filled.LocationOn, onValueChange = {beskrivelse = it}, input = if(editIdea){
+                    currentIdea.description
+                } else beskrivelse)
+                inputTextfield(label = "Indsæt link", height = 80, imageVector = Icons.Filled.LocationOn, onValueChange = {link = it}, input = if(editIdea){
+                    currentIdea.link
+                } else link)
 
                 Row(modifier = Modifier
                     .fillMaxWidth()
@@ -100,7 +106,9 @@ fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavContr
                     Spacer(modifier = Modifier.width(40.dp))
                     Button(
                         onClick = {
-                            createIdeaViewModel.createNewIdea(
+                            if(editIdea){
+                                createIdeaViewModel.updateIdea(currentIdea.id, titel, beskrivelse, link, image, date)
+                            } else createIdeaViewModel.createNewIdea(
                                 titel,
                                 beskrivelse,
                                 link,

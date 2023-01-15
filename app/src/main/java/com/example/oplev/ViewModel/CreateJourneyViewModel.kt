@@ -35,7 +35,7 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
             _state.value = _state.value.copy(editMode = true)
         }
     }
-    fun createNewJourney( tag: String, Image: String?, CategoryID: String, Date: String?, Description: String, Title: String, collaboratorMail: String, activity: Activity){
+    fun createNewJourney(tag: String, Image: String?, CategoryID: String, Date: String?, Description: String, Title: String, collaboratorMail: String, activity: Activity){
         var img = "img_paris"
         val tempJourney = Journey(UUID.randomUUID().toString(), tag, img, CategoryID, Date, Description, Title)
         val baseFolderId = UUID.randomUUID().toString()
@@ -61,8 +61,12 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
         return currentJourney
     }
 
-    fun updateJourney(Title: String, Description: String, category: String){
+    fun updateJourney(Id: String, tag: String, Image: String?, CategoryID: String, Date: String?, Description: String, Title: String){
+        var tempJourney = Journey(Id, tag, Image, CategoryID, Date, Description, Title)
 
+        runBlocking {
+            journeydataService.updateItem(tempJourney)
+        }
     }
 
     fun getCategoryIdFromTitle(Title: String): String{

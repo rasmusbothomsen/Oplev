@@ -71,6 +71,7 @@ data class States(
     var chosenJourneyState: Journey? = null,
     var emailDialogState : Boolean = false,
     var editMode: Boolean = false,
+    var editIdea: Boolean = false,
 )
 
 

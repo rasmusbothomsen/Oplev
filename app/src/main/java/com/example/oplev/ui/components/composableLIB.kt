@@ -96,9 +96,13 @@ fun NavController(application: Application, startRoute : String) {
         }
         composable(route = Screen.CreateIdeaScreen.route+"/{id}"){navBackStack ->
             val folderId = navBackStack.arguments?.getString("id")
-            CreateIdea(createIdeaViewModel = dependencyController.initCreateIdeaViewModel(context, application,folderId!!), navController)
+            CreateIdea(createIdeaViewModel = dependencyController.initCreateIdeaViewModel(context, application,folderId!!, null), navController)
         }
-
+        composable(route = Screen.CreateIdeaScreen.route+"/{id}"+"/{idea}"){navBackStack ->
+            val folderId = navBackStack.arguments?.getString("id")
+            val ideaID = navBackStack.arguments?.getString("idea")
+            CreateIdea(createIdeaViewModel = dependencyController.initCreateIdeaViewModel(context, application,folderId!!, ideaID), navController)
+        }
 
         composable(route = Screen.Onboarding1.route){
             OnboardingLayout1(navController = navController, viewModel = dependencyController.initOnboardingViewModel(context, application))

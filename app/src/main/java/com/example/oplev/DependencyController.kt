@@ -67,11 +67,11 @@ class DependencyController() {
         return IdeaViewModel(ideaDataService, application, ideaId)
     }
 
-    fun initCreateIdeaViewModel(context: android.content.Context, application: Application,folderId:String):CreateIdeaViewModel{
+    fun initCreateIdeaViewModel(context: android.content.Context, application: Application,folderId:String, ideaId: String?):CreateIdeaViewModel{
         val appDb = AppDatabase.getInstance(context)
         val queueDataService = QueueDataService(appDb)
         val ideaDataService = IdeaDataService(appDb.IdeaDao(),queueDataService)
-        return CreateIdeaViewModel(ideaDataService, application,folderId)
+        return CreateIdeaViewModel(ideaDataService, application,folderId, ideaId)
 
     }
 

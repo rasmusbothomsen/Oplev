@@ -108,7 +108,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, journeyId:
                           Button(
                               onClick = {
                                   if(editMode){
-                                      createJourneyViewModel.updateJourney(Title, Description, createJourneyViewModel.getCategoryIdFromTitle(category))
+                                      createJourneyViewModel.updateJourney(currentJourney.id, tag, Image, createJourneyViewModel.getCategoryIdFromTitle(category), Date, Description, Title)
                                   }else createJourneyViewModel.createNewJourney(tag, Image, createJourneyViewModel.getCategoryIdFromTitle(category), Date, Description, Title, collaboratorId, activity)
                                   navController.navigate(Screen.FrontPageScreen.route)
                               },
