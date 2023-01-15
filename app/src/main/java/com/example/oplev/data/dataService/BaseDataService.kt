@@ -51,8 +51,9 @@ open class BaseDataService<T> (
 
             }
             .await()
-
+        if(!query.documents.isEmpty()){
         id = query.documents[0].id
+        }
 
         return id
     }
@@ -67,6 +68,9 @@ open class BaseDataService<T> (
         val collabmail = sharedJourney.documents[0].get("collaboratorMail")
         val add = map.second
         val currentUser = gerUserIdFromMail(collabmail as String)
+        if (currentUser == ""){
+            return
+        }
         db.collection("users").document(currentUser).collection(map.first!!)
             .document(add["id"].toString())
             .set(add)

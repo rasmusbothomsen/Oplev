@@ -102,8 +102,9 @@ class UserDataService(
 
             }
             .await()
-
+        if(!query.documents.isEmpty()){
         id = query.documents[0].id
+        }
 
         return id
     }

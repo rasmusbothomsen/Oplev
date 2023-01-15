@@ -58,7 +58,7 @@ class QueueDataService(
 
             if (itemsSynced == items.size){
                 Log.d("Synced complete","QueItems synced")
-                appDatabase.clearAllTables()
+              //  appDatabase.clearAllTables()
             }
             else{
                 Log.e("SYNCED FAILED","NOT ALL ITEMS WHERE SYNCED. SYNCED: $itemsSynced: Total: ${items.size}")
