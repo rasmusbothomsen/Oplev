@@ -29,7 +29,6 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
     private val _state = mutableStateOf(States())
     val state: State<States> = _state
 
-
     suspend fun updateFrontPage() {
         viewModelScope.launch(Dispatchers.IO) {
             var journeys = journeyDataService.getJourneys(categoryDataService)
@@ -37,6 +36,22 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
                 journeyDataService.insertItem(Journey)
             }
         }
+    }
+
+    fun updateCategory(Id: String, title: String, createdBy: String){
+        var tempCategory = Category(Id, title, createdBy)
+
+        runBlocking {
+            categoryDataService.updateItem(tempCategory)
+        }
+    }
+
+    fun setCurrentCategory(category: CategoryDto){
+         state.value.copy(currentCategory = category)
+    }
+
+    fun setEditCategory(){
+        state.value.copy(editCategory = true)
     }
 
     suspend fun createCategory(title: String, activity: Activity) {

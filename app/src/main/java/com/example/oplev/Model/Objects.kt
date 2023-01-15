@@ -2,6 +2,7 @@ package com.example.oplev.Model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.oplev.data.dto.CategoryDto
 import com.google.firebase.auth.FirebaseUser
 
 @Entity(tableName = "ideas" )
@@ -72,6 +73,8 @@ data class States(
     var emailDialogState : Boolean = false,
     var editMode: Boolean = false,
     var editIdea: Boolean = false,
+    var editCategory: Boolean = false,
+    var currentCategory: CategoryDto? = null,
 )
 
 

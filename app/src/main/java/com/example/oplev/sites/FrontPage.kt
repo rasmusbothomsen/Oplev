@@ -73,7 +73,6 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
 
-
     Scaffold(
         scaffoldState = scaffoldstate,
             drawerContent = {
@@ -108,9 +107,6 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                             color = Color.Black,
                             fontSize = 18.sp,
                             modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp))
-
-
-
                     }
 
 
@@ -133,26 +129,6 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         )
                     }
                 }
-
-                /*Row(Modifier.padding(20.dp, 20.dp, 0.dp, 0.dp)) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = "",
-                        modifier = Modifier
-                                .size(45.dp, 45.dp)
-                                .padding(0.dp, 5.dp, 0.dp, 0.dp), tint = Color.Cyan
-                    )
-
-                    TextButton(onClick = { /*TODO*/ }) {
-                        Text(
-                            text = "Indstillinger",
-                            color = Color.Black
-
-                            fontSize = 18.sp,
-                            modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)
-                        )
-                    }
-                }*/
                 Row(Modifier.padding(20.dp, 20.dp, 0.dp, 0.dp)) {
                     Icon(
                         painterResource(id = R.drawable.ic_baseline_logout_24),
@@ -179,25 +155,6 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         )
                     }
                 }
-                /*Row(verticalAlignment = Bottom, horizontalArrangement = Arrangement.Center) {
-                    Button(
-                        onClick = {
-                            scope.launch{
-                                scaffoldstate.drawerState.close()}
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = OplevFarve2,
-                            contentColor = Color.White
-                        ),
-                        modifier = Modifier.size(240.dp, 40.dp),
-                        shape = RoundedCornerShape(50)
-                    ) {
-                        Text(
-                            text = "Luk", fontSize = 18.sp
-                        )
-
-                    }
-                }*/
         },
         drawerGesturesEnabled = true,
         topBar = {
@@ -259,11 +216,11 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
 
                     FloatingActionButton(shape = CircleShape,
                         modifier = Modifier
-                                .size(width = 75.dp, height = 75.dp)
-                                .graphicsLayer {
-                                    translationX = x
-                                    translationY = y
-                                }
+                            .size(width = 75.dp, height = 75.dp)
+                            .graphicsLayer {
+                                translationX = x
+                                translationY = y
+                            }
                             ,
                         onClick = {
                             frontpageViewModel.expandFab()
@@ -273,8 +230,8 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                             imageVector = Icons.Filled.Add,
                             contentDescription = "",
                             modifier = Modifier
-                                    .size(38.dp)
-                                    .rotate(alpha),
+                                .size(38.dp)
+                                .rotate(alpha),
                             tint = Color.White
                         )
                     }
@@ -285,9 +242,10 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
 
 @Composable
 fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController, frontPageViewModel: FrontPageViewModel, state: States) {
+    var currentCategory = state.currentCategory
     Column(modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxSize()
+        .verticalScroll(rememberScrollState())
+        .fillMaxSize()
     )
     {
         val max = categories.size-1
@@ -298,17 +256,20 @@ fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController,
         }
     }
     if(state.dialogState) {
-        NewCategoryDialog(frontPageViewModel = frontPageViewModel)
+        NewCategoryDialog(frontPageViewModel = frontPageViewModel, null, null)
+    }
+    if(state.editCategory){
+        NewCategoryDialog(frontPageViewModel = frontPageViewModel, state.editCategory, currentCategory)
     }
 }
 
 @Composable
-fun NewCategoryDialog(frontPageViewModel: FrontPageViewModel){
+fun NewCategoryDialog(frontPageViewModel: FrontPageViewModel, editCategory: Boolean?, currentCategory: CategoryDto?){
     var categoryTitle by remember { mutableStateOf("") }
     val activity = LocalContext.current as Activity
     AlertDialog(
         onDismissRequest = { /*TODO*/ },
-        title = { Text(text = "Indtast navnet på den nye kategori")},
+        title = { Text(text = if(editCategory!!){ currentCategory!!.baseObject!!.title } else "Indtast navnet på den nye kategori")},
         text = {
             OutlinedTextField(
                 value = categoryTitle,
@@ -323,9 +284,11 @@ fun NewCategoryDialog(frontPageViewModel: FrontPageViewModel){
         },
         confirmButton = {
             Button(onClick = {
-                runBlocking {
+                if(editCategory!!){
+                    frontPageViewModel.updateCategory(currentCategory!!.baseObject!!.id, categoryTitle, currentCategory!!.baseObject!!.createdBy)
+                } else runBlocking {
                     frontPageViewModel.createCategory(categoryTitle, activity)
-                }
+                    }
                 frontPageViewModel.changeDialogVal()
             }) {
                 Text(text = "Gem")
@@ -353,6 +316,12 @@ fun CategoryRow(category: CategoryDto, navController: NavController, frontPageVi
         modifier = Modifier
             .padding(5.dp, 0.dp, 0.dp, 0.dp)
     )
+    IconButton(onClick = {
+        frontPageViewModel.setEditCategory()
+        frontPageViewModel.setCurrentCategory(category)
+    }) {
+        Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
+    }
     Row(modifier = Modifier
         .horizontalScroll(rememberScrollState()), verticalAlignment = Alignment.Bottom
     ) {
@@ -378,17 +347,17 @@ fun JourneyCard(journey: Journey, navController: NavController,frontPageViewMode
     }
 
         Card(modifier = Modifier
-                .clickable {
-                    val journeyId = journey.id
-                    navController.navigate(Screen.JourneyScreen.route + "/$journeyId")
-                }
-                /** Tror at nedstående skal ændres. Vi vil gerne have default paddings på hele projektet. */
-                .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
+            .clickable {
+                val journeyId = journey.id
+                navController.navigate(Screen.JourneyScreen.route + "/$journeyId")
+            }
+            /** Tror at nedstående skal ændres. Vi vil gerne have default paddings på hele projektet. */
+            .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
 
             Column() {
                 Box(modifier = Modifier
-                        .padding()
-                        .fillMaxSize()) {
+                    .padding()
+                    .fillMaxSize()) {
                     Image(
                         painter = painterResource(id = drawableId),
                         contentDescription = "Image Denmark",
@@ -396,9 +365,9 @@ fun JourneyCard(journey: Journey, navController: NavController,frontPageViewMode
                     )
                     Box(
                         modifier = Modifier
-                                //.fillMaxWidth().height(23.dp)
-                                .align(Alignment.BottomCenter)
-                                .background(Color.Black.copy(alpha = 0.6f))
+                            //.fillMaxWidth().height(23.dp)
+                            .align(Alignment.BottomCenter)
+                            .background(Color.Black.copy(alpha = 0.6f))
                     ) {
                         Text(
                             fontSize = 18.sp,
