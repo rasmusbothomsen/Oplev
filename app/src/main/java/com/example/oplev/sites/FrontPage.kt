@@ -376,7 +376,7 @@ private fun Context.buildPlayerView(exoPlayer: ExoPlayer) =
 @Composable
 fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController, frontPageViewModel: FrontPageViewModel, state: States) {
     val rawId = MainActivity.context.resources.getIdentifier(
-        "blob",
+        "nature",
         "raw",
         MainActivity.context.packageName
     )

@@ -11,7 +11,7 @@ kapt {
 }
 android {
     namespace 'com.example.oplev'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.oplev"
@@ -101,7 +101,7 @@ dependencies {
     
     def lifecycle_version = "2.6.0-alpha01"
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
-
+    implementation "io.github.vanpra.compose-material-dialogs:datetime:0.9.0"
     implementation platform('com.google.firebase:firebase-bom:31.0.2')
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"

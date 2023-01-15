@@ -25,34 +25,50 @@ import java.util.*
 class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val categoryDataService:CategoryDataService, val userDataService: UserDataService, application: Application, val folderDataService: FolderDataService): BaseViewModel<Journey>(application) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    fun createNewJourney( tag: String, Image: String?, CategoryID: String, Date: String?, Description: String, Title: String, collaboratorMail: String, activity: Activity) {
+    fun createNewJourney(
+        tag: String,
+        Image: String?,
+        CategoryID: String,
+        Date: String?,
+        Description: String,
+        Title: String,
+        collaboratorMail: String,
+        activity: Activity
+    ) {
         var img = "img_paris"
         val tempJourney =
             Journey(UUID.randomUUID().toString(), tag, img, CategoryID, Date, Description, Title)
-    fun createNewJourney( tag: String, Image: String?, CategoryID: String, Date: String?, Description: String, Title: String, collaboratorMail: String, activity: Activity){
-        var img = "oplev300dpi"
-        val tempJourney = Journey(UUID.randomUUID().toString(), tag, img, CategoryID, Date, Description, Title)
-        val baseFolderId = UUID.randomUUID().toString()
-        val baseFolderOfJourney = Folder(baseFolderId, tempJourney.id, baseFolderId, "Basefolder")
 
-        runBlocking {
-            journeydataService.insertItem(tempJourney)
-            folderDataService.insertItem(baseFolderOfJourney)
+        fun createNewJourney(
+            tag: String,
+            Image: String?,
+            CategoryID: String,
+            Date: String?,
+            Description: String,
+            Title: String,
+            collaboratorMail: String,
+            activity: Activity
+        ) {
+            var img = "oplev300dpi"
+            val tempJourney = Journey(
+                UUID.randomUUID().toString(),
+                tag,
+                img,
+                CategoryID,
+                Date,
+                Description,
+                Title
+            )
+            val baseFolderId = UUID.randomUUID().toString()
+            val baseFolderOfJourney =
+                Folder(baseFolderId, tempJourney.id, baseFolderId, "Basefolder")
 
-            if (!collaboratorMail.isEmpty()) {
-                viewModelScope.launch(Dispatchers.IO) {
-                    shareJourney(
-                        Firebase.auth.currentUser?.uid.toString(),
-                        tempJourney.id,
-                        collaboratorMail,
-                        activity,
-                        tempJourney
-                    )
-                }
-                runBlocking {
-                    journeydataService.insertItem(tempJourney)
-                    folderDataService.insertItem(baseFolderOfJourney)
-                    if (collaboratorMail.isNotEmpty()) {
+            runBlocking {
+                journeydataService.insertItem(tempJourney)
+                folderDataService.insertItem(baseFolderOfJourney)
+
+                if (!collaboratorMail.isEmpty()) {
+                    viewModelScope.launch(Dispatchers.IO) {
                         shareJourney(
                             Firebase.auth.currentUser?.uid.toString(),
                             tempJourney.id,
@@ -60,52 +76,76 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
                             activity,
                             tempJourney
                         )
+                    }
+                    runBlocking {
+                        journeydataService.insertItem(tempJourney)
+                        folderDataService.insertItem(baseFolderOfJourney)
+                        if (collaboratorMail.isNotEmpty()) {
+                            shareJourney(
+                                Firebase.auth.currentUser?.uid.toString(),
+                                tempJourney.id,
+                                collaboratorMail,
+                                activity,
+                                tempJourney
+                            )
 
+                        }
                     }
                 }
             }
         }
     }
 
-    fun getCategoryIdFromTitle(Title: String): String{
-        var categoryID = " "
-        runBlocking {
-            categoryID = categoryDataService.getCategoryId(Title)
+        fun getCategoryIdFromTitle(Title: String): String {
+            var categoryID = " "
+            runBlocking {
+                categoryID = categoryDataService.getCategoryId(Title)
+            }
+            return categoryID
         }
-        return categoryID
-    }
 
-    fun getCategories(): List<Category>{
-        var id = Firebase.auth.currentUser?.uid
-        val categories = categoryDataService.getAllCategories(id.toString())
-        return categories
-    }
-
-    fun shareJourney(ownerId : String, journeyId : String, collaboratorMail : String, activity: Activity, tempJourney : Journey) {
-        runBlocking {
-            userDataService.shareJourney(ownerId, journeyId, collaboratorMail, activity)
-            val collaboratorId = userDataService.gerUserIdFromMail(activity, collaboratorMail)
-            journeydataService.insertSharedJourneyToFirebase(tempJourney, collaboratorId, categoryDataService, activity)
+        fun getCategories(): List<Category> {
+            var id = Firebase.auth.currentUser?.uid
+            val categories = categoryDataService.getAllCategories(id.toString())
+            return categories
         }
+
+        fun shareJourney(
+            ownerId: String,
+            journeyId: String,
+            collaboratorMail: String,
+            activity: Activity,
+            tempJourney: Journey
+        ) {
+            runBlocking {
+                userDataService.shareJourney(ownerId, journeyId, collaboratorMail, activity)
+                val collaboratorId = userDataService.gerUserIdFromMail(activity, collaboratorMail)
+                journeydataService.insertSharedJourneyToFirebase(
+                    tempJourney,
+                    collaboratorId,
+                    categoryDataService,
+                    activity
+                )
+            }
+        }
+
+        suspend fun getUserName(activity: Activity, baseContext: Context): String {
+            val docRef = db.collection("users").document(Firebase.auth.currentUser?.uid.toString())
+
+            val userInfo = docRef.get()
+
+                .addOnCompleteListener(activity) { task ->
+                    if (task.isSuccessful) {
+
+                        Log.d(AuthViewModel.TAG, "retrieveUserName:success")
+                    } else {
+                        Log.d(AuthViewModel.TAG, "retrieveUserName:failed")
+
+                    }
+                }.await()
+
+            return userInfo["firstname"].toString()
+
+        }
+
     }
-
-    suspend fun getUserName(activity: Activity, baseContext: Context): String {
-        val docRef = db.collection("users").document(Firebase.auth.currentUser?.uid.toString())
-
-        val userInfo = docRef.get()
-
-            .addOnCompleteListener(activity) { task ->
-                if (task.isSuccessful) {
-
-                    Log.d(AuthViewModel.TAG, "retrieveUserName:success")
-                } else {
-                    Log.d(AuthViewModel.TAG, "retrieveUserName:failed")
-
-                }
-            }.await()
-
-        return userInfo["firstname"].toString()
-
-    }
-
-}

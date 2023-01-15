@@ -15,6 +15,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -29,6 +30,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,6 +42,9 @@ import com.example.oplev.Screen
 import com.example.oplev.data.dto.CategoryDto
 import kotlinx.coroutines.runBlocking
 import com.example.oplev.ui.theme.*
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.datetime.date.datepicker
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 
 @Composable
 fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navController: NavController){
@@ -132,7 +138,15 @@ fun inputTextfield(label: String, height: Int, imageVector: ImageVector, onValue
             modifier = Modifier
                 .height(height.dp)
                 .width(300.dp),
-            onValueChange = onValueChange
+            onValueChange = onValueChange,
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Color.Black,
+                backgroundColor = Color.White,
+                focusedIndicatorColor = Color.DarkGray,
+                unfocusedIndicatorColor = Color.DarkGray,
+                disabledIndicatorColor = Color.DarkGray
+            ),
+            shape = CircleShape
         )
     }
 }
@@ -149,7 +163,15 @@ fun inputFieldNoRow(label: String, height: Int, imageVector: ImageVector){
         label = { Text(text = label) },
         onValueChange = {
             input = it
-        }, modifier = Modifier.width(105.dp)
+        }, modifier = Modifier.width(105.dp),
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = Color.Black,
+            backgroundColor = Color.White,
+            focusedIndicatorColor = Color.DarkGray,
+            unfocusedIndicatorColor = Color.DarkGray,
+            disabledIndicatorColor = Color.DarkGray
+        ),
+        shape = CircleShape
     )
 }
 
@@ -285,6 +307,190 @@ fun ExposedDropdownMenu(list: List<Category>, imageVector: ImageVector, selected
 @Preview(showBackground = true)
 @Composable
 fun createJourneyPreview(){
+    var tag by remember { mutableStateOf("") }
+    var Image by remember { mutableStateOf("") }
+    var Date by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf("") }
+    var Description by remember { mutableStateOf("") }
+    var Title by remember { mutableStateOf("") }
+    var collaboratorId by remember { mutableStateOf("") }
+    var list = listOf<String>()
+    var dstate = mutableStateOf(false)
 
- }
+    Scaffold(
+        topBar = {
+                 TopAppBar() {
+
+                 }
+        },
+        content = {
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())) {
+                var imageUri by remember { mutableStateOf<Uri?>(null) }
+                val bitmap = remember { mutableStateOf<Bitmap?>(null) }
+                val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()){ uri: Uri? -> imageUri = uri}
+
+                Box(modifier = Modifier
+                    .height(120.dp)
+                    .fillMaxWidth()) {
+                    Image(
+                        painter = painterResource(id = R.drawable.img_finland),
+                        contentDescription = "Placeholder", modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(),
+                        contentScale = ContentScale.FillBounds
+                    )
+                    IconButton(onClick = { }) {
+                        Icon(
+                            imageVector = Icons.Default.AddCircle, contentDescription = "",
+                            tint = Color.White
+                        )
+                    }
+                }
+                inputTextfield("Destination",80,imageVector = Icons.Default.LocationOn, onValueChange = {
+                    Title = it
+                }, Title)
+
+                ExposedDropdownMenu(list = listOf(), imageVector = Icons.Default.Info, category) {
+                    category = it.title
+                }
+                inputTextfield("Inviter Venner",80, imageVector = Icons.Default.Person, onValueChange = {
+                    collaboratorId = it
+                },collaboratorId)
+                val dialogState = rememberMaterialDialogState(false)
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+                    .padding(10.dp)) {
+
+                    var input by remember { mutableStateOf("") }
+                    IconButton(onClick = {
+                        dialogState.show()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.DateRange,
+                            contentDescription = "",
+                            modifier = Modifier.padding(10.dp, 15.dp, 15.dp, 5.dp)
+                        )
+                    }
+
+                        OutlinedTextField(
+                            value = input,
+                            label = { Text(text = "Dato") },
+                            onValueChange = {
+                                input = it
+                                dialogState.show()
+                            }, modifier = Modifier.width(105.dp)
+                                .clickable(onClick = {dstate.value = true}),
+                            enabled = false,
+                            colors = TextFieldDefaults.textFieldColors(
+                                textColor = Color.Black,
+                                backgroundColor = Color.White,
+                                focusedIndicatorColor = Color.DarkGray,
+                                unfocusedIndicatorColor = Color.DarkGray,
+                                disabledIndicatorColor = Color.DarkGray
+                            ),
+                            shape = CircleShape)
+
+                        Spacer(modifier = Modifier.width(20.dp))
+                    }
+
+                if(dstate.value){
+                    dialogState.show()
+                }
+
+
+                val maxChar = 150
+
+                Column() {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(80.dp)
+                            .padding(10.dp, 0.dp, 0.dp, 5.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "",
+                            modifier = Modifier.padding(10.dp, 20.dp, 15.dp, 0.dp)
+                        )
+                        OutlinedTextField(
+                            value = Description,
+                            onValueChange = {
+                                if (it.length <= maxChar) Description = it
+                            },
+                            label = { Text(text = "Beskrivelse")},
+                            colors = TextFieldDefaults.textFieldColors(
+                                textColor = Color.Black,
+                                backgroundColor = Color.White,
+                                focusedIndicatorColor = Color.DarkGray,
+                                unfocusedIndicatorColor = Color.DarkGray,
+                                disabledIndicatorColor = Color.DarkGray
+                            ),
+                            shape = CircleShape,
+                            modifier = Modifier.height(360.dp)
+                        )
+                    }
+                    Text(
+                        text = "${Description.length} / $maxChar",
+                        textAlign = TextAlign.End,
+                        style = MaterialTheme.typography.caption,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp, 0.dp, 16.dp, 5.dp)
+                    )
+                }
+
+
+
+                MaterialDialog(
+                    dialogState = dialogState,
+                    buttons = {
+                        positiveButton(text = "Ok", onClick = {dstate.value = false} )
+                        negativeButton(text = "Annuller", onClick = {dstate.value = false} )
+                    }
+                ) {
+                    datepicker { date ->
+                        // Do stuff with java.time.LocalDate object which is passed in
+                    }
+                }
+
+                //dialogState.show()
+
+
+                Row(modifier = Modifier.padding(60.dp,10.dp,0.dp,80.dp)) {
+                    //Nedenstående buttons skal være composables
+                    Button(
+                        onClick = {
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Farvekombi032,
+                            contentColor = Color.Black
+                        ),
+                        modifier = Modifier.size(130.dp, 40.dp),
+                        shape = RoundedCornerShape(50)
+                    ) {
+                        Text(
+                            text = "Annuller", fontSize = 18.sp
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(40.dp))
+                    Button(
+                        onClick = {
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = OplevFarve2,
+                            contentColor = Color.White
+                        ),
+                        modifier = Modifier.size(130.dp, 40.dp),
+                        shape = RoundedCornerShape(50)
+                    ) {
+                        Text(text = "Gem", fontSize = 18.sp)
+                    }
+                }
+            }
+        } )
+}
+
 
