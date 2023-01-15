@@ -1,6 +1,10 @@
 package com.example.oplev.sites
 
 import android.app.Activity
+import android.content.Context
+import android.net.Uri
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -27,8 +31,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
+import com.example.oplev.MainActivity
 import com.example.oplev.Model.Category
 import com.example.oplev.data.dto.CategoryDto
 import com.example.oplev.Model.Journey
@@ -44,6 +50,13 @@ import kotlinx.coroutines.runBlocking
 import com.example.oplev.ui.theme.OplevFarve2
 import com.example.oplev.ui.theme.Farvekombi033
 import com.example.oplev.ui.theme.OplevBlue
+import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
+import com.google.android.exoplayer2.ui.StyledPlayerView
 
 
 @Preview
@@ -290,22 +303,72 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
     )
 }
 
+private fun Context.buildExoPlayer(uri: Uri) =
+    ExoPlayer.Builder(this).build().apply {
+        setMediaItem(MediaItem.fromUri(uri))
+        repeatMode = Player.REPEAT_MODE_ALL
+        playWhenReady = true
+        videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
+        prepare()
+    }
+
+private fun Context.buildPlayerView(exoPlayer: ExoPlayer) =
+    StyledPlayerView(this).apply {
+        player = exoPlayer
+        layoutParams = FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        useController = false
+        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+    }
+
 @Composable
 fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController, frontPageViewModel: FrontPageViewModel, state: States) {
-    Column(modifier = Modifier
-        .verticalScroll(rememberScrollState())
-        .fillMaxSize()
+    val rawId = MainActivity.context.resources.getIdentifier(
+        "geometric",
+        "raw",
+        MainActivity.context.packageName
     )
-    {
-        val max = categories.size-1
-        for (i in 0..max) {
-            Spacer(modifier = Modifier
-                .height(15.dp))
-            CategoryRow(categories[i], navController = navController,frontPageViewModel)
+    val video = "android.resource://${MainActivity.context}.packageName/$rawId"
+    val videoUri = Uri.parse(video)
+
+    val exoPlayer = remember { MainActivity.context.buildExoPlayer(videoUri) }
+    exoPlayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
+    // exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
+
+
+    DisposableEffect(
+        AndroidView(
+            factory = { it.buildPlayerView(exoPlayer) },
+            modifier = Modifier.fillMaxSize()
+        )
+    ) {
+        onDispose {
+            exoPlayer.release()
         }
     }
-    if(state.dialogState) {
-        NewCategoryDialog(frontPageViewModel = frontPageViewModel)
+
+    ProvideWindowInsets {
+
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxSize()
+        )
+        {
+            val max = categories.size - 1
+            for (i in 0..max) {
+                Spacer(
+                    modifier = Modifier
+                        .height(15.dp)
+                )
+                CategoryRow(categories[i], navController = navController, frontPageViewModel)
+            }
+        }
+        if (state.dialogState) {
+            NewCategoryDialog(frontPageViewModel = frontPageViewModel)
+        }
     }
 }
 

@@ -95,6 +95,7 @@ class JourneyViewModel(val journeyDataService: JourneyDataService, val folderDat
 
 
 
+
     suspend fun getUserName(activity: Activity, baseContext: Context): String {
         val docRef = db.collection("users").document(Firebase.auth.currentUser?.uid.toString())
 

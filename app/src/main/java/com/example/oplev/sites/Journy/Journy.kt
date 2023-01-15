@@ -31,6 +31,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
@@ -49,7 +50,9 @@ import com.example.oplev.data.dataService.IdeaDataService
 import com.example.oplev.data.dataService.QueueDataService
 import com.example.oplev.data.dto.CategoryDto
 import com.example.oplev.data.roomDao.IdeaDao
+import com.example.oplev.ui.theme.Farvekombi031
 import com.example.oplev.ui.theme.Farvekombi032
+import com.example.oplev.ui.theme.Farvekombi033
 import com.example.oplev.ui.theme.OplevFarve2
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.ArrowAltCircleLeft
@@ -69,16 +72,16 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
 
     Scaffold(
         topBar = {
-            var userName = ""
+            var journeyName = ""
             runBlocking {
-                userName = journeyViewModel.getUserName(activity, context)
+                journeyName = journeyViewModel.getJourneyTitle()
             }
-            TopBar("Velkommen $userName", navController)},
+            TopBar( "$journeyName", navController)},
         content = {
             Column(modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
+                //.verticalScroll(rememberScrollState())
             ) {
                 if(state.dialogState) {
                     NewCategoryDialog(journeyViewModel, uiState)
@@ -105,7 +108,8 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
                             translationY = -180f}) {
                         FloatingActionButton(
                             onClick = { journeyViewModel.changeDialogVal() },
-                            modifier = Modifier.size(50.dp)) {
+                            modifier = Modifier.size(50.dp),
+                        backgroundColor = Farvekombi033) {
                             Icon(
                                 imageVector = Icons.Filled.Add,
                                 contentDescription = "",
@@ -122,7 +126,8 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
                     }) {
                         FloatingActionButton(onClick = {
                             navController.navigate(Screen.CreateIdeaScreen.route+"/${uiState.openFolder!!.id}")
-                        }, modifier = Modifier.size(50.dp)) {
+                        }, modifier = Modifier.size(50.dp),
+                        backgroundColor = Farvekombi033) {
                             Icon(
                                 imageVector = Icons.Filled.Add,
                                 contentDescription = "",
@@ -148,7 +153,8 @@ fun JourneyScreen(journeyViewModel: JourneyViewModel, navController: NavControll
                     ,
                     onClick = {
                         journeyViewModel.expandFab()
-                    }) {
+                    },
+                backgroundColor = Farvekombi033) {
                     Icon(
                         imageVector = Icons.Filled.Add,
                         contentDescription = "",
@@ -210,7 +216,7 @@ fun imageAndText(
     image: Image?,
     journeyViewModel: JourneyViewModel,
 navController: NavController) {
-    Box(modifier = Modifier.height(180.dp)){
+    Box(modifier = Modifier.height(150.dp)){
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -221,24 +227,13 @@ navController: NavController) {
             painter = painterResource(id = R.drawable.img_denmark),
             contentDescription = "Placerholder image",
             modifier = Modifier
-                .height(150.dp)
-                .fillMaxWidth(),
+                .fillMaxSize(),
+
             contentScale = ContentScale.Crop
         )
-        Box(
-            modifier = Modifier
-                .align(alignment = Alignment.CenterHorizontally)
-                .background(OplevFarve2)
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = journeyViewModel.getJourneyTitle(),
-                fontSize = 17.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-            }
          }
+        Divider(startIndent = 0.dp, thickness = 5.dp, color = Farvekombi031, modifier = Modifier.align(
+            BottomCenter))
         }
     }
 
@@ -302,7 +297,8 @@ fun BottomBar(viewModel: JourneyViewModel, navController: NavController){
                 icon = { Icon(imageVector = Icons.Default.Menu, "") },
                 label = { Text(text = "Menu") },
                 selected = false,
-                onClick = {})
+                onClick = {},
+                modifier = Modifier.background(color= Farvekombi032))
             BottomNavigationItem(
                 icon = { Icon(LineAwesomeIcons.ArrowAltCircleLeft, "") },
                 label = { Text(text = "Tilbage") },
