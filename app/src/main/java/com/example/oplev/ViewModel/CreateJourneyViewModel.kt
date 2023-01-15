@@ -26,7 +26,7 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     fun createNewJourney( tag: String, Image: String?, CategoryID: String, Date: String?, Description: String, Title: String, collaboratorMail: String, activity: Activity){
-        var img = "img_paris"
+        var img = "oplev300dpi"
         val tempJourney = Journey(UUID.randomUUID().toString(), tag, img, CategoryID, Date, Description, Title)
         val baseFolderId = UUID.randomUUID().toString()
         val baseFolderOfJourney = Folder(baseFolderId,tempJourney.id,baseFolderId,"Basefolder")

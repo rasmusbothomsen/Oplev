@@ -24,7 +24,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -42,14 +44,11 @@ import com.example.oplev.Model.States
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.FrontPageViewModel
-import com.example.oplev.ui.theme.Farvekombi032
+import com.example.oplev.ui.theme.*
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import com.example.oplev.ui.theme.OplevFarve2
-import com.example.oplev.ui.theme.Farvekombi033
-import com.example.oplev.ui.theme.OplevBlue
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
@@ -326,7 +325,7 @@ private fun Context.buildPlayerView(exoPlayer: ExoPlayer) =
 @Composable
 fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController, frontPageViewModel: FrontPageViewModel, state: States) {
     val rawId = MainActivity.context.resources.getIdentifier(
-        "geometric",
+        "blob",
         "raw",
         MainActivity.context.packageName
     )
@@ -335,6 +334,7 @@ fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController,
 
     val exoPlayer = remember { MainActivity.context.buildExoPlayer(videoUri) }
     exoPlayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
+
     // exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
 
 
@@ -418,7 +418,7 @@ fun CategoryRow(category: CategoryDto, navController: NavController, frontPageVi
     Text(
         text = category.baseObject?.title.toString(),
         fontSize = 20.sp,
-        fontFamily = FontFamily.Default,
+        fontFamily = fontsmedium,
         fontWeight = FontWeight.Medium,
         modifier = Modifier
             .padding(5.dp, 0.dp, 0.dp, 0.dp)
@@ -430,7 +430,7 @@ fun CategoryRow(category: CategoryDto, navController: NavController, frontPageVi
             JourneyCard(category.journeys[i], navController = navController,frontPageViewModel)
         }
         if (category.journeys.size < 1) {
-                Text(text = "Ingen rejser oprettet", color = Color.LightGray, fontSize = 30.sp)
+                Text(text = "Ingen rejser oprettet", color = Color.LightGray, fontSize = 18.sp, modifier = Modifier.padding(5.dp, 0.dp, 0.dp, 35.dp))
         }
     }
 }
@@ -453,12 +453,12 @@ fun JourneyCard(journey: Journey, navController: NavController,frontPageViewMode
                 navController.navigate(Screen.JourneyScreen.route + "/$journeyId")
             }
             /** Tror at nedstående skal ændres. Vi vil gerne have default paddings på hele projektet. */
-            .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Color.LightGray) {
+            .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Farvekombi033) {
 
             Column() {
                 Box(modifier = Modifier
-                        .padding()
-                        .fillMaxSize()) {
+                    .padding()
+                    .fillMaxSize()) {
                     Image(
                         painter = painterResource(id = drawableId),
                         contentDescription = "Image Denmark",
@@ -466,16 +466,19 @@ fun JourneyCard(journey: Journey, navController: NavController,frontPageViewMode
                     )
                     Box(
                         modifier = Modifier
-                                //.fillMaxWidth().height(23.dp)
-                                .align(Alignment.BottomCenter)
-                                .background(Color.Black.copy(alpha = 0.6f))
+                            .width(145.dp)
+                            .align(Alignment.BottomCenter)
+                            .background(Farvekombi033.copy(alpha = 0.6f))
                     ) {
                         Text(
-                            fontSize = 18.sp,
+                            fontSize = 16.sp,
                             text = journey.title,
-                            modifier = Modifier.align(Alignment.BottomCenter),
-
-                            color = Color.White
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            fontFamily = fonts1,
+                            color = Color.Black
                         )
                     }
 
