@@ -1,5 +1,7 @@
 package com.example.oplev.Model
 
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.firebase.auth.FirebaseUser
@@ -71,7 +73,11 @@ data class States(
     var forgotpassworddialog : Boolean = false,
     var chosenJourneyState: Journey? = null,
     var emailDialogState : Boolean = false,
-    var frontPageUpdated: Boolean = false
+    var frontPageUpdated: Boolean = false,
+    var isLoadingBlur: Dp = 0.dp,
+    var emailconf : Boolean = false,
+    var deleteuserconf : Boolean = false,
+    var logOutdialog: Boolean = false
 )
 
 

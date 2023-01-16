@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -37,6 +38,7 @@ import com.example.oplev.Model.States
 import com.example.oplev.R
 import com.example.oplev.Screen
 import com.example.oplev.ViewModel.AuthViewModel
+import com.example.oplev.ui.theme.Farvekombi032
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -53,11 +55,14 @@ fun ProfileView(authViewModel: AuthViewModel, navController: NavController) {
     )
 }
 
+var blur = mutableStateOf(0.dp)
+
 @Composable
 fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, states: States) {
     Column(modifier = Modifier
         .fillMaxSize()
-        .verticalScroll(rememberScrollState())) {
+        .verticalScroll(rememberScrollState())
+        .blur(blur.value)) {
         Box(modifier = Modifier
             .fillMaxWidth()
             .height(200.dp)) {
@@ -182,9 +187,10 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
 
                 runBlocking {
                     if (email != null) {
-                        authViewModel.sendPasswordReset(email)
+                        authViewModel.sendPasswordReset(email!!)
                     }
                     authViewModel.forgotPasswordStateChange()
+                    blur.value = 16.dp
                 }
             }) {
                 Icon(imageVector = Icons.Default.Lock, contentDescription = "", tint = Color.Black )
@@ -201,6 +207,7 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
             .padding(16.dp, 16.dp, 16.dp, 0.dp)) {
             TextButton(onClick = {
                 authViewModel.changeDialogVal()
+                blur.value = 16.dp
             }) {
                 Icon(imageVector = Icons.Default.MailOutline, contentDescription = "", tint = Color.Black )
                 Spacer(modifier = Modifier.width(20.dp))
@@ -214,12 +221,8 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
             .fillMaxWidth()
             .padding(16.dp, 16.dp, 16.dp, 0.dp)) {
             TextButton(onClick = {
-                runBlocking {
-                    authViewModel.deleteUser()
-                }
-                if (FirebaseAuth.getInstance().currentUser == null) {
-                    navController.navigate(Screen.LoginScreen.route)
-                }
+                blur.value = 16.dp
+                    authViewModel.sletbrugerdialog()
             }) {
                 Icon(imageVector = Icons.Default.Close, contentDescription = "", tint = Color.Black )
                 Spacer(modifier = Modifier.width(20.dp))
@@ -263,7 +266,49 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
         }
 
         if(states.emailDialogState) {
-            NewEmailDialog(authViewModel)
+            var email by remember { mutableStateOf("") }
+            val activity = LocalContext.current as Activity
+            AlertDialog(
+                onDismissRequest = { /*TODO*/ },
+                title = { Text(text = "Indtast din nye mail")},
+                shape = RoundedCornerShape(20.dp),
+                text = {
+                    OutlinedTextField(
+                        value = email,
+                        label = { Text(text = "Mail", textAlign = TextAlign.Center) },
+                        modifier = Modifier
+                            .width(130.dp),
+                        onValueChange = {
+                            email = it
+                        },
+                        singleLine = true
+                    )
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        runBlocking {
+                            authViewModel.updateEmail(email)
+                        }
+                        authViewModel.changeDialogVal()
+                        blur.value = 0.dp
+                    },
+                        shape = CircleShape,
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Farvekombi032,
+                            contentColor = Color.White
+                        )) {
+                        Text(text = "Gem")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        authViewModel.changeDialogVal()
+                        blur.value = 0.dp
+                    }) {
+                        Text(text = "Annuller", color = Color.Black)
+                    }
+                }
+            )
         }
 
         //TODO ER TAGET FRA ASOS. SKAL ÆNDRES
@@ -271,6 +316,7 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
             AlertDialog(
                 onDismissRequest = { /*TODO*/ },
                 title = { Text(text = "LINK TIL NULSTILLING AF ADGANGSKODE ER SENDT") },
+                shape = RoundedCornerShape(20.dp),
                 text = {
                     Text(
                         text =
@@ -284,54 +330,59 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
                 confirmButton = {
                     Button(onClick = {
                         authViewModel.forgotPasswordStateChange()
-                    }) {
+                        blur.value = 0.dp
+                    },
+                        shape = CircleShape,
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Farvekombi032,
+                            contentColor = Color.White
+                        )) {
                         Text(text = "OK")
                     }
                 }
             )
         }
-    }
-
-}
-
-@Composable
-fun NewEmailDialog(authViewModel: AuthViewModel){
-    var email by remember { mutableStateOf("") }
-    val activity = LocalContext.current as Activity
-    AlertDialog(
-        onDismissRequest = { /*TODO*/ },
-        title = { Text(text = "Indtast din nye mail")},
-        text = {
-            OutlinedTextField(
-                value = email,
-                label = { Text(text = "Mail", textAlign = TextAlign.Center) },
-                modifier = Modifier
-                    .width(130.dp),
-                onValueChange = {
-                    email = it
+        if (states.deleteuserconf) {
+            AlertDialog(
+                onDismissRequest = { /*TODO*/ },
+                title = { Text(text = "SLET BRUGER") },
+                shape = RoundedCornerShape(20.dp),
+                text = {
+                    Text(
+                        text =
+                        "Er du sikker på, at du vil slette din konto?"
+                    )
                 },
-                singleLine = true
-            )
-        },
-        confirmButton = {
-            Button(onClick = {
-                runBlocking {
-                    authViewModel.updateEmail(email)
+                confirmButton = {
+                    Button(onClick = {
+                        runBlocking {
+                            authViewModel.deleteUser()
+                        }
+                        if (FirebaseAuth.getInstance().currentUser == null) {
+                            navController.navigate(Screen.LoginScreen.route)
+                        }
+                        blur.value = 0.dp
+                    },
+                        shape = CircleShape,
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Farvekombi032,
+                            contentColor = Color.White
+                        )) {
+                        Text(text = "JA")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        authViewModel.sletbrugerdialog()
+                        blur.value = 0.dp
+                    }) {
+                        Text(text = "NEJ", color = Color.Black)
+                    }
                 }
-                authViewModel.changeDialogVal()
-            }) {
-                Text(text = "Gem")
-            }
-        },
-        dismissButton = {
-            Button(onClick = {
-                authViewModel.changeDialogVal()
-            }) {
-                Text(text = "Annuller")
-            }
+            )
         }
-    )
-}
+        }
+    }
 
 
 

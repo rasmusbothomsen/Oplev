@@ -6,6 +6,7 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.States
@@ -48,11 +49,13 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
      fun syncDatabases(){
         viewModelScope.launch(Dispatchers.IO) {
             isLoading.value = true
+            loadingBlurChange()
         queueDataService.syncDatabases().await()
             isLoading.value = false
             syncdone.value = true
         }
          isLoading.value = true
+         loadingBlurChange()
     }
 
     suspend fun updateName(fullname: String, activity: Activity){
@@ -78,6 +81,12 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
         val currentValue = state.value.emailDialogState
         _state.value = _state.value.copy(emailDialogState = !currentValue)
     }
+
+    fun sletbrugerdialog(){
+        val currentValue = state.value.deleteuserconf
+        _state.value = _state.value.copy(deleteuserconf = !currentValue)
+    }
+
 
     suspend fun updateEmail(email: String){
         userDataService.updateEmail(email)
@@ -162,6 +171,15 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
     fun forgotPasswordStateChange(){
         var currentState = state.value.forgotpassworddialog
         _state.value = _state.value.copy(forgotpassworddialog = !currentState )
+    }
+
+    fun loadingBlurChange(){
+        var currentState = state.value.isLoadingBlur
+        if (currentState == 0.dp) {
+            _state.value = _state.value.copy(isLoadingBlur = 16.dp )
+        } else {
+            _state.value = _state.value.copy(isLoadingBlur = 0.dp )
+        }
     }
 
 

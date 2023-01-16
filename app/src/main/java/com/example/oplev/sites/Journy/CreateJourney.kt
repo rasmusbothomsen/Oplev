@@ -2,15 +2,12 @@ package com.example.oplev.sites.Journy
 
 import CreateJourneyViewModel
 import android.app.Activity
-import android.app.LauncherActivity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
-import android.icu.text.CaseMap
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
@@ -22,15 +19,15 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,13 +36,13 @@ import androidx.navigation.NavController
 import com.example.oplev.Model.Category
 import com.example.oplev.R
 import com.example.oplev.Screen
-import com.example.oplev.data.dto.CategoryDto
 import kotlinx.coroutines.runBlocking
 import com.example.oplev.ui.theme.*
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navController: NavController){
 
@@ -55,7 +52,11 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
     var category by remember { mutableStateOf("") }
     var Description by remember { mutableStateOf("") }
     var Title by remember { mutableStateOf("") }
+    var collaboratorIds = mutableListOf<String>()
     var collaboratorId by remember { mutableStateOf("") }
+    var dstate = mutableStateOf(false)
+    var invitedialog = mutableStateOf(false)
+    var blur = mutableStateOf(0.dp)
 
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
@@ -70,45 +71,202 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
         content = {
                   Column(modifier = Modifier
                       .fillMaxSize()
-                      .verticalScroll(rememberScrollState())) {
+                      .verticalScroll(rememberScrollState())
+                      .blur(blur.value)) {
+
                       topScreenLayout(context)
-                      inputTextfield("Destination",80,imageVector = Icons.Default.LocationOn, onValueChange = {
-                          Title = it
-                      }, Title)
-                      ExposedDropdownMenu(list = createJourneyViewModel.getCategories(), imageVector = Icons.Default.Info, category) {
-                          category = it.title
+
+                      OutlinedTextField(
+                          value = Title,
+                          label = { Text(text = "Destination") },
+                          modifier = Modifier
+                              .width(300.dp)
+                              .align(Alignment.CenterHorizontally),
+                          onValueChange = { Title = it },
+                          colors = TextFieldDefaults.textFieldColors(
+                              textColor = Color.Black,
+                              backgroundColor = Color.White,
+                              focusedIndicatorColor = Color.Black,
+                              unfocusedIndicatorColor = Color.DarkGray,
+                              disabledIndicatorColor = Color.DarkGray
+                          ),
+                          shape = CircleShape,
+                          leadingIcon = {
+                              Icon(
+                                  imageVector = Icons.Default.PushPin,
+                                  contentDescription = "",
+                                  tint = Farvekombi032
+                              )
+                          },
+                      )
+
+                      Row(
+                          modifier = Modifier
+                              .width(300.dp)
+                              .align(Alignment.CenterHorizontally)
+                      ) {
+                          ExposedDropdownMenu(
+                              list = createJourneyViewModel.getCategories(),
+                              category
+                          ) {
+                              category = it.title
+                          }
                       }
-                      inputTextfield("Inviter Venner",80, imageVector = Icons.Default.Person, onValueChange = {
-                              collaboratorId = it
-                          },collaboratorId)
-                      datePicker()
-                      inputTextfield("Beskriv oplevelsen",height = 80,imageVector = Icons.Default.Menu, onValueChange = {
-                          Description = it
-                      },Description)
-                      Row(modifier = Modifier.padding(60.dp,10.dp,0.dp,80.dp)) {
+
+                      OutlinedTextField(
+                          value = collaboratorId,
+                          label = { Text(text = "Inviter venner") },
+                          modifier = Modifier
+                              .width(300.dp)
+                              .align(Alignment.CenterHorizontally)
+                              .clickable(onClick = {
+                                  invitedialog.value = true
+                                  blur.value = 16.dp
+                              }),
+                          enabled = false,
+                          onValueChange = { collaboratorId = it},
+                          colors = TextFieldDefaults.textFieldColors(
+                              textColor = Color.Black,
+                              backgroundColor = Color.White,
+                              focusedIndicatorColor = Color.Black,
+                              unfocusedIndicatorColor = Color.DarkGray,
+                              disabledIndicatorColor = Color.DarkGray
+                          ),
+                          shape = CircleShape,
+                          leadingIcon = {
+                              Icon(
+                                  painterResource(id = R.drawable.ic_baseline_group_add_24),
+                                  contentDescription = "",
+                                  tint = Farvekombi032
+                              )
+                          },
+                      )
+
+                      val dialogState = rememberMaterialDialogState(false)
+
+
+                      OutlinedTextField(
+                          value = Date,
+                          label = { Text(text = "Dato") },
+                          onValueChange = {
+                              Date = it
+                              dialogState.show()
+                          }, modifier = Modifier
+                              .width(300.dp)
+                              .clickable(onClick = { dstate.value = true })
+                              .align(Alignment.CenterHorizontally),
+                          enabled = false,
+                          colors = TextFieldDefaults.textFieldColors(
+                              textColor = Color.Black,
+                              backgroundColor = Color.White,
+                              focusedIndicatorColor = Color.Black,
+                              unfocusedIndicatorColor = Color.Black,
+                              disabledIndicatorColor = Color.Black,
+                              disabledTextColor = Color.DarkGray,
+                              disabledLabelColor = Color.Gray
+                          ),
+                          leadingIcon = {
+                              Icon(
+                                  imageVector = Icons.Default.DateRange,
+                                  contentDescription = "",
+                                  tint = Farvekombi032
+                              )
+                          },
+                          shape = CircleShape
+                      )
+
+                      Spacer(modifier = Modifier.width(20.dp))
+
+
+                      if (dstate.value) {
+                          dialogState.show()
+                      }
+
+                      MaterialDialog(
+                          dialogState = dialogState,
+                          buttons = {
+                              positiveButton(text = "Ok", onClick = {
+                                  dstate.value = false
+                              })
+                              negativeButton(text = "Annuller", onClick = { dstate.value = false })
+                          }
+                      ) {
+                          datepicker { date ->
+                              val year = date.year
+                              val month = date.month
+                              val day = date.dayOfMonth
+                              Date = "$day/$month/$year"
+
+                          }
+                      }
+
+                      val maxChar = 150
+
+                      Column(
+                          modifier = Modifier
+                              .width(300.dp)
+                              .align(Alignment.CenterHorizontally)
+                      ) {
+
+                          OutlinedTextField(
+                              value = Description,
+                              onValueChange = {
+                                  if (it.length <= maxChar) Description = it
+                              },
+                              label = { Text(text = "Beskrivelse") },
+                              colors = TextFieldDefaults.textFieldColors(
+                                  textColor = Color.Black,
+                                  backgroundColor = Color.White,
+                                  focusedIndicatorColor = Color.DarkGray,
+                                  unfocusedIndicatorColor = Color.DarkGray,
+                                  disabledIndicatorColor = Color.DarkGray
+                              ),
+                              shape = RoundedCornerShape(20.dp),
+                              modifier = Modifier
+                                  .width(300.dp)
+                                  .align(Alignment.CenterHorizontally)
+                                  .height(200.dp),
+                              leadingIcon = {
+                                  Icon(
+                                      imageVector = Icons.Default.Menu,
+                                      contentDescription = "",
+                                      tint = Farvekombi032,
+                                      modifier = Modifier.padding(bottom = 135.dp)
+                                  )
+                              }
+                          )
+
+                          Text(
+                              text = "${Description.length} / $maxChar",
+                              textAlign = TextAlign.End,
+                              style = MaterialTheme.typography.caption,
+                              modifier = Modifier
+                                  .width(300.dp)
+                                  .padding(10.dp, 0.dp, 16.dp, 5.dp)
+                          )
+                      }
+
+                      Row(modifier = Modifier.padding(50.dp, 10.dp, 0.dp, 80.dp)) {
                           //Nedenstående buttons skal være composables
-                          Button(
+                          TextButton(
                               onClick = {
                                   navController.navigate(Screen.FrontPageScreen.route)
                               },
-                              colors = ButtonDefaults.buttonColors(
-                                  backgroundColor = Farvekombi032,
-                                  contentColor = Color.Black
-                              ),
                               modifier = Modifier.size(130.dp, 40.dp),
                               shape = RoundedCornerShape(50)
                           ) {
                               Text(
-                                  text = "Annuller", fontSize = 18.sp
+                                  text = "Annuller", fontSize = 18.sp, color = Color.Gray
                               )
                           }
                           Spacer(modifier = Modifier.width(40.dp))
                           Button(
-                              onClick = { createJourneyViewModel.createNewJourney(tag, Image, createJourneyViewModel.getCategoryIdFromTitle(category), Date, Description, Title, collaboratorId, activity)
+                              onClick = {
+                                  createJourneyViewModel.createNewJourney(tag, Image, createJourneyViewModel.getCategoryIdFromTitle(category), Date, Description, Title, collaboratorIds, activity)
                                   navController.navigate(Screen.FrontPageScreen.route)
                               },
                               colors = ButtonDefaults.buttonColors(
-                                  backgroundColor = OplevFarve2,
+                                  backgroundColor = Farvekombi032,
                                   contentColor = Color.White
                               ),
                               modifier = Modifier.size(130.dp, 40.dp),
@@ -117,7 +275,195 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                               Text(text = "Gem", fontSize = 18.sp)
                           }
                       }
+
                   }
+
+            if (invitedialog.value) {
+                var tempIds = mutableListOf<String>()
+                var collab1 by remember { mutableStateOf("") }
+                var collab2 by remember { mutableStateOf("") }
+                var collab3 by remember { mutableStateOf("") }
+                var collab4 by remember { mutableStateOf("") }
+                var collab5 by remember { mutableStateOf("") }
+
+                AlertDialog(
+                    onDismissRequest = {/*TODO*/ },
+                    confirmButton = {
+                        Button(onClick = {
+                            tempIds.add(collab1)
+                            tempIds.add(collab2)
+                            tempIds.add(collab3)
+                            tempIds.add(collab4)
+                            tempIds.add(collab5)
+
+                            for ( i in 0 until tempIds.size){
+                                if (tempIds[i].isNotEmpty()){
+                                    collaboratorIds.add(tempIds[i])
+                                    invitedialog.value = false
+                                }
+                            }
+
+                            blur.value = 0.dp
+                        },
+                        shape = CircleShape,
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Farvekombi032,
+                                contentColor = Color.White
+                            ),
+                            modifier = Modifier.width(100.dp)
+                        ) {
+                            Text(text = "Inviter")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = {
+                            invitedialog.value = false
+                            blur.value = 0.dp
+                        },
+                        ) {
+                            Text(text = "Annuller", color = Color.Black)
+                        }
+                    },
+                    title = {
+                        Text(text = "Inviter venner!")
+                    },
+                    modifier = Modifier
+                        .height(500.dp),
+                    shape = RoundedCornerShape(25.dp)
+                    ,
+                    text = {
+                        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                            Text(text = "")
+                            var stateOfTextfield1 = "Mail 1"
+                            OutlinedTextField(
+                                value = collab1,
+                                label = { Text(text = stateOfTextfield1) },
+                                modifier = Modifier
+                                    .width(200.dp),
+                                onValueChange = { collab1 = it },
+                                colors = TextFieldDefaults.textFieldColors(
+                                    textColor = Color.Black,
+                                    backgroundColor = Color.White,
+                                    focusedIndicatorColor = Color.Black,
+                                    unfocusedIndicatorColor = Color.DarkGray,
+                                    disabledIndicatorColor = Color.DarkGray
+                                ),
+                                shape = CircleShape,
+                                leadingIcon = {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_baseline_group_add_24),
+                                        contentDescription = "",
+                                        tint = Farvekombi032
+                                    )
+                                },
+                            )
+
+                            var stateOfTextfield2 = "Mail 2"
+                            OutlinedTextField(
+                                value = collab2,
+                                label = { Text(text = stateOfTextfield2) },
+                                modifier = Modifier
+                                    .width(200.dp)
+                                    .align(Alignment.CenterHorizontally),
+                                onValueChange = { collab2 = it },
+                                colors = TextFieldDefaults.textFieldColors(
+                                    textColor = Color.Black,
+                                    backgroundColor = Color.White,
+                                    focusedIndicatorColor = Color.Black,
+                                    unfocusedIndicatorColor = Color.DarkGray,
+                                    disabledIndicatorColor = Color.DarkGray
+                                ),
+                                shape = CircleShape,
+                                leadingIcon = {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_baseline_group_add_24),
+                                        contentDescription = "",
+                                        tint = Farvekombi032
+                                    )
+                                },
+                            )
+
+                            var stateOfTextfield3 = "Mail 3"
+                            OutlinedTextField(
+                                value = collab3,
+                                label = { Text(text = stateOfTextfield3) },
+                                modifier = Modifier
+                                    .width(200.dp)
+                                    .align(Alignment.CenterHorizontally),
+                                onValueChange = { collab3 = it },
+                                colors = TextFieldDefaults.textFieldColors(
+                                    textColor = Color.Black,
+                                    backgroundColor = Color.White,
+                                    focusedIndicatorColor = Color.Black,
+                                    unfocusedIndicatorColor = Color.DarkGray,
+                                    disabledIndicatorColor = Color.DarkGray
+                                ),
+                                shape = CircleShape,
+                                leadingIcon = {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_baseline_group_add_24),
+                                        contentDescription = "",
+                                        tint = Farvekombi032
+                                    )
+                                },
+                            )
+
+                            var stateOfTextfield4 = "Mail 4"
+                            OutlinedTextField(
+                                value = collab4,
+                                label = { Text(text = stateOfTextfield4) },
+                                modifier = Modifier
+                                    .width(200.dp)
+                                    .align(Alignment.CenterHorizontally),
+                                onValueChange = { collab4 = it },
+                                colors = TextFieldDefaults.textFieldColors(
+                                    textColor = Color.Black,
+                                    backgroundColor = Color.White,
+                                    focusedIndicatorColor = Color.Black,
+                                    unfocusedIndicatorColor = Color.DarkGray,
+                                    disabledIndicatorColor = Color.DarkGray
+                                ),
+                                shape = CircleShape,
+                                leadingIcon = {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_baseline_group_add_24),
+                                        contentDescription = "",
+                                        tint = Farvekombi032
+                                    )
+                                },
+                            )
+
+                            var stateOfTextfield5 = "Mail 5"
+                            OutlinedTextField(
+                                value = collab5,
+                                label = { Text(text = stateOfTextfield5) },
+                                modifier = Modifier
+                                    .width(200.dp)
+                                    .align(Alignment.CenterHorizontally),
+                                onValueChange = { collab5 = it },
+                                colors = TextFieldDefaults.textFieldColors(
+                                    textColor = Color.Black,
+                                    backgroundColor = Color.White,
+                                    focusedIndicatorColor = Color.Black,
+                                    unfocusedIndicatorColor = Color.DarkGray,
+                                    disabledIndicatorColor = Color.DarkGray
+                                ),
+                                shape = CircleShape,
+                                leadingIcon = {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_baseline_group_add_24),
+                                        contentDescription = "",
+                                        tint = Farvekombi032
+                                    )
+                                },
+                            )
+
+                        }
+
+                    }
+
+                )
+            }
         },
     )
 }
@@ -242,25 +588,15 @@ fun topScreenLayout(context: Context){
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ExposedDropdownMenu(list: List<Category>, imageVector: ImageVector, selectedOption:String, upDateValue: (Category) -> Unit){
+fun ExposedDropdownMenu(list: List<Category>, selectedOption:String, upDateValue: (Category) -> Unit){
     var expanded by remember { mutableStateOf(false) }
-    var selectedOptionlocal by remember {
-        mutableStateOf(selectedOption)
-    }
-    val icon = if (!expanded)
-    {
+    var selectedOptionlocal by remember { mutableStateOf(selectedOption) }
+    val icon = if (!expanded) {
         Icons.Filled.KeyboardArrowUp
-    }
-    else
-    {
+    } else {
         Icons.Filled.KeyboardArrowDown
     }
-    Row() {
-        Icon(
-            imageVector = imageVector,
-            contentDescription = "",
-            modifier = Modifier.padding(20.dp, 15.dp, 15.dp, 20.dp)
-        )
+
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = {
@@ -270,13 +606,27 @@ fun ExposedDropdownMenu(list: List<Category>, imageVector: ImageVector, selected
             OutlinedTextField(
                 value = selectedOptionlocal,
                 readOnly = true,
-                onValueChange = {selectedOptionlocal = it},
                 modifier = Modifier
-                    .width(300.dp)
-                    .padding(0.dp, 0.dp, 0.dp, 5.dp),
+                    .width(300.dp),
+                onValueChange = { selectedOptionlocal = it },
+                colors = TextFieldDefaults.textFieldColors(
+                    textColor = Color.Black,
+                    backgroundColor = Color.White,
+                    focusedIndicatorColor = Color.Black,
+                    unfocusedIndicatorColor = Color.DarkGray,
+                    disabledIndicatorColor = Color.DarkGray
+                ),
+                shape = CircleShape,
                 label = { Text(text = "Kategori") },
                 trailingIcon = {
                     Icon(icon, "", Modifier.clickable { expanded = !expanded })
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.TravelExplore,
+                        contentDescription = "",
+                        tint = Farvekombi032
+                    )
                 }
             )
             ExposedDropdownMenu(
@@ -299,8 +649,119 @@ fun ExposedDropdownMenu(list: List<Category>, imageVector: ImageVector, selected
             }
         }
     }
-}
 
+@Preview
+@Composable
+fun InviteDialog() {
+
+    AlertDialog(
+        onDismissRequest = {/*TODO*/ },
+        confirmButton = {
+            Button(onClick = {
+            /*TODO*/
+            }) {
+
+            }
+        },
+        dismissButton = {
+            Button(onClick = {
+            /*TODO*/
+            }) {
+
+            }
+        },
+        title = {
+            Text(text = "Inviter venner!")
+        },
+        text = {
+            var numOfCollaborators by remember { mutableStateOf(1) }
+            var stateOfTextfield = "Mail"
+            var collab by remember { mutableStateOf("") }
+
+
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+
+                OutlinedTextField(
+                    value = collab,
+                    label = { Text(text = stateOfTextfield) },
+                    modifier = Modifier
+                        .width(200.dp),
+                    //  .align(Alignment.CenterHorizontally),
+                    onValueChange = { collab = it },
+                    colors = TextFieldDefaults.textFieldColors(
+                        textColor = Color.Black,
+                        backgroundColor = Color.White,
+                        focusedIndicatorColor = Color.Black,
+                        unfocusedIndicatorColor = Color.DarkGray,
+                        disabledIndicatorColor = Color.DarkGray
+                    ),
+                    shape = CircleShape,
+                    leadingIcon = {
+                        Icon(
+                            painterResource(id = R.drawable.ic_baseline_group_add_24),
+                            contentDescription = "",
+                            tint = Farvekombi032
+                        )
+                    },
+                )
+
+                for (i in 1 until numOfCollaborators) {
+                    var stateOfTextfield = "Mail"
+                    var collab by remember { mutableStateOf("") }
+                    Row() {
+                        OutlinedTextField(
+                            value = collab,
+                            label = { Text(text = stateOfTextfield) },
+                            modifier = Modifier
+                                .width(200.dp),
+                            //  .align(Alignment.CenterHorizontally),
+                            onValueChange = { collab = it },
+                            colors = TextFieldDefaults.textFieldColors(
+                                textColor = Color.Black,
+                                backgroundColor = Color.White,
+                                focusedIndicatorColor = Color.Black,
+                                unfocusedIndicatorColor = Color.DarkGray,
+                                disabledIndicatorColor = Color.DarkGray
+                            ),
+                            shape = CircleShape,
+                            leadingIcon = {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_baseline_group_add_24),
+                                    contentDescription = "",
+                                    tint = Farvekombi032
+                                )
+                            },
+                        )
+                    }
+                }
+
+                Row() {
+                    TextButton(
+                        onClick = {
+                            numOfCollaborators++
+                                  },
+                        modifier = Modifier
+                            .width(300.dp),
+                        //  .align(Alignment.CenterHorizontally),
+                    ) {
+                        Text(text = "Tilføj")
+                        Icon(
+                            imageVector = Icons.Default.Add, contentDescription = ""
+                            // align at end
+                        )
+                    }
+                }
+
+
+
+
+            }
+
+        }
+
+    )
+
+}
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -316,6 +777,8 @@ fun createJourneyPreview(){
     var collaboratorId by remember { mutableStateOf("") }
     var list = listOf<String>()
     var dstate = mutableStateOf(false)
+    var blur = mutableStateOf(0.dp)
+
 
     Scaffold(
         topBar = {
@@ -326,7 +789,8 @@ fun createJourneyPreview(){
         content = {
             Column(modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())) {
+                .verticalScroll(rememberScrollState())
+                .blur(blur.value)) {
                 var imageUri by remember { mutableStateOf<Uri?>(null) }
                 val bitmap = remember { mutableStateOf<Bitmap?>(null) }
                 val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()){ uri: Uri? -> imageUri = uri}
@@ -348,32 +812,120 @@ fun createJourneyPreview(){
                         )
                     }
                 }
-                inputTextfield("Destination",80,imageVector = Icons.Default.LocationOn, onValueChange = {
-                    Title = it
-                }, Title)
 
-                ExposedDropdownMenu(list = listOf(), imageVector = Icons.Default.Info, category) {
-                    category = it.title
+                    OutlinedTextField(
+                        value = Title,
+                        label = { Text(text = "Destination") },
+                        modifier = Modifier
+                            .width(300.dp)
+                            .align(CenterHorizontally),
+                        onValueChange = {  },
+                        colors = TextFieldDefaults.textFieldColors(
+                            textColor = Color.Black,
+                            backgroundColor = Color.White,
+                            focusedIndicatorColor = Color.Black,
+                            unfocusedIndicatorColor = Color.DarkGray,
+                            disabledIndicatorColor = Color.DarkGray
+                        ),
+                        shape = CircleShape,
+                        leadingIcon = {
+                            Icon(imageVector = Icons.Default.PushPin,
+                                contentDescription = "",
+                                tint = Farvekombi032
+                            )
+                        },
+                    )
+
+                var expanded by remember { mutableStateOf(false) }
+                var selectedOptionlocal by remember { mutableStateOf(category) }
+                val icon = if (!expanded)
+                {
+                    Icons.Filled.KeyboardArrowUp
                 }
-                inputTextfield("Inviter Venner",80, imageVector = Icons.Default.Person, onValueChange = {
-                    collaboratorId = it
-                },collaboratorId)
-                val dialogState = rememberMaterialDialogState(false)
+                else
+                {
+                    Icons.Filled.KeyboardArrowDown
+                }
                 Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-                    .padding(10.dp)) {
+                    .width(300.dp)
+                    .align(CenterHorizontally)) {
+                    ExposedDropdownMenuBox(
+                        expanded = expanded,
+                        onExpandedChange = {
+                            expanded = !expanded
+                        }
+                    ) {
+                        OutlinedTextField(
+                            value = selectedOptionlocal,
+                            readOnly = true,
+                            modifier = Modifier
+                                .width(300.dp),
+                            onValueChange = {  },
+                            colors = TextFieldDefaults.textFieldColors(
+                                textColor = Color.Black,
+                                backgroundColor = Color.White,
+                                focusedIndicatorColor = Color.Black,
+                                unfocusedIndicatorColor = Color.DarkGray,
+                                disabledIndicatorColor = Color.DarkGray
+                            ),
+                            shape = CircleShape,
+                            label = { Text(text = "Kategori") },
+                            trailingIcon = {
+                                Icon(icon, "", Modifier.clickable { expanded = !expanded })
+                            },
+                            leadingIcon = {
+                                Icon(imageVector = Icons.Default.TravelExplore,
+                                    contentDescription = "",
+                                    tint = Farvekombi032
+                                )
+                            }
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = {
+                                expanded = false
+                            }
+                        ) {
+                            list.forEach { selectionOption ->
+                                DropdownMenuItem(
+                                    onClick = {
+
+                                    }
+                                ) {
+                                    Text(text = "")
+                                }
+                            }
+                        }
+                    }
+                }
+
+                OutlinedTextField(
+                    value = Title,
+                    label = { Text(text = "Inviter venner") },
+                    modifier = Modifier
+                        .width(300.dp)
+                        .align(CenterHorizontally),
+                    onValueChange = {  },
+                    colors = TextFieldDefaults.textFieldColors(
+                        textColor = Color.Black,
+                        backgroundColor = Color.White,
+                        focusedIndicatorColor = Color.Black,
+                        unfocusedIndicatorColor = Color.DarkGray,
+                        disabledIndicatorColor = Color.DarkGray
+                    ),
+                    shape = CircleShape,
+                    leadingIcon = {
+                        Icon(
+                            painterResource(id = R.drawable.ic_baseline_group_add_24),
+                            contentDescription = "",
+                            tint = Farvekombi032
+                        )
+                    },
+                )
+
+                val dialogState = rememberMaterialDialogState(false)
 
                     var input by remember { mutableStateOf("") }
-                    IconButton(onClick = {
-                        dialogState.show()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.DateRange,
-                            contentDescription = "",
-                            modifier = Modifier.padding(10.dp, 15.dp, 15.dp, 5.dp)
-                        )
-                    }
 
                         OutlinedTextField(
                             value = input,
@@ -381,66 +933,81 @@ fun createJourneyPreview(){
                             onValueChange = {
                                 input = it
                                 dialogState.show()
-                            }, modifier = Modifier.width(105.dp)
-                                .clickable(onClick = {dstate.value = true}),
-                            enabled = false,
+                            }, modifier = Modifier
+                                .width(300.dp)
+                                .clickable(onClick = { dstate.value = true })
+                                .align(CenterHorizontally),
+                            readOnly = true,
                             colors = TextFieldDefaults.textFieldColors(
                                 textColor = Color.Black,
                                 backgroundColor = Color.White,
-                                focusedIndicatorColor = Color.DarkGray,
-                                unfocusedIndicatorColor = Color.DarkGray,
-                                disabledIndicatorColor = Color.DarkGray
+                                focusedIndicatorColor = Color.Black,
+                                unfocusedIndicatorColor = Color.Black,
+                                disabledIndicatorColor = Color.Black,
+                                disabledTextColor = Color.Black,
+                                disabledPlaceholderColor = Color.Black,
+                                disabledLabelColor = Color.Black
                             ),
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.DateRange,
+                                    contentDescription = "",
+                                    tint = Farvekombi032
+                                )
+                            },
                             shape = CircleShape)
 
                         Spacer(modifier = Modifier.width(20.dp))
-                    }
+
 
                 if(dstate.value){
                     dialogState.show()
                 }
 
-
                 val maxChar = 150
 
-                Column() {
-                    Row(
+                Column(modifier = Modifier
+                    .width(300.dp)
+                    .align(CenterHorizontally)) {
+
+                    OutlinedTextField(
+                        value = Description,
+                        onValueChange = {
+                            if (it.length <= maxChar) Description = it
+                        },
+                        label = { Text(text = "Beskrivelse") },
+                        colors = TextFieldDefaults.textFieldColors(
+                            textColor = Color.Black,
+                            backgroundColor = Color.White,
+                            focusedIndicatorColor = Color.DarkGray,
+                            unfocusedIndicatorColor = Color.DarkGray,
+                            disabledIndicatorColor = Color.DarkGray
+                        ),
+                        shape = RoundedCornerShape(20.dp),
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(80.dp)
-                            .padding(10.dp, 0.dp, 0.dp, 5.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "",
-                            modifier = Modifier.padding(10.dp, 20.dp, 15.dp, 0.dp)
-                        )
-                        OutlinedTextField(
-                            value = Description,
-                            onValueChange = {
-                                if (it.length <= maxChar) Description = it
-                            },
-                            label = { Text(text = "Beskrivelse")},
-                            colors = TextFieldDefaults.textFieldColors(
-                                textColor = Color.Black,
-                                backgroundColor = Color.White,
-                                focusedIndicatorColor = Color.DarkGray,
-                                unfocusedIndicatorColor = Color.DarkGray,
-                                disabledIndicatorColor = Color.DarkGray
-                            ),
-                            shape = CircleShape,
-                            modifier = Modifier.height(360.dp)
-                        )
-                    }
+                            .width(300.dp)
+                            .align(CenterHorizontally)
+                            .height(200.dp),
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = "",
+                                tint = Farvekombi032,
+                                modifier = Modifier.padding(bottom = 135.dp)
+                            )
+                        }
+                    )
+
                     Text(
                         text = "${Description.length} / $maxChar",
                         textAlign = TextAlign.End,
                         style = MaterialTheme.typography.caption,
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .width(300.dp)
                             .padding(10.dp, 0.dp, 16.dp, 5.dp)
                     )
                 }
+
 
 
 
@@ -461,11 +1028,10 @@ fun createJourneyPreview(){
 
                 Row(modifier = Modifier.padding(60.dp,10.dp,0.dp,80.dp)) {
                     //Nedenstående buttons skal være composables
-                    Button(
+                    TextButton(
                         onClick = {
                         },
                         colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Farvekombi032,
                             contentColor = Color.Black
                         ),
                         modifier = Modifier.size(130.dp, 40.dp),
@@ -490,7 +1056,8 @@ fun createJourneyPreview(){
                     }
                 }
             }
-        } )
+        }
+    )
 }
 
 

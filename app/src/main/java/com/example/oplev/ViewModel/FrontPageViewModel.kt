@@ -18,6 +18,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
@@ -79,6 +82,11 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
     fun changeupdatedStat(){
         val currentValue = state.value.frontPageUpdated
         _state.value = _state.value.copy(frontPageUpdated = !currentValue)
+    }
+
+    fun logOutdialog(){
+        val currentValue = state.value.logOutdialog
+        _state.value = _state.value.copy(logOutdialog = !currentValue)
     }
 
 }

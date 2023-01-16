@@ -33,7 +33,7 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
             Date: String?,
             Description: String,
             Title: String,
-            collaboratorMail: String,
+            collaboratorMail: MutableList<String>,
             activity: Activity
         ) {
             var img = "oplev300dpi"
@@ -54,17 +54,18 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
                 journeydataService.insertItem(tempJourney)
                 folderDataService.insertItem(baseFolderOfJourney)
 
-                if (!collaboratorMail.isEmpty()) {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        shareJourney(
-                            Firebase.auth.currentUser?.uid.toString(),
-                            tempJourney.id,
-                            collaboratorMail,
-                            activity,
-                            tempJourney
-                        )
+                for (i in 0 until collaboratorMail.size){
+                    if (collaboratorMail[i].isNotEmpty()){
+                        viewModelScope.launch(Dispatchers.IO) {
+                            shareJourney(
+                                Firebase.auth.currentUser?.uid.toString(),
+                                tempJourney.id,
+                                collaboratorMail[i],
+                                activity,
+                                tempJourney
+                            )
+                        }
                     }
-
                 }
             }
         }

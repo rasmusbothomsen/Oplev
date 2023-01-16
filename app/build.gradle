@@ -78,7 +78,6 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$nav_version"
     // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:31.1.1')
-
     // Add the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-auth-ktx'
@@ -114,9 +113,9 @@ dependencies {
     // Add the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-auth-ktx'
-
+    implementation "androidx.compose.material:material:1.0.0-alpha09"
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
-
+    implementation 'com.google.accompanist:accompanist-swiperefresh:0.24.13-rc'
     implementation platform('com.google.firebase:firebase-bom:31.0.2')
 
     // Declare the dependency for the Cloud Firestore library

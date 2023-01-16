@@ -54,12 +54,15 @@ import com.example.oplev.ui.theme.OplevFarve2
 import com.example.oplev.ui.theme.Farvekombi033
 import com.example.oplev.ui.theme.OplevBlue
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.StyledPlayerView
+import kotlinx.coroutines.delay
 
 
 @Preview
@@ -183,12 +186,7 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         tint = Farvekombi033
                     )
                     TextButton(onClick = {
-                        runBlocking {
-                            frontpageViewModel.signOut()
-                        }
-                        if (FirebaseAuth.getInstance().currentUser == null) {
-                            navController.navigate(Screen.LoginScreen.route)
-                        }
+                        frontpageViewModel.logOutdialog()
                     }) {
                         Text(
                             text = "Sign out",
@@ -402,11 +400,28 @@ fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController,
     }
 
     ProvideWindowInsets {
+        var refreshing by remember { mutableStateOf(false) }
+        LaunchedEffect(refreshing) {
+            if (refreshing) {
+                delay(3000)
+                refreshing = false
+            }
+        }
+
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing = refreshing),
+            onRefresh = {
+                runBlocking {
+                    frontPageViewModel.updateFrontPage()
+                }
+                refreshing = true },
+        ) {
 
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .fillMaxSize()
+                .fillMaxSize(),
+
         )
         {
             val max = categories.size - 1
@@ -421,7 +436,53 @@ fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController,
         if (state.dialogState) {
             NewCategoryDialog(frontPageViewModel = frontPageViewModel)
         }
+            if (state.logOutdialog) {
+                SignOutDialog(frontPageViewModel = frontPageViewModel, navController)
+            }
     }
+}
+
+}
+
+/*
+   runBlocking {
+                            frontpageViewModel.signOut()
+                        }
+                        if (FirebaseAuth.getInstance().currentUser == null) {
+                            navController.navigate(Screen.LoginScreen.route)
+                        }
+
+ */
+
+@Composable
+fun SignOutDialog(frontPageViewModel: FrontPageViewModel, navController: NavController){
+    AlertDialog(
+        onDismissRequest = { /*TODO*/ },
+        title = { Text(text = "LOG AF")},
+        text = {
+          Text(text = "Er du sikker på, at du vil logge af?")
+        },
+        confirmButton = {
+            Button(onClick = {
+                runBlocking {
+                    frontPageViewModel.signOut()
+                }
+                if (FirebaseAuth.getInstance().currentUser == null) {
+                    navController.navigate(Screen.LoginScreen.route)
+                }
+                frontPageViewModel.logOutdialog()
+            }) {
+                Text(text = "JA")
+            }
+        },
+        dismissButton = {
+            Button(onClick = {
+                frontPageViewModel.logOutdialog()
+            }) {
+                Text(text = "NEJ")
+            }
+        }
+    )
 }
 
 @Composable
@@ -432,33 +493,42 @@ fun NewCategoryDialog(frontPageViewModel: FrontPageViewModel){
         onDismissRequest = { /*TODO*/ },
         title = { Text(text = "Indtast navnet på den nye kategori")},
         text = {
+            Text(text = "")
             OutlinedTextField(
                 value = categoryTitle,
                 label = { Text(text = "Kategori", textAlign = TextAlign.Center) },
                 modifier = Modifier
-                    .width(130.dp),
+                    .fillMaxWidth(),
                 onValueChange = {
                     categoryTitle = it
                 },
-                singleLine = true
+                singleLine = true,
+                shape = CircleShape
             )
         },
+        shape = RoundedCornerShape(25.dp),
         confirmButton = {
             Button(onClick = {
                 runBlocking {
                     frontPageViewModel.createCategory(categoryTitle, activity)
                 }
                 frontPageViewModel.changeDialogVal()
-            }) {
+            },
+                shape = CircleShape,
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Farvekombi032,
+                    contentColor = Color.White
+                )
+            ) {
                 Text(text = "Gem")
             }
         },
         dismissButton = {
-            Button(onClick = {
+            TextButton(onClick = {
                 frontPageViewModel.changeDialogVal()
                 frontPageViewModel.expandFab()
             }) {
-                Text(text = "Annuller")
+                Text(text = "Annuller", color = Color.Black)
             }
         }
     )

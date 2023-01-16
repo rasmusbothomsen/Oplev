@@ -58,12 +58,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.oplev.data.dataService.UserDataService
+import com.example.oplev.ui.theme.Farvekombi032
+import com.example.oplev.ui.theme.Farvekombi033
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
@@ -126,9 +131,10 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
     // exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
 
 
-    if(syncDone){
+    if (syncDone) {
         navController.navigate(Screen.FrontPageScreen.route)
     }
+
 
     DisposableEffect(
         AndroidView(
@@ -142,191 +148,210 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
     }
 
     ProvideWindowInsets {
-        if (loading){
-            LoadingAnimation()
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize().verticalScroll(rememberScrollState()).blur(radius = state.isLoadingBlur)
+
+    ) {
+        Spacer(modifier = Modifier.height(150.dp))
+        Row(modifier = Modifier
+            .graphicsLayer {
+                translationX = 30f
+            }) {
+            Image(
+                painter = painterResource(id = R.drawable.oplev_logo),
+                contentDescription = "",
+                modifier = Modifier
+                    .height(102.dp)
+                    .width(113.dp)
+                    .padding(top = 0.dp)
+            )
+            Text(
+                text = "OPLEV",
+                fontSize = 64.sp,
+                fontFamily = fonts,
+                letterSpacing = 10.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = logotextcol
+            )
         }
-        Column(
-            modifier = Modifier
-                .fillMaxSize().verticalScroll(rememberScrollState())
 
-            ) {
-                Spacer(modifier = Modifier.height(150.dp))
-                Row(modifier = Modifier
-                    .graphicsLayer {
-                        translationX = 30f
-                    }) {
-                    Image(
-                        painter = painterResource(id = R.drawable.oplev_logo),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .height(102.dp)
-                            .width(113.dp)
-                            .padding(top = 0.dp)
-                    )
-                    Text(
-                        text = "OPLEV",
-                        fontSize = 64.sp,
-                        fontFamily = fonts,
-                        letterSpacing = 10.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = logotextcol
-                    )
-                }
+        Spacer(modifier = Modifier.height(50.dp))
+        //var dialogstate by rememberSaveable { mutableStateOf(false) }
 
-                Spacer(modifier = Modifier.height(50.dp))
-                //var dialogstate by rememberSaveable { mutableStateOf(false) }
-
-                Column() {
-
-                    OutlinedTextField(
-                        value = email,
-                        label = { Text(text = "Email", textAlign = TextAlign.Center) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(70.dp, 0.dp, 70.dp, 0.dp),
-                        onValueChange = {
-                            email = it
-                        },
-                        singleLine = true,
-                        colors = TextFieldDefaults.textFieldColors(
-                            textColor = Color.Black,
-                            backgroundColor = Color.White,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent
-                        ),
-                        shape = CircleShape
-                    )
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    var passwordVisible by rememberSaveable { mutableStateOf(false) }
-
-                    OutlinedTextField(
-                        value = password,
-                        label = { Text(text = "Kodeord", textAlign = TextAlign.Center) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(70.dp, 0.dp, 70.dp, 0.dp),
-                        onValueChange = {
-                            password = it
-                        },
-                        singleLine = true,
-                        colors = TextFieldDefaults.textFieldColors(
-                            textColor = Color.Black,
-                            backgroundColor = Color.White,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent
-                        ),
-                        shape = CircleShape,
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        trailingIcon = {
-                            val image = if (passwordVisible)
-                                Icons.Filled.Visibility
-                            else Icons.Filled.VisibilityOff
-                            val description =
-                                if (passwordVisible) "Hide password" else "Show password"
-                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(imageVector = image, description)
-                            }
-                        }
-                    )
+        Column() {
+            TextField(
+                value = email,
+                label = { Text(text = "Email", textAlign = TextAlign.Center) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(70.dp, 0.dp, 70.dp, 0.dp),
+                onValueChange = {
+                    email = it
+                },
+                singleLine = true,
+                colors = TextFieldDefaults.textFieldColors(
+                    textColor = Color.Black,
+                    backgroundColor = Color.White,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                ),
+                shape = CircleShape,
+                 leadingIcon = {
+                     Icon (
+                         imageVector = Icons.Default.Email, contentDescription = "", tint = Farvekombi033
+                             )
+                 }
+            )
 
 
+            Spacer(modifier = Modifier.height(10.dp))
 
-                    TextButton(
-                        onClick = {
-                            if (!email.isEmpty()) {
-                                runBlocking {
-                                    authViewModel.sendPasswordReset(email)
-                                    authViewModel.forgotPasswordStateChange()
-                                }
-                            }
-                        },
-                        modifier = Modifier
-                            .padding(195.dp, 0.dp, 70.dp, 0.dp)
-                    ) {
-                        Text(
-                            text = "Glemt kodeord",
-                            color = Color.Black
-                        )
+            var passwordVisible by rememberSaveable { mutableStateOf(false) }
+
+            TextField(
+                value = password,
+                label = { Text(text = "Kodeord", textAlign = TextAlign.Center) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(70.dp, 0.dp, 70.dp, 0.dp),
+                onValueChange = {
+                    password = it
+                },
+                singleLine = true,
+                colors = TextFieldDefaults.textFieldColors(
+                    textColor = Color.Black,
+                    backgroundColor = Color.White,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+
+                ),
+                shape = CircleShape,
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                trailingIcon = {
+                    val image = if (passwordVisible)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+                    val description =
+                        if (passwordVisible) "Hide password" else "Show password"
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(imageVector = image, description)
                     }
-
+                },
+                        leadingIcon = {
+                    Icon (
+                        imageVector = Icons.Default.Lock, contentDescription = "", tint = Farvekombi033
+                    )
                 }
+            )
 
-                val context = LocalContext.current
-                val activity = LocalContext.current as Activity
 
-                Spacer(modifier = Modifier.height(50.dp))
 
-                Button(
-                    onClick = {
-                        if (!email.isEmpty() && !password.isEmpty()) {
-                            val success = authViewModel.signIn(email, password, context, activity)
-                            when (success) {
-                                is UserDataService.SignInResult.Success -> {
-                                    if (FirebaseAuth.getInstance().currentUser != null) {
-                                        authViewModel.syncDatabases()
-                                    }
-                                }
-                                is UserDataService.SignInResult.WrongCredentials -> {
-                                    Log.e("Failed login", "Wrong credentials")
-                                }
-                                is UserDataService.SignInResult.Failed -> {
-                                    Log.e("Failed login", "FirebaseFailed")
-                                }
-                            }
+            TextButton(
+                onClick = {
+                    if (!email.isEmpty()) {
+                        runBlocking {
+                            authViewModel.sendPasswordReset(email)
+                            authViewModel.forgotPasswordStateChange()
                         }
-                    }, shape = CircleShape,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = logotextcol),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                        .padding(90.dp, 0.dp, 90.dp, 0.dp)
-                ) {
-                    Text(text = "LOG IND", fontSize = 16.sp, color = Color.White)
-                }
+                    }
+                },
+                modifier = Modifier
+                    .padding(195.dp, 0.dp, 70.dp, 0.dp)
+            ) {
+                Text(
+                    text = "Glemt kodeord",
+                    color = Color.Black
+                )
+            }
 
-                TextButton(
-                    onClick = {
-                        navController.navigate(Screen.SignUpScreen.route)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(90.dp, 15.dp, 90.dp, 0.dp)
-                ) {
-                    Text(text = "OPRET BRUGER", fontSize = 16.sp, color = Color.Black)
+        }
+
+        val context = LocalContext.current
+        val activity = LocalContext.current as Activity
+
+        Spacer(modifier = Modifier.height(50.dp))
+
+        Button(
+            onClick = {
+                if (!email.isEmpty() && !password.isEmpty()) {
+                    val success = authViewModel.signIn(email, password, context, activity)
+                    when (success) {
+                        is UserDataService.SignInResult.Success -> {
+                            if (FirebaseAuth.getInstance().currentUser != null) {
+                                authViewModel.syncDatabases()
+                            }
+                            authViewModel.loadingBlurChange()
+                        }
+                        is UserDataService.SignInResult.WrongCredentials -> {
+                            Log.e("Failed login", "Wrong credentials")
+                        }
+                        is UserDataService.SignInResult.Failed -> {
+                            Log.e("Failed login", "FirebaseFailed")
+                        }
+                    }
                 }
+            }, shape = CircleShape,
+            colors = ButtonDefaults.buttonColors(backgroundColor = logotextcol),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .padding(90.dp, 0.dp, 90.dp, 0.dp)
+        ) {
+            Text(text = "LOG IND", fontSize = 16.sp, color = Color.White)
+        }
+
+        TextButton(
+            onClick = {
+                navController.navigate(Screen.SignUpScreen.route)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(90.dp, 15.dp, 90.dp, 0.dp)
+        ) {
+            Text(text = "OPRET BRUGER", fontSize = 16.sp, color = Color.Black)
+        }
 
 //TODO ER TAGET FRA ASOS. SKAL ÆNDRES
-                if (authViewModel.state.value.forgotpassworddialog) {
-                    AlertDialog(
-                        onDismissRequest = { /*TODO*/ },
-                        title = { Text(text = "LINK TIL NULSTILLING AF ADGANGSKODE ER SENDT") },
-                        text = {
-                            Text(
-                                text =
-                                "Vi har sendt dig en e-mail til nulstilling af din adgangskode\n" +
-                                        "\n" +
-                                        "For at oprette din nye adgangskode skal du klikke på linket i e-mailen og angive en ny – pærenemt\n" +
-                                        "\n" +
-                                        "Har du ikke modtaget e-mailen? Tjek din spammappe."
-                            )
-                        },
-                        confirmButton = {
-                            Button(onClick = {
-                                authViewModel.forgotPasswordStateChange()
-                            }) {
-                                Text(text = "OK")
-                            }
-                        }
+        if (authViewModel.state.value.forgotpassworddialog) {
+            AlertDialog(
+                onDismissRequest = { /*TODO*/ },
+                title = { Text(text = "LINK TIL NULSTILLING AF ADGANGSKODE ER SENDT") },
+                text = {
+                    Text(
+                        text =
+                        "Vi har sendt dig en e-mail til nulstilling af din adgangskode\n" +
+                                "\n" +
+                                "For at oprette din nye adgangskode skal du klikke på linket i e-mailen og angive en ny – pærenemt\n" +
+                                "\n" +
+                                "Har du ikke modtaget e-mailen? Tjek din spammappe."
                     )
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        authViewModel.forgotPasswordStateChange()
+                    }) {
+                        Text(text = "OK")
+                    }
                 }
-            }
+            )
         }
     }
+    if (loading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            LoadingAnimation()
+        }
+    }
+}
+
 
 @Composable
 fun LoadingAnimation(
