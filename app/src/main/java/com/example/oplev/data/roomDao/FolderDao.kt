@@ -12,4 +12,6 @@ interface FolderDao:BaseDao<Folder> {
     fun findFolderFromJourneyId(journeyId:Int):List<Folder>
     @Query("select * from folder where id == :stringid")
     fun getfromId(stringid:String):List<Folder>
+    @Query("delete from Folder")
+    fun deleteAll()
 }

@@ -50,7 +50,7 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
             val baseFolderOfJourney =
                 Folder(baseFolderId, tempJourney.id, baseFolderId, "Basefolder")
 
-            runBlocking {
+            viewModelScope.launch(Dispatchers.IO) {
                 journeydataService.insertItem(tempJourney)
                 folderDataService.insertItem(baseFolderOfJourney)
 

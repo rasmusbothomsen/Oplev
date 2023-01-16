@@ -103,7 +103,7 @@ open class BaseDataService<T> (
                 }else{
 
                 }
-            }.await()
+            }
         if (!sucess){
             insertQueueItem(item,add["id"].toString())
         }

@@ -19,4 +19,6 @@ interface IdeaDao:BaseDao<Idea> {
 
     @Query("select journeyId from Folder where id == :id")
     fun getJourneyFromFolderId(id:String):String
+    @Query("delete from ideas")
+    fun deleteAll()
 }

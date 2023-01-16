@@ -26,4 +26,7 @@ interface CategoryDao:BaseDao<Category> {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addCategory(category: Category)
 
+    @Query("delete from Category")
+    fun deleteAll()
+
 }

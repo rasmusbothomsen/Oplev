@@ -16,4 +16,6 @@ interface BaseDao<T> {
      fun insertAll(vararg item:T)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllAny(items:List<out T>)
+
+
 }

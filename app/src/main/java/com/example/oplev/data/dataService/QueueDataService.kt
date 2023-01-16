@@ -58,7 +58,12 @@ class QueueDataService(
 
             if (itemsSynced == items.size){
                 Log.d("Synced complete","QueItems synced")
-              //  appDatabase.clearAllTables()
+                appDatabase.IdeaDao().deleteAll()
+                appDatabase.JourneyDao().deleteAll()
+                appDatabase.FolderDao().deleteAll()
+                appDatabase.CategoryDao().deleteAll()
+                appDatabase.QueDao().deleteAll()
+
             }
             else{
                 Log.e("SYNCED FAILED","NOT ALL ITEMS WHERE SYNCED. SYNCED: $itemsSynced: Total: ${items.size}")

@@ -9,4 +9,6 @@ interface QueDao:BaseDao<QueueItem> {
 
     @Query("select * from queue_table")
     fun getAll():List<QueueItem>
+    @Query("delete from queue_table")
+    fun deleteAll()
 }
