@@ -65,23 +65,25 @@ open class BaseDataService<T> (
         if(sharedJourney.size() == 0){
             return
         }
-        val collabmail = sharedJourney.documents[0].get("collaboratorMail")
-        val add = map.second
-        val currentUser = gerUserIdFromMail(collabmail as String)
-        if (currentUser == ""){
-            return
-        }
-        db.collection("users").document(currentUser).collection(map.first!!)
-            .document(add["id"].toString())
-            .set(add)
-            .addOnCompleteListener(){
-                    task ->
-                if(task.isSuccessful){
-                    Log.d("FirebaseInsert",  "STATUS: SUCCESS")
-                }else{
+          val add = map.second
+      for(doc in sharedJourney.documents){
+          val collabmail = doc.get("collaboratorMail")
+          val currentUser = gerUserIdFromMail(collabmail as String)
+          if (currentUser == ""){
+              break
+          }
+          db.collection("users").document(currentUser).collection(map.first!!)
+              .document(add["id"].toString())
+              .set(add)
+              .addOnCompleteListener(){
+                      task ->
+                  if(task.isSuccessful){
+                      Log.d("FirebaseInsert",  "STATUS: SUCCESS")
+                  }else{
 
-                }
-            }.await()
+                  }
+              }.await()
+      }
 
     }
 

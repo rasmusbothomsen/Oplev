@@ -97,18 +97,11 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
 
 
         suspend fun createNewUser(fullname: String, email: String, password: String, baseContext: Context, activity: Activity){
-            var str = fullname
-            var delimiter1 = " "
-
-            val parts = str.split(delimiter1)
-            var firstname = ""
-            var lastname = ""
-
-            if (parts.size > 1){
-                firstname = parts[0]
-                for (i in 1 until parts.size){
-                    lastname += parts[i] + " "
-                }
+            var str = fullname.split(" ", limit = 2)
+            var firstname = str[0]
+            var lastname = str[1]
+            if(firstname.isEmpty()){
+                firstname = fullname
             }
 
             var success = false
