@@ -1,5 +1,6 @@
 package com.example.oplev.sites.Idea
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -27,23 +28,27 @@ import androidx.navigation.NavController
 import com.example.oplev.R
 import com.example.oplev.ViewModel.IdeaViewModel
 import com.example.oplev.sites.TopBar
+import com.example.oplev.ui.theme.Farvekombi031
 import com.example.oplev.ui.theme.Farvekombi032
 import com.example.oplev.ui.theme.OplevBlue
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.ArrowAltCircleLeft
 import compose.icons.lineawesomeicons.Lightbulb
+import compose.icons.lineawesomeicons.LinkSolid
 
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
-   // val context = LocalContext.current
-   // val activity = LocalContext.current as Activity
-   // val uiState by ideaViewModel.uiState.collectAsState()
+     val context = LocalContext.current
+     val activity = LocalContext.current as Activity
+     val uiState by ideaViewModel.uiState.collectAsState()
 
 
     Scaffold(
-        topBar = { TopBar(title = "Tur til København", navController)
-                 },
+        topBar = {
+            TopBar(title = ideaViewModel.currentIdea.title, navController)
+        },
         content = {
             Column(Modifier.verticalScroll(rememberScrollState())) {
                 Image(
@@ -63,8 +68,10 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
                         .background(Color.White)
                         .fillMaxSize()
                 ) {
-                    Column(modifier = Modifier
-                        .padding(10.dp)) {
+                    Column(
+                        modifier = Modifier
+                            .padding(10.dp)
+                    ) {
                         Spacer(modifier = Modifier.height(15.dp))
                         Row {
                             Icon(
@@ -75,8 +82,10 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(50
-                                        .dp)
+                                    .height(
+                                        50
+                                            .dp
+                                    )
                                     .clip(RoundedCornerShape(30.dp))
                                     .background(Color.LightGray, RoundedCornerShape(30.dp))
                                     .padding(10.dp),
@@ -177,18 +186,24 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
                          */
                         // IDEA LINK
 
-                        Row (
+                        Row(
                             modifier = Modifier
                                 .padding(40.dp)
                                 .fillMaxWidth()
-                        ){
+                        ) {
                             val context = LocalContext.current
-                            val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(ideaViewModel.currentIdea.link)) }
+                            val intent = remember {
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse(ideaViewModel.currentIdea.link)
+                                )
+                            }
                             Button(
-                                onClick = { context.startActivity(intent)
-                                     },
+                                onClick = {
+                                    context.startActivity(intent)
+                                },
                                 colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = Color.Yellow,
+                                    backgroundColor = Farvekombi031,
                                     contentColor = Color.Black
                                 ),
                                 modifier = Modifier
@@ -198,7 +213,7 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
                                 shape = RoundedCornerShape(50.dp)
                             ) {
                                 Icon(
-                                    imageVector = LineAwesomeIcons.Lightbulb,
+                                    imageVector = LineAwesomeIcons.LinkSolid,
                                     contentDescription = "",
                                 )
                                 Text(text = "Link", fontSize = 18.sp)
@@ -208,7 +223,7 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
                             Button(
                                 onClick = { /*TODO*/ },
                                 colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = OplevBlue,
+                                    backgroundColor = Farvekombi032,
                                     contentColor = Color.Black
                                 ),
                                 modifier = Modifier
@@ -216,7 +231,7 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
                                     .fillMaxWidth()
                                     .height(50.dp),
 
-                                    shape = CircleShape
+                                shape = CircleShape
                             ) {
                                 Text(text = "Edit", fontSize = 18.sp)
                             }

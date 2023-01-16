@@ -1,15 +1,16 @@
 package com.example.oplev.sites.Idea
 
+import android.annotation.SuppressLint
+import android.util.EventLogTags
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +28,7 @@ import com.example.oplev.Screen
 import com.example.oplev.ViewModel.*
 import com.example.oplev.sites.TopBar
 import com.example.oplev.ui.components.DateandTimePicker
+import com.example.oplev.ui.theme.Farvekombi032
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.Calendar
 import compose.icons.lineawesomeicons.Comment
@@ -34,6 +36,7 @@ import compose.icons.lineawesomeicons.Lightbulb
 import compose.icons.lineawesomeicons.LinkSolid
 
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavController) {
 
@@ -81,33 +84,104 @@ fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavContr
                 ) {
 
 
-                    inputTextfield(
-                        label = "Titel",
-                        height = 80,
-                        imageVector = LineAwesomeIcons.Lightbulb,
+                    OutlinedTextField(
+                        value = titel,
+                        label = { Text(text = "Idé") },
+                        modifier = Modifier
+                            .width(300.dp)
+                            .align(Alignment.CenterHorizontally),
                         onValueChange = { titel = it },
-                        input = titel
+                        colors = TextFieldDefaults.textFieldColors(
+                            textColor = Color.Black,
+                            backgroundColor = Color.White,
+                            focusedIndicatorColor = Color.Black,
+                            unfocusedIndicatorColor = Color.DarkGray,
+                            disabledIndicatorColor = Color.DarkGray
+                        ),
+                        shape = CircleShape,
+                        leadingIcon = {
+                            Icon(
+                                imageVector = LineAwesomeIcons.Lightbulb,
+                                contentDescription = "",
+                                tint = Farvekombi032
+                            )
+                        },
                     )
-                    inputTextfield(
-                        label = "Beskriv ideen",
-                        height = 200,
-                        imageVector = LineAwesomeIcons.Comment,
-                        onValueChange = { beskrivelse = it },
-                        input = beskrivelse
+                    val maxChar = 150
+
+                    OutlinedTextField(
+                        value = beskrivelse,
+                        onValueChange = {
+                            if (it.length <= maxChar) beskrivelse = it
+                        },
+                        label = { Text(text = "Beskrivelse") },
+                        colors = TextFieldDefaults.textFieldColors(
+                            textColor = Color.Black,
+                            backgroundColor = Color.White,
+                            focusedIndicatorColor = Color.DarkGray,
+                            unfocusedIndicatorColor = Color.DarkGray,
+                            disabledIndicatorColor = Color.DarkGray
+                        ),
+                        shape = RoundedCornerShape(20.dp),
+                        modifier = Modifier
+                            .width(300.dp)
+                            .align(Alignment.CenterHorizontally)
+                            .height(200.dp),
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = "",
+                                tint = Farvekombi032,
+                                modifier = Modifier.padding(bottom = 135.dp)
+                            )
+                        }
                     )
-                    inputTextfield(
-                        label = "Indsæt link",
-                        height = 80,
-                        imageVector = LineAwesomeIcons.LinkSolid,
+
+                    OutlinedTextField(
+                        value = link,
+                        label = { Text(text = "Link") },
+                        modifier = Modifier
+                            .width(300.dp)
+                            .align(Alignment.CenterHorizontally),
                         onValueChange = { link = it },
-                        input = link
+                        colors = TextFieldDefaults.textFieldColors(
+                            textColor = Color.Black,
+                            backgroundColor = Color.White,
+                            focusedIndicatorColor = Color.Black,
+                            unfocusedIndicatorColor = Color.DarkGray,
+                            disabledIndicatorColor = Color.DarkGray
+                        ),
+                        shape = CircleShape,
+                        leadingIcon = {
+                            Icon(
+                                imageVector = LineAwesomeIcons.LinkSolid,
+                                contentDescription = "",
+                                tint = Farvekombi032
+                            )
+                        },
                     )
-                    inputTextfield(
-                        label = "Indsæt dato",
-                        height = 80,
-                        imageVector = LineAwesomeIcons.Calendar,
+                    OutlinedTextField(
+                        value = date,
+                        label = { Text(text = "Dato") },
+                        modifier = Modifier
+                            .width(300.dp)
+                            .align(Alignment.CenterHorizontally),
                         onValueChange = { date = it },
-                        input = date
+                        colors = TextFieldDefaults.textFieldColors(
+                            textColor = Color.Black,
+                            backgroundColor = Color.White,
+                            focusedIndicatorColor = Color.Black,
+                            unfocusedIndicatorColor = Color.DarkGray,
+                            disabledIndicatorColor = Color.DarkGray
+                        ),
+                        shape = CircleShape,
+                        leadingIcon = {
+                            Icon(
+                                imageVector = LineAwesomeIcons.Calendar,
+                                contentDescription = "",
+                                tint = Farvekombi032
+                            )
+                        },
                     )
 
 
@@ -138,8 +212,8 @@ fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavContr
                                 navController.navigate(Screen.FrontPageScreen.route)
                             },
                             colors = ButtonDefaults.buttonColors(
-                                backgroundColor = Color.Green,
-                                contentColor = Color.Black
+                                backgroundColor = Farvekombi032,
+                                contentColor = Color.White
                             ),
                             modifier = Modifier.size(130.dp, 40.dp),
                             shape = RoundedCornerShape(50)
