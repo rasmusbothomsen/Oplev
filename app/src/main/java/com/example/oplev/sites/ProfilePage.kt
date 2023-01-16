@@ -273,15 +273,17 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
                 title = { Text(text = "Indtast din nye mail")},
                 shape = RoundedCornerShape(20.dp),
                 text = {
+                    Text(text = "")
                     OutlinedTextField(
                         value = email,
                         label = { Text(text = "Mail", textAlign = TextAlign.Center) },
                         modifier = Modifier
-                            .width(130.dp),
+                            .fillMaxWidth(),
                         onValueChange = {
                             email = it
                         },
-                        singleLine = true
+                        singleLine = true,
+                        shape = CircleShape
                     )
                 },
                 confirmButton = {

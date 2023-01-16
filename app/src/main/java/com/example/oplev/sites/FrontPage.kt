@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Bottom
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -288,7 +289,11 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                                     translationX = 90f
                                     translationY = -180f}) {
                             FloatingActionButton(
-                                onClick = { frontpageViewModel.changeDialogVal() },
+                                onClick = {
+                                    frontpageViewModel.changeDialogVal()
+                                    blurred.value = 16.dp
+                                    frontpageViewModel.expandFab()
+                                          },
                                 modifier = Modifier.size(50.dp),
                                 backgroundColor = Farvekombi033) {
                                 Icon(
@@ -373,6 +378,8 @@ private fun Context.buildPlayerView(exoPlayer: ExoPlayer) =
         resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
     }
 
+    var blurred = mutableStateOf(0.dp)
+
 @Composable
 fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController, frontPageViewModel: FrontPageViewModel, state: States) {
     val rawId = MainActivity.context.resources.getIdentifier(
@@ -421,7 +428,8 @@ fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController,
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .fillMaxSize(),
+                .fillMaxSize()
+                .blur(blurred.value),
 
         )
         {
@@ -514,6 +522,7 @@ fun NewCategoryDialog(frontPageViewModel: FrontPageViewModel){
                     frontPageViewModel.createCategory(categoryTitle, activity)
                 }
                 frontPageViewModel.changeDialogVal()
+                blurred.value = 0.dp
             },
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(
@@ -528,6 +537,7 @@ fun NewCategoryDialog(frontPageViewModel: FrontPageViewModel){
             TextButton(onClick = {
                 frontPageViewModel.changeDialogVal()
                 frontPageViewModel.expandFab()
+                blurred.value = 0.dp
             }) {
                 Text(text = "Annuller", color = Color.Black)
             }
