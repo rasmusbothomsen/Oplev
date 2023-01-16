@@ -9,7 +9,10 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomCenter
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -24,6 +27,7 @@ import androidx.navigation.NavController
 import com.example.oplev.DependencyController
 import com.example.oplev.MainActivity
 import com.example.oplev.R
+import com.example.oplev.Screen
 import com.example.oplev.ViewModel.OnboadringViewModel
 import com.example.oplev.ui.theme.OplevOnboard1
 import com.example.oplev.ui.theme.OplevOnboard2
@@ -42,51 +46,78 @@ fun OnboardingLayout1(navController: NavController, viewModel: OnboadringViewMod
 
         )
         {
-            Spacer(Modifier.height(20.dp))
-            Image(
-                painterResource(R.drawable.oplev72dpi),
-                contentDescription = "",
-                modifier = Modifier.size(240.dp, 240.dp)
-            )
-            Spacer(Modifier.height(10.dp))
-
-
-            Text(
-                text = "Velkommen til Oplev",
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                fontSize = 40.sp,
-                fontFamily = FontFamily.Default,
-                textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.height(30.dp))
-            Text(
-                text = "Oplev er appen til at planlægge ture og rejser, og dele dem med andre.",
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(10.dp),
-                fontSize = 20.sp,
-                fontFamily = FontFamily.Default,
-                textAlign = TextAlign.Center
-
-            )
-            val activity = LocalContext.current as Activity
-
-            Row(modifier= Modifier
-                .fillMaxSize()
-                .padding(50.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
-
-                ClickableText(
-                    text = AnnotatedString("Spring Over"),
-
-
-                    onClick = {
-                        viewModel.onboadringComplete(activity)
-                        navController.navigate(route = "frontpage") }
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(400.dp)) {
+                Image(
+                    painter = painterResource(id = R.drawable.ob1top),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(androidx.compose.ui.Alignment.TopEnd)
                 )
 
+                Image(
+                    painterResource(R.drawable.oplev72dpi),
+                    contentDescription = "",
+                    modifier = Modifier.size(240.dp, 240.dp)
+                        .align(androidx.compose.ui.Alignment.Center)
+                )
 
-                ClickableText(
-                    text = AnnotatedString("Næste", ), onClick = { navController.navigate(route = "onboarding2")})
+                Text(
+                    text = "Velkommen til Oplev",
+                    modifier = Modifier.align(BottomCenter),
+                    fontSize = 40.sp,
+                    fontFamily = FontFamily.Default,
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(400.dp)) {
+                Image(
+                    painter = painterResource(id = R.drawable.ob1bottom),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(androidx.compose.ui.Alignment.BottomStart)
+                )
+
+                Text(
+                    text = "Oplev er appen til at planlægge ture og rejser, og dele dem med andre.",
+                    modifier = Modifier
+                        .align(TopCenter)
+                        .padding(10.dp),
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily.Default,
+                    textAlign = TextAlign.Center
+
+                )
+                val activity = LocalContext.current as Activity
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(50.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+
+                    ClickableText(
+                        text = AnnotatedString("Spring Over"),
+
+                        onClick = {
+                            viewModel.onboadringComplete(activity)
+                            navController.navigate(route = "frontpage")
+                        }
+                    )
+
+
+                    ClickableText(
+                        text = AnnotatedString("Næste",),
+                        onClick = { navController.navigate(route = "onboarding2") })
+                }
             }
         }
     }
@@ -105,50 +136,77 @@ fun OnboardingLayout2(navController: NavController, viewModel: OnboadringViewMod
 
         )
         {
-            Spacer(Modifier.height(60.dp))
-            Image(
-                painterResource(R.drawable.onboardingimg1),
-                contentDescription = "",
-                modifier = Modifier.size(160.dp)
-            )
-            Spacer(Modifier.height(30.dp))
-            /* Headline */
 
-            Text(
-                text = "Lær lidt om appen inden du starter.",
-                modifier = Modifier.align(CenterHorizontally),
-                fontSize = 40.sp,
-                fontFamily = FontFamily.Default,
-                textAlign = TextAlign.Center
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(450.dp)) {
 
-            )
-            Spacer(Modifier.height(30.dp))
-            Text(
-                text = "De næste sider du ser, vil lære dig Oplev's kernefunktioner at kende.",
-                modifier = Modifier
-                    .align(CenterHorizontally)
-                    .padding(10.dp),
-                fontSize = 20.sp,
-                fontFamily = FontFamily.Default,
-                textAlign = TextAlign.Center
-
-            )
-
-
-            Row(modifier= Modifier
-                .fillMaxSize()
-                .padding(50.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
-
-                ClickableText(
-                    text = AnnotatedString("Tilbage"),
-
-
-                    onClick = {navController.navigate(route= "onboarding1")},
+                Image(
+                    painter = painterResource(id = R.drawable.ob3top),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(androidx.compose.ui.Alignment.TopEnd)
                 )
 
+                Image(
+                    painterResource(R.drawable.onboardingimg1),
+                    contentDescription = "",
+                    modifier = Modifier.size(160.dp).align(Center)
+                )
 
-                ClickableText(
-                    text = AnnotatedString("Næste", ), onClick = { navController.navigate(route = "onboarding3") })
+                Text(
+                    text = "Lær lidt om appen inden du starter.",
+                    modifier = Modifier.align(BottomCenter),
+                    fontSize = 40.sp,
+                    fontFamily = FontFamily.Default,
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(400.dp)) {
+
+                Image(
+                    painter = painterResource(id = R.drawable.ob3bottom),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(androidx.compose.ui.Alignment.BottomStart)
+                )
+
+                Text(
+                    text = "De næste sider du ser, vil lære dig Oplev's kernefunktioner at kende.",
+                    modifier = Modifier
+                        .align(TopCenter)
+                        .padding(10.dp),
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily.Default,
+                    textAlign = TextAlign.Center
+
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(50.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+
+                    ClickableText(
+                        text = AnnotatedString("Tilbage"),
+
+
+                        onClick = { navController.navigate(route = "onboarding1") },
+                    )
+
+
+                    ClickableText(
+                        text = AnnotatedString("Næste",),
+                        onClick = { navController.navigate(route = "onboarding3") })
+                }
             }
         }
     }
@@ -166,112 +224,265 @@ fun OnboardingLayout3(navController: NavController, viewModel: OnboadringViewMod
 
         )
         {
-            Spacer(Modifier.height(60.dp))
-            Image(
-                painterResource(R.drawable.onboardingimg2),
-                contentDescription = "",
-                modifier = Modifier.size(160.dp)
-            )
-            Spacer(Modifier.height(20.dp))
-            /* Headline */
-
-            Text(
-                text = "Opret eventyr",
-                modifier = Modifier.align(CenterHorizontally),
-                fontSize = 40.sp,
-                fontFamily = FontFamily.Default,
-                textAlign = TextAlign.Center
-
-            )
-            Spacer(Modifier.height(30.dp))
-            Text(
-                text = "Plus-ikonet i bunden af din side, er hvor du starter din egen rejse. Når du klikker på den, kan du oprette en rejse, eller en rejsekategori.",
+            Box(
                 modifier = Modifier
-                    .align(CenterHorizontally)
-                    .padding(10.dp),
-                fontSize = 20.sp,
-                fontFamily = FontFamily.Default,
-                textAlign = TextAlign.Center
+                    .fillMaxWidth()
+                    .height(450.dp)
+            ) {
 
-            )
+                Image(
+                    painter = painterResource(id = R.drawable.obpinkbottom),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(androidx.compose.ui.Alignment.TopEnd)
+                )
 
+                Image(
+                    painterResource(R.drawable.onboardingimg2),
+                    contentDescription = "",
+                    modifier = Modifier.size(160.dp).align(Center)
+                )
 
-            Row(modifier= Modifier
-                .fillMaxSize()
-                .padding(50.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
+                Text(
+                    text = "Opret eventyr",
+                    modifier = Modifier.align(BottomCenter),
+                    fontSize = 40.sp,
+                    fontFamily = FontFamily.Default,
+                    textAlign = TextAlign.Center
 
-                ClickableText(
-                    text = AnnotatedString("Tilbage"),
+                )
+            }
 
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(400.dp)
+            ) {
 
-                    onClick = {navController.navigate(route = "onboarding2")},
+                Image(
+                    painter = painterResource(id = R.drawable.obpinktop),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(androidx.compose.ui.Alignment.BottomStart)
+                )
+
+                Text(
+                    text = "Plus-ikonet i bunden af din side, er hvor du starter din egen rejse. Når du klikker på den, kan du oprette en rejse, eller en rejsekategori.",
+                    modifier = Modifier
+                        .align(TopCenter)
+                        .padding(10.dp),
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily.Default,
+                    textAlign = TextAlign.Center
+
                 )
 
 
-                ClickableText(
-                    text = AnnotatedString("Næste", ), onClick = { navController.navigate(route = "onboarding4") })
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(50.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+
+                    ClickableText(
+                        text = AnnotatedString("Tilbage"),
+
+
+                        onClick = { navController.navigate(route = "onboarding2") },
+                    )
+
+
+                    ClickableText(
+                        text = AnnotatedString("Næste",),
+                        onClick = { navController.navigate(route = "onboarding4") })
+                }
             }
         }
     }
 }
 
 @Composable
-fun OnboardingLayout4(navController: NavController, viewModel: OnboadringViewModel){
-    Surface (modifier = Modifier.fillMaxSize()){
+fun OnboardingLayout4(navController: NavController, viewModel: OnboadringViewModel) {
+    Surface(modifier = Modifier.fillMaxSize()) {
 
         Column(
-            horizontalAlignment = CenterHorizontally ,
+            horizontalAlignment = CenterHorizontally,
             modifier = Modifier
                 .background(color = OplevOnboard4)
                 .fillMaxWidth()
 
         )
         {
-            Spacer(Modifier.height(60.dp))
-            Image(
-                painterResource(R.drawable.onboardingimg3),
-                contentDescription = "",
-                modifier = Modifier.size(150.dp, 120.dp)
-            )
-            Spacer(Modifier.height(30.dp))
-            /* Headline */
-
-            Text(
-                text = "Del dine rejser.",
-                modifier = Modifier.align(CenterHorizontally),
-                fontSize = 40.sp,
-                fontFamily = FontFamily.Default,
-                textAlign = TextAlign.Center
-
-            )
-            Spacer(Modifier.height(30.dp))
-            Text(
-                text = "Del dine rejser med andre brugere. Invitér dem du vil have med på dit eventyr. ",
+            Box(
                 modifier = Modifier
-                    .align(CenterHorizontally)
-                    .padding(10.dp),
-                fontSize = 20.sp,
-                fontFamily = FontFamily.Default,
-                textAlign = TextAlign.Center
+                    .fillMaxWidth()
+                    .height(400.dp)
+            ) {
 
-            )
-
-            val activity = LocalContext.current as Activity
-            Row(modifier= Modifier
-                .fillMaxSize()
-                .padding(50.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
-
-                ClickableText(
-                    text = AnnotatedString("Tilbage"),
-
-
-                    onClick = {navController.navigate(route = "onboarding3")},
+                Image(
+                    painter = painterResource(id = R.drawable.ob3top),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(androidx.compose.ui.Alignment.TopEnd)
                 )
-                ClickableText(
-                    text = AnnotatedString("Slut", ), onClick = { viewModel.onboadringComplete(activity)
-                        navController.navigate(route = "frontpage")})
+
+                Image(
+                    painterResource(R.drawable.onboardingimg3),
+                    contentDescription = "",
+                    modifier = Modifier.size(150.dp, 120.dp)
+                        .align(Center)
+                )
+
+
+                Text(
+                    text = "Del dine rejser.",
+                    modifier = Modifier.align(BottomCenter),
+                    fontSize = 40.sp,
+                    fontFamily = FontFamily.Default,
+                    textAlign = TextAlign.Center
+
+                )
+
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(400.dp)
+            ) {
+
+                Image(
+                    painter = painterResource(id = R.drawable.ob3bottom),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(androidx.compose.ui.Alignment.BottomStart)
+                )
+
+                Text(
+                    text = "Del dine rejser med andre brugere. Invitér dem du vil have med på dit eventyr. ",
+                    modifier = Modifier
+                        .align(TopCenter)
+                        .padding(10.dp),
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily.Default,
+                    textAlign = TextAlign.Center
+
+                )
+
+                val activity = LocalContext.current as Activity
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(50.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+
+                    ClickableText(
+                        text = AnnotatedString("Tilbage"),
+
+
+                        onClick = { navController.navigate(route = "onboarding3") },
+                    )
+                    ClickableText(
+                        text = AnnotatedString("Slut",), onClick = {
+                            viewModel.onboadringComplete(activity)
+                            navController.navigate(route = "frontpage")
+                        })
+                }
             }
         }
     }
 }
 
+@Preview
+@Composable
+fun ob1() {
+    Surface (modifier = Modifier.fillMaxSize()){
+
+        Column(
+            horizontalAlignment = CenterHorizontally ,
+            modifier = Modifier
+                .background(color = OplevOnboard2)
+                .fillMaxWidth()
+
+        )
+        {
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(500.dp)) {
+
+                Image(
+                    painter = painterResource(id = R.drawable.ob3top),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(androidx.compose.ui.Alignment.TopEnd)
+                )
+
+                Image(
+                    painterResource(R.drawable.onboardingimg1),
+                    contentDescription = "",
+                    modifier = Modifier.size(160.dp)
+                        .align(androidx.compose.ui.Alignment.Center)
+                )
+                /* Headline */
+                Text(
+                    text = "Lær lidt om appen inden du starter.",
+                    modifier = Modifier.align(BottomCenter),
+                    fontSize = 40.sp,
+                    fontFamily = FontFamily.Default,
+                    textAlign = TextAlign.Center
+
+                )
+            }
+
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)) {
+                Image(
+                    painter = painterResource(id = R.drawable.ob3bottom),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(androidx.compose.ui.Alignment.BottomStart)
+                )
+
+                Text(
+                    text = "De næste sider du ser, vil lære dig Oplev's kernefunktioner at kende.",
+                    modifier = Modifier
+                        .align(TopCenter)
+                        .padding(10.dp),
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily.Default,
+                    textAlign = TextAlign.Center
+
+                )
+
+                Row(modifier= Modifier
+                    .fillMaxSize()
+                    .padding(50.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
+
+                    ClickableText(
+                        text = AnnotatedString("Tilbage"),
+
+
+                        onClick = {},
+                    )
+
+
+                    ClickableText(
+                        text = AnnotatedString("Næste", ), onClick = { })
+                }
+            }
+
+
+        }
+    }
+}
