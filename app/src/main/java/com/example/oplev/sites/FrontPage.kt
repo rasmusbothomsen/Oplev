@@ -95,11 +95,17 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
     val state = frontpageViewModel.state.value
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
-    var categories : List<CategoryDto>
+    var categories: List<CategoryDto>
 
-
-    Scaffold(
-        scaffoldState = scaffoldstate,
+    Box {
+        Image(
+            modifier = Modifier.fillMaxSize(),
+            painter = painterResource(R.drawable.background),
+            contentDescription = "background",
+            contentScale = ContentScale.FillBounds
+        )
+        Scaffold(
+            scaffoldState = scaffoldstate,
             drawerContent = {
 
                 Row(Modifier.padding(20.dp, 30.dp, 0.dp, 0.dp)) {
@@ -123,16 +129,16 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         contentDescription = "",
                         modifier = Modifier
                             .size(45.dp, 45.dp)
-                            .padding(0.dp, 5.dp, 0.dp, 0.dp)
-                        , tint = Farvekombi033
+                            .padding(0.dp, 5.dp, 0.dp, 0.dp), tint = Farvekombi033
                     )
 
-                    TextButton(onClick = { navController.navigate(Screen.ProfileScreen.route)}) {
-                        Text(text = "Profil",
+                    TextButton(onClick = { navController.navigate(Screen.ProfileScreen.route) }) {
+                        Text(
+                            text = "Profil",
                             color = Color.Black,
                             fontSize = 18.sp,
-                            modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp))
-
+                            modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)
+                        )
 
 
                     }
@@ -141,7 +147,7 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                 }
                 Row(Modifier.padding(20.dp, 20.dp, 0.dp, 0.dp)) {
                     Icon(
-                        painterResource(id = R.drawable.ic_baseline_group_add_24) ,
+                        painterResource(id = R.drawable.ic_baseline_group_add_24),
                         contentDescription = "",
                         modifier = Modifier
                             .size(45.dp, 45.dp)
@@ -217,85 +223,95 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
 
                     }
                 }*/
-        },
-        drawerGesturesEnabled = true,
-        topBar = {
-            var userName = ""
-            runBlocking {
-                userName = frontpageViewModel.getUserName(activity, context)
-            }
-            TopBar("Velkommen $userName", navController)
-        },
-        content = { paddingValues ->
-            runBlocking {
-                categories = frontpageViewModel.getCategories()
-            }
-            FrontPageColumn(
-            categories, navController, frontpageViewModel, state)
-                  },
-        bottomBar = {
-            var context = LocalContext.current
-            var pageIsUpdated = state.frontPageUpdated
-
-            BottomAppBar(modifier = Modifier
-                .height(65.dp),
-                backgroundColor = Farvekombi032
-            ) {
-                BottomNavigation {
-                    BottomNavigationItem(
-                        icon = {
-                            Icon(imageVector = Icons.Default.Menu, contentDescription = "" )},
-                        label = { Text(text = "Menu") },
-                        selected = false,
-                        onClick = { scope.launch{
-                            scaffoldstate.drawerState.open()
-                        } },
-                        modifier = Modifier.background(color= Farvekombi032))
-                    BottomNavigationItem(
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Refresh,
-                                "")
-                        },
-                        label = { Text(text = "Opdater") },
-                        selected = false,
-                        onClick = {
-                            runBlocking {
-                                categories = frontpageViewModel.getCategories()
-                                frontpageViewModel.updateFrontPage()
-                            }
-                            if (pageIsUpdated) {
-                                Toast.makeText(context, "Rejser opdateret!", Toast.LENGTH_SHORT)
-                                    .show()
-                                frontpageViewModel.changeupdatedStat()
-                            }
-                        },
-                        modifier = Modifier.background(color= Farvekombi032))
+            },
+            drawerGesturesEnabled = true,
+            topBar = {
+                var userName = ""
+                runBlocking {
+                    userName = frontpageViewModel.getUserName(activity, context)
                 }
-            }
+                TopBar("Velkommen $userName", navController)
+            },
+            content = { paddingValues ->
+                runBlocking {
+                    categories = frontpageViewModel.getCategories()
+                }
+                FrontPageColumn(
+                    categories, navController, frontpageViewModel, state
+                )
+            },
+            bottomBar = {
+                var context = LocalContext.current
+                var pageIsUpdated = state.frontPageUpdated
 
-                    },
-        floatingActionButtonPosition = FabPosition.Center,
-        isFloatingActionButtonDocked = true,
-        floatingActionButton = {
+                BottomAppBar(
+                    modifier = Modifier
+                        .height(65.dp),
+                    backgroundColor = Farvekombi032
+                ) {
+                    BottomNavigation {
+                        BottomNavigationItem(
+                            icon = {
+                                Icon(imageVector = Icons.Default.Menu, contentDescription = "")
+                            },
+                            label = { Text(text = "Menu") },
+                            selected = false,
+                            onClick = {
+                                scope.launch {
+                                    scaffoldstate.drawerState.open()
+                                }
+                            },
+                            modifier = Modifier.background(color = Farvekombi032)
+                        )
+                        BottomNavigationItem(
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Default.Refresh,
+                                    ""
+                                )
+                            },
+                            label = { Text(text = "Opdater") },
+                            selected = false,
+                            onClick = {
+                                runBlocking {
+                                    categories = frontpageViewModel.getCategories()
+                                    frontpageViewModel.updateFrontPage()
+                                }
+                                if (pageIsUpdated) {
+                                    Toast.makeText(context, "Rejser opdateret!", Toast.LENGTH_SHORT)
+                                        .show()
+                                    frontpageViewModel.changeupdatedStat()
+                                }
+                            },
+                            modifier = Modifier.background(color = Farvekombi032)
+                        )
+                    }
+                }
+
+            },
+            floatingActionButtonPosition = FabPosition.Center,
+            isFloatingActionButtonDocked = true,
+            floatingActionButton = {
                 Column() {
                     val alpha: Float by animateFloatAsState(if (state.fabExpanded) 315f else 0f)
-                    var x : Float = 0f
-                    var y : Float = 0f
+                    var x: Float = 0f
+                    var y: Float = 0f
 
                     if (state.fabExpanded) {
                         Row(modifier = Modifier
-                                .graphicsLayer {
-                                    translationX = 90f
-                                    translationY = -180f}) {
+                            .graphicsLayer {
+                                translationX = 90f
+                                translationY = -180f
+                            }) {
                             FloatingActionButton(
                                 onClick = {
                                     frontpageViewModel.changeDialogVal()
                                     blurred.value = 16.dp
                                     frontpageViewModel.expandFab()
-                                          },
+                                },
                                 modifier = Modifier.size(50.dp),
-                                backgroundColor = Farvekombi033) {
+                                backgroundColor = Farvekombi033
+                            ) {
                                 Icon(
                                     imageVector = Icons.Filled.Add,
                                     contentDescription = "",
@@ -307,9 +323,9 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                             Text(text = "Ny kategori")
                         }
                         Row(modifier = Modifier.graphicsLayer {
-                                    translationX = 90f
-                                    translationY = -160f
-                                }) {
+                            translationX = 90f
+                            translationY = -160f
+                        }) {
                             FloatingActionButton(onClick = {
                                 navController.navigate(Screen.CreateJourneyScreen.route)
                             }, modifier = Modifier.size(50.dp), backgroundColor = Farvekombi033) {
@@ -337,9 +353,7 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                                 translationX = x
                                 translationY = y
                             },
-                        backgroundColor = Farvekombi033
-
-                            ,
+                        backgroundColor = Farvekombi033,
                         onClick = {
                             frontpageViewModel.expandFab()
                             //navController.navigate(Screen.CreateJourneyScreen.route)
@@ -354,60 +368,18 @@ fun TotalView(frontpageViewModel: FrontPageViewModel, navController: NavControll
                         )
                     }
                 }
-        },
-    )
+            },
+            backgroundColor = Color.Transparent,
+        )
+    }
 }
 
-private fun Context.buildExoPlayer(uri: Uri) =
-    ExoPlayer.Builder(this).build().apply {
-        setMediaItem(MediaItem.fromUri(uri))
-        repeatMode = Player.REPEAT_MODE_ALL
-        playWhenReady = true
-        videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
-        prepare()
-    }
-
-private fun Context.buildPlayerView(exoPlayer: ExoPlayer) =
-    StyledPlayerView(this).apply {
-        player = exoPlayer
-        layoutParams = FrameLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
-        useController = false
-        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-    }
 
     var blurred = mutableStateOf(0.dp)
 
 @Composable
 fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController, frontPageViewModel: FrontPageViewModel, state: States) {
-    val rawId = MainActivity.context.resources.getIdentifier(
-        "nature",
-        "raw",
-        MainActivity.context.packageName
-    )
-    val video = "android.resource://${MainActivity.context}.packageName/$rawId"
-    val videoUri = Uri.parse(video)
 
-    val exoPlayer = remember { MainActivity.context.buildExoPlayer(videoUri) }
-    exoPlayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
-
-    // exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
-
-
-    DisposableEffect(
-        AndroidView(
-            factory = { it.buildPlayerView(exoPlayer) },
-            modifier = Modifier.fillMaxSize()
-        )
-    ) {
-        onDispose {
-            exoPlayer.release()
-        }
-    }
-
-    ProvideWindowInsets {
         var refreshing by remember { mutableStateOf(false) }
         LaunchedEffect(refreshing) {
             if (refreshing) {
@@ -451,7 +423,6 @@ fun FrontPageColumn(categories: List<CategoryDto>, navController: NavController,
     }
 }
 
-}
 
 /*
    runBlocking {
@@ -598,9 +569,9 @@ fun JourneyCard(journey: Journey, navController: NavController,frontPageViewMode
                     )
                     Box(
                         modifier = Modifier
-                            .width(145.dp)
+                            .width(185.dp)
                             .align(Alignment.BottomCenter)
-                            .background(Farvekombi033.copy(alpha = 0.6f))
+                            .background(Color.Black.copy(alpha = 0.3f))
                     ) {
                         Text(
                             fontSize = 16.sp,
@@ -610,7 +581,7 @@ fun JourneyCard(journey: Journey, navController: NavController,frontPageViewMode
                                 .fillMaxWidth(),
                             textAlign = TextAlign.Center,
                             fontFamily = fonts1,
-                            color = Color.Black
+                            color = Color.White
                         )
                     }
 

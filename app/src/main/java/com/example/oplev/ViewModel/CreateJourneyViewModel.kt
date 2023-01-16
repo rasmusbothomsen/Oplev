@@ -36,7 +36,7 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
             collaboratorMail: MutableList<String>,
             activity: Activity
         ) {
-            var img = "oplev300dpi"
+            var img = "palmtree"
             val tempJourney = Journey(
                 UUID.randomUUID().toString(),
                 tag,
