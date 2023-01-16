@@ -1,11 +1,11 @@
 package com.example.oplev.sites
 
 import android.app.Activity
-import android.widget.Toast
 import android.content.Context
 import android.net.Uri
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -56,6 +56,7 @@ import com.example.oplev.ui.theme.OplevBlue
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem

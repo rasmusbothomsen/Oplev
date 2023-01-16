@@ -58,6 +58,7 @@ import com.example.oplev.ui.theme.Farvekombi033
 import com.example.oplev.ui.theme.OplevFarve2
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.ArrowAltCircleLeft
+import compose.icons.lineawesomeicons.Lightbulb
 import compose.icons.lineawesomeicons.PlusSolid
 import kotlinx.coroutines.runBlocking
 
@@ -282,9 +283,9 @@ fun ideaCreator(idea: Idea, onIdeaClick:(String)-> Unit){
         modifier = Modifier.size(100.dp)
     ){
         IconButton(onClick = {onIdeaClick(idea.id)}, Modifier.align(Alignment.CenterHorizontally)) {
-            Icon(painter = painterResource(id = R.drawable.ic_baseline_lightbulb_24),
-                contentDescription = "Idea",
-                modifier = Modifier.size(80.dp))
+            Icon(LineAwesomeIcons.Lightbulb, contentDescription = "Idea",
+                modifier = Modifier.size(80.dp)
+            )
         }
         Text(text = idea.title, modifier = Modifier.align(Alignment.CenterHorizontally))
     }
