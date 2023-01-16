@@ -50,18 +50,16 @@ class MainActivity : ComponentActivity() {
 
         // Check if user is signed in (non-null) and update UI accordingly.
 
-        val currentUser = auth.currentUser
-        if(currentUser != null){
-            val user = database.UserDao().getUserFromId(currentUser.uid.toString())
-            if(!database.UserDao().getOBStatus(user.userId)) {
-                startPage = Screen.Onboarding1.route
-            }
-            else {
-                startPage = Screen.FrontPageScreen.route
+            val currentUser = auth.currentUser
+            if(currentUser != null){
+                val user = database.UserDao().getUserFromId(currentUser.uid.toString())
+                if(!database.UserDao().getOBStatus(user.userId)) {
+                    startPage = Screen.Onboarding1.route
+                }
+                else {
+                    startPage = Screen.FrontPageScreen.route
+                }
             }
         }
-
-
     }
-}
 

@@ -26,15 +26,14 @@ class QueueDataService(
         val item = QueueItem(0,itemType,itemID,true)
         dao.insert(item)
     }
-    suspend fun syncDatabases():Deferred<Unit>{
-        return GlobalScope.async(Dispatchers.IO) {
+    suspend fun syncDatabases(){
+
             upDateFirebaseFromQueue()
-                getAllFirebaseObjects()
-        }
+            getAllFirebaseObjects()
+
     }
     suspend fun getAllFirebaseObjects(){
         var ideas:List<Idea> = populateDatClass(Idea::class as KClass<Any>) as List<Idea>
-
         appDatabase.IdeaDao().insertAllAny(ideas)
         var folders = populateDatClass(Folder::class as KClass<Any>) as List<Folder>
         appDatabase.FolderDao().insertAllAny(folders)
@@ -45,7 +44,7 @@ class QueueDataService(
 
 
     }
-     fun upDateFirebaseFromQueue() {
+   suspend fun upDateFirebaseFromQueue() {
         val items = dao.getAll()
         for (item in items){
             when(item.type)
@@ -55,8 +54,10 @@ class QueueDataService(
                 "Category" -> processCategory(item.objectId)
                 "Journey" -> processJourney(item.objectId)
             }
+        }
 
-            if (itemsSynced == items.size){
+
+         if (itemsSynced == items.size){
                 Log.d("Synced complete","QueItems synced")
                 appDatabase.IdeaDao().deleteAll()
                 appDatabase.JourneyDao().deleteAll()
@@ -68,7 +69,6 @@ class QueueDataService(
             else{
                 Log.e("SYNCED FAILED","NOT ALL ITEMS WHERE SYNCED. SYNCED: $itemsSynced: Total: ${items.size}")
             }
-        }
     }
 
 

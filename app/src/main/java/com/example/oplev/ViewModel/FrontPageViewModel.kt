@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.oplev.Model.*
 import com.example.oplev.data.dataService.CategoryDataService
 import com.example.oplev.data.dataService.JourneyDataService
+import com.example.oplev.data.dataService.QueueDataService
 import com.example.oplev.data.dataService.UserDataService
 import com.example.oplev.data.dto.CategoryDto
 import com.google.firebase.auth.ktx.auth
@@ -25,7 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
-class FrontPageViewModel(application: Application, val categoryDataService: CategoryDataService, val journeyDataService: JourneyDataService ,val userDataService: UserDataService):BaseViewModel<Category>(
+class FrontPageViewModel(application: Application, val categoryDataService: CategoryDataService, val journeyDataService: JourneyDataService ,val userDataService: UserDataService, val queueDataService: QueueDataService):BaseViewModel<Category>(
     application
 ) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -34,7 +35,7 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
 
 
      suspend fun updateFrontPage() {
-            var journeys = journeyDataService.getJourneys(categoryDataService)
+            queueDataService.syncDatabases()
              changeupdatedStat()
          Log.d("FrontPageUpdate","Called")
 

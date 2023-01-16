@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -50,12 +51,10 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
         viewModelScope.launch(Dispatchers.IO) {
             isLoading.value = true
             loadingBlurChange()
-        queueDataService.syncDatabases().await()
+        queueDataService.syncDatabases()
             isLoading.value = false
             syncdone.value = true
         }
-         isLoading.value = true
-         loadingBlurChange()
     }
 
     suspend fun updateName(fullname: String, activity: Activity){

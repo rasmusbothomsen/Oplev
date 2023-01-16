@@ -31,7 +31,6 @@ abstract class AppDatabase : RoomDatabase() {
                     ctx.applicationContext, AppDatabase::class.java,
                     "oplev_DataBase"
                 ).allowMainThreadQueries()
-                    .fallbackToDestructiveMigration()
                     .addCallback(roomCallback)
                     .build()
             }

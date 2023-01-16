@@ -283,7 +283,9 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
                     when (success) {
                         is UserDataService.SignInResult.Success -> {
                             if (FirebaseAuth.getInstance().currentUser != null) {
-                                authViewModel.syncDatabases()
+                                runBlocking {
+                                    authViewModel.syncDatabases()
+                                }
                             }
                             authViewModel.loadingBlurChange()
                         }
