@@ -91,7 +91,7 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
             activity: Activity,
             tempJourney: Journey
         ) {
-            runBlocking {
+            viewModelScope.launch(Dispatchers.IO)  {
                 userDataService.shareJourney(ownerId, journeyId, collaboratorMail, activity)
                 val collaboratorId = userDataService.gerUserIdFromMail(activity, collaboratorMail)
                 journeydataService.insertSharedJourneyToFirebase(

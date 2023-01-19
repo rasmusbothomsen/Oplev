@@ -98,30 +98,44 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
 
         suspend fun createNewUser(fullname: String, email: String, password: String, baseContext: Context, activity: Activity){
             var str = fullname.split(" ", limit = 2)
-            var firstname = str[0]
-            var lastname = str[1]
+            var firstname = ""
+            var lastname =""
+            if(str.size ==2){
+                 firstname = str[0]
+                 lastname = str[1]
+            }else{
+            }
             if(firstname.isEmpty()){
                 firstname = fullname
             }
 
             var success = false
+            viewModelScope.launch(Dispatchers.IO){
+                launch {
+                    success = userDataService.createAccount(firstname.toString(),lastname,email,password,baseContext,activity)
+                    if (Firebase.auth.currentUser != null) {
+                        categoryDataService.createCategory("Seneste", activity)
+                        categoryDataService.createCategory("Favoritter", activity)
+                        categoryDataService.createCategory("Delt med mig", activity)
+                    }
+                }.invokeOnCompletion {
+                    launch {
+                        val user = Firebase.auth.currentUser
+                        if (user!=null){
+                            updateUI(user, true)
+                        }
+                        else{
+                            updateUI(null, false)
+                        }
+                    }
+                }
 
-            success = userDataService.createAccount(firstname.toString(),lastname,email,password,baseContext,activity)
-
-            if (Firebase.auth.currentUser != null) {
-                categoryDataService.createCategory("Seneste", activity)
-                categoryDataService.createCategory("Favoritter", activity)
-                categoryDataService.createCategory("Delt med mig", activity)
             }
 
 
-        val user = Firebase.auth.currentUser
-        if (success){
-        updateUI(user, true)
-        }
-        else{
-        updateUI(null, false)
-        }
+
+
+
 
     }
      fun signIn(email: String, password: String, baseContext: Context, activity: Activity):UserDataService.SignInResult {

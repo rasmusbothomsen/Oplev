@@ -32,7 +32,7 @@ class CreateIdeaViewModel (val dataService: IdeaDataService, application: Applic
             image,
             date
         )
-        runBlocking {
+        viewModelScope.launch(Dispatchers.IO)  {
             dataService.insertItem(idea)
         }
     }

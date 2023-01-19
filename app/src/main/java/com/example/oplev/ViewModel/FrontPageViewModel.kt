@@ -35,14 +35,24 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
 
 
      suspend fun updateFrontPage() {
-            queueDataService.syncDatabases()
+         viewModelScope.launch(Dispatchers.IO) {
+             queueDataService.syncDatabases()
              changeupdatedStat()
-         Log.d("FrontPageUpdate","Called")
-
+             Log.d("FrontPageUpdate","Called")
+         }
      }
 
     suspend fun createCategory(title: String, activity: Activity) {
-        categoryDataService.createCategory(title, activity)
+        viewModelScope.launch(Dispatchers.IO) {
+            launch {
+            categoryDataService.createCategory(title, activity)
+            }.invokeOnCompletion {
+            launch {
+                updateFrontPage()
+
+            }
+            }
+        }
     }
 
     suspend fun getCategories(): List<CategoryDto> {
@@ -68,6 +78,8 @@ class FrontPageViewModel(application: Application, val categoryDataService: Cate
 
     suspend fun signOut(){
         Firebase.auth.signOut()
+        queueDataService.signOut()
+
     }
 
     fun expandFab(){

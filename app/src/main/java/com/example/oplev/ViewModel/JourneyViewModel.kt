@@ -6,6 +6,8 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.oplev.Model.Folder
 import com.example.oplev.Model.Idea
 import com.example.oplev.Model.Journey
@@ -15,10 +17,12 @@ import com.example.oplev.data.dataService.JourneyDataService
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
@@ -122,10 +126,10 @@ class JourneyViewModel(val journeyDataService: JourneyDataService, val folderDat
             folderId,
             folderTitle
         )
-        runBlocking {
+        viewModelScope.launch(Dispatchers.IO) {
             folderDataService.insertItem(tempFolder)
+            updateOpenFolder()
         }
-        updateOpenFolder()
     }
 
     fun expandFab(){

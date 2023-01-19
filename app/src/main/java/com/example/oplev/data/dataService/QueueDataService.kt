@@ -8,7 +8,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
+import java.io.IOException
 import java.lang.reflect.Type
+import java.net.HttpURLConnection
+import java.net.URL
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.javaType
@@ -31,6 +34,19 @@ class QueueDataService(
             upDateFirebaseFromQueue()
             getAllFirebaseObjects()
 
+    }
+    fun isInternetWorking(): Boolean {
+        var success = false
+        try {
+            val url = URL("https://google.com")
+            val connection = url.openConnection() as HttpURLConnection
+            connection.connectTimeout = 3000
+            connection.connect()
+            success = connection.responseCode == 200
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return success
     }
     suspend fun getAllFirebaseObjects(){
         var ideas:List<Idea> = populateDatClass(Idea::class as KClass<Any>) as List<Idea>
@@ -120,20 +136,75 @@ class QueueDataService(
        return returnItems
     }
 
-     fun insertIntoFireBase(deconStructedItem: Pair<String?, HashMap<String, Any>>){
+      fun  insertIntoFireBase(deconStructedItem: Pair<String?, HashMap<String, Any>>){
 
         val collectionName = deconStructedItem.first
         val add = deconStructedItem.second
 
-        db.collection(collectionName!!)
-            .document(Firebase.auth.currentUser?.uid.toString())
-            .set(add)
-            .addOnCompleteListener(){
-                    task ->
-                if(task.isSuccessful){
-                    Log.d("FirebaseInsert",  "STATUS: SUCCESS")
-                    itemsSynced ++
+            db.collection("users")
+                .document(Firebase.auth.currentUser?.uid.toString()).collection(collectionName!!)
+                .document(add["id"].toString()).set(add)
+                .addOnCompleteListener() { task ->
+                    if (task.isSuccessful) {
+                        Log.d("FirebaseInsert", "STATUS: SUCCESS")
+                        runBlocking {
+                        checkAndInsertIfShared(deconStructedItem)
+                        }
+                        itemsSynced++
+                    }
                 }
+
+    } suspend fun gerUserIdFromMail(mail: String): String {
+        var id = ""
+        var query = db.collection("users")
+            .whereEqualTo("email", mail)
+            .get()
+            .addOnSuccessListener {
+
             }
+            .await()
+        if(!query.documents.isEmpty()){
+            id = query.documents[0].id
+        }
+
+        return id
+    }
+    suspend fun signOut() = coroutineScope{
+        launch {
+        appDatabase.clearAllTables()
+        }
+    }
+
+    open suspend fun checkAndInsertIfShared(deconStructedItem: Pair<String?, HashMap<String, Any>>) {
+
+        val map = deconStructedItem
+        val journeyId = map.second.get("journeyId") ?: return
+        val sharedJourney = db.collection("sharings").whereEqualTo("journeyId",journeyId).get().await()?:return
+        if(sharedJourney.size() == 0){
+            return
+        }
+        val add = map.second
+        for(doc in sharedJourney.documents){
+            val collabmail = doc.get("collaboratorMail")
+            val currentUser = gerUserIdFromMail(collabmail as String)
+            if(currentUser == Firebase.auth.currentUser?.uid.toString()){
+                currentUser == doc.get("ownerId")
+            }
+            if (currentUser == ""){
+                break
+            }
+            db.collection("users").document(currentUser).collection(map.first!!)
+                .document(add["id"].toString())
+                .set(add)
+                .addOnCompleteListener(){
+                        task ->
+                    if(task.isSuccessful){
+                        Log.d("FirebaseInsert",  "STATUS: SUCCESS")
+                    }else{
+
+                    }
+                }.await()
+        }
+
     }
 }
