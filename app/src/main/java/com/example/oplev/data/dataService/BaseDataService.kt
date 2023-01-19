@@ -23,6 +23,9 @@ open class BaseDataService<T> (
      val baseDao: BaseDao<T>,
      val queueDataService: QueueDataService
         ){
+        /** TAKEN FOM STACKOVERFLOW
+         * Found here https://stackoverflow.com/questions/50594146/firestore-timeout-for-android
+         * **/
 
         fun isInternetWorking(): Boolean {
             var success = false
