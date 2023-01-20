@@ -51,7 +51,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
     var tag by remember { mutableStateOf("") }
     var Image by remember { mutableStateOf("") }
     var Date by remember { mutableStateOf("") }
-    var category by remember { mutableStateOf(createJourneyViewModel.getCategories()[0].title) }
+    var category by remember { mutableStateOf(createJourneyViewModel.getCategories()[1].title) }
     var Description by remember { mutableStateOf("") }
     var Title by remember { mutableStateOf("") }
     var collaboratorIds = mutableListOf<String>()
