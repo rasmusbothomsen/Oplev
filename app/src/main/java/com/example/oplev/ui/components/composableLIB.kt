@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.service.autofill.UserData
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -69,6 +70,8 @@ fun NavController(application: Application, startRoute : String) {
     NavHost(navController = navController, startDestination = startRoute) {
         composable(route = Screen.FrontPageScreen.route) {
             TotalView(frontpageViewModel = dependencyController.initFrontPageViewModel(context,application), navController)
+            BackHandler(true) {
+            }
         }
         composable(route = Screen.CreateJourneyScreen.route) {
             createJourneyComp(createJourneyViewModel = dependencyController.initCreateJourneyViewModel(context,application), navController )
@@ -82,6 +85,7 @@ fun NavController(application: Application, startRoute : String) {
         }
         composable(route = Screen.LoginScreen.route){
             LoginView(authViewModel = dependencyController.initAuthViewModel(context, application), navController = navController)
+
         }
         composable(route = Screen.ProfileScreen.route){
             ProfileView(authViewModel = dependencyController.initAuthViewModel(context, application), navController = navController)
