@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -32,9 +33,7 @@ import com.example.oplev.ui.theme.Farvekombi031
 import com.example.oplev.ui.theme.Farvekombi032
 import com.example.oplev.ui.theme.OplevBlue
 import compose.icons.LineAwesomeIcons
-import compose.icons.lineawesomeicons.ArrowAltCircleLeft
-import compose.icons.lineawesomeicons.Lightbulb
-import compose.icons.lineawesomeicons.LinkSolid
+import compose.icons.lineawesomeicons.*
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -113,7 +112,7 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
                     ) {
                         Row {
                             Icon(
-                                imageVector = Icons.Filled.Info,
+                                imageVector = LineAwesomeIcons.InfoCircleSolid,
                                 contentDescription = "",
                                 modifier = Modifier.padding(10.dp, 10.dp, 10.dp, 10.dp)
                             )
@@ -138,7 +137,7 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
 
                         Row {
                             Icon(
-                                imageVector = Icons.Filled.DateRange,
+                                imageVector = LineAwesomeIcons.Calendar,
                                 contentDescription = "",
                                 modifier = Modifier.padding(10.dp, 10.dp, 10.dp, 10.dp)
                             )
@@ -176,6 +175,13 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
                                 onClick = {
                                     if (ideaViewModel.currentIdea.link != "") {
                                         context.startActivity(intent)
+                                    }
+                                    if (ideaViewModel.currentIdea.link == "") {
+                                        Toast.makeText(
+                                            context,
+                                            "Der er ikke tilføjet et link til denne ide",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
                                 },
                                 colors = ButtonDefaults.buttonColors(
