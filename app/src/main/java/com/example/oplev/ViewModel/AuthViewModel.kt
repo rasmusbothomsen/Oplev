@@ -21,6 +21,7 @@ import com.example.oplev.data.dataService.UserDataService
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.StateFlow
@@ -42,6 +43,7 @@ val imageDataService: ImageDataService):
     val state: State<States> = _state
     val isLoading = mutableStateOf(false)
     val syncdone = mutableStateOf(false)
+    var storageRef = Firebase.storage.reference
 
 
     suspend fun deleteUser(){
@@ -209,8 +211,9 @@ val imageDataService: ImageDataService):
         val imageInfo = ImageInfo(UUID.randomUUID().toString(),imageByteArray.toByteArray())
         viewModelScope.launch(Dispatchers.IO) {
         imageDataService.insertImage(imageInfo)
-        }.invokeOnCompletion {
         }
+
+
 
     }
 
