@@ -57,7 +57,7 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight()
+                        .height(150.dp)
                 )
 
                 // IDEA NAME
@@ -179,7 +179,7 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
                                     if (ideaViewModel.currentIdea.link == "") {
                                         Toast.makeText(
                                             context,
-                                            "Der er ikke tilføjet et link til denne ide",
+                                            "Der er ikke tilføjet et link til denne idé",
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     }
