@@ -180,33 +180,44 @@ fun NewCategoryDialog(journeyViewModel: JourneyViewModel, uiState: JourneyUiStat
         onDismissRequest = { /*TODO*/ },
         title = { Text(text = "Indtast navnet på den nye mappe")},
         text = {
+            Text(text = "")
             OutlinedTextField(
                 value = folderTitle,
                 label = { Text(text = "mappe", textAlign = TextAlign.Center) },
                 modifier = Modifier
-                    .width(130.dp),
+                    .fillMaxWidth(),
                 onValueChange = {
                     folderTitle = it
                 },
-                singleLine = true
+                singleLine = true,
+                shape = CircleShape
             )
         },
+        shape = RoundedCornerShape(25.dp),
         confirmButton = {
             Button(onClick = {
                 runBlocking {
                     journeyViewModel.createFolder(folderTitle, uiState.openFolder!!.journeyId ,uiState.openFolder!!.id ,activity)
                 }
                 journeyViewModel.changeDialogVal()
-            }) {
+                blurred.value = 0.dp
+            },
+                shape = CircleShape,
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Farvekombi032,
+                    contentColor = Color.White
+                )
+            ) {
                 Text(text = "Gem")
             }
         },
         dismissButton = {
-            Button(onClick = {
+            TextButton(onClick = {
                 journeyViewModel.changeDialogVal()
                 journeyViewModel.expandFab()
+                blurred.value = 0.dp
             }) {
-                Text(text = "Annuller")
+                Text(text = "Annuller", color = Color.Black)
             }
         }
     )
