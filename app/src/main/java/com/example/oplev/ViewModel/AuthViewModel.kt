@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.oplev.Model.Category
 import com.example.oplev.Model.ImageInfo
 import com.example.oplev.Model.States
+import com.example.oplev.Model.UserInfo
 import com.example.oplev.data.dataService.CategoryDataService
 import com.example.oplev.data.dataService.ImageDataService
 import com.example.oplev.data.dataService.QueueDataService
@@ -102,7 +103,9 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
         _state.value = _state.value.copy(deleteuserconf = !currentValue)
     }
 
-
+    fun getUser():UserInfo{
+       return userDataService.getUserFromId(Firebase.auth.currentUser?.uid.toString())
+    }
     suspend fun updateEmail(email: String){
         userDataService.updateEmail(email)
     }
@@ -165,6 +168,7 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
              userDataService.addFirebaseuserInRoom(activity)
              }
          }
+
          return  result
     }
 

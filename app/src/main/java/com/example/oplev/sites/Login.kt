@@ -77,6 +77,7 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import kotlinx.coroutines.runBlocking
 
 @Composable
@@ -131,8 +132,10 @@ fun LoginContent(authViewModel: AuthViewModel, navController: NavController) {
     // exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
 
 
-    if (syncDone) {
+    if (syncDone && authViewModel.getUser() != null &&  authViewModel.getUser().hasOnboarded) {
         navController.navigate(Screen.FrontPageScreen.route)
+    }else if (syncDone){
+        navController.navigate(Screen.Onboarding1.route)
     }
 
 
