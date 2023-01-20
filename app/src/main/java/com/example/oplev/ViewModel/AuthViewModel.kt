@@ -86,7 +86,11 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
 
         userDataService.updateName(firstname,lastname, activity)
     }
-
+     fun upDateImage(imageId:String){
+         viewModelScope.launch(Dispatchers.IO) {
+        userDataService.updateUserImage(Firebase.auth.currentUser?.uid.toString(),imageId)
+         }
+    }
 
     fun changeDialogVal(){
         val currentValue = state.value.emailDialogState

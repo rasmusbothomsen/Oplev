@@ -265,7 +265,8 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
                 navController.navigate(Screen.FrontPageScreen.route)
             }
             bitmap.value?.let {
-                authViewModel.upLoadImage(it)
+                var imageId = authViewModel.upLoadImage(it)
+                authViewModel.upDateImage(imageId)
             }
 
         }, modifier = Modifier.align(Alignment.CenterHorizontally),

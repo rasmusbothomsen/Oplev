@@ -290,6 +290,11 @@ class UserDataService(
             updateNameLocally(user?.uid.toString(), firstname, lastname)
 
     }
+    suspend fun updateUserImage(userId:String, imageId:String){
+        var user = userDao.getUserFromId(userId)
+        user.imageId = imageId
+        userDao.update(user)
+    }
 
     fun updatePhoneNumLocally(id : String, newPhoneNum: String) {
         val user = userDao.getUserFromId(id)
