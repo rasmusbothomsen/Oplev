@@ -10,7 +10,7 @@ import com.example.oplev.data.roomDao.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-@Database(entities = [Category::class, Journey::class, Folder::class, Idea::class, UserInfo::class,QueueItem::class], version = 3)
+@Database(entities = [Category::class, Journey::class, Folder::class, Idea::class, UserInfo::class,QueueItem::class, ImageInfo::class], version = 4)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun CategoryDao(): CategoryDao
     abstract fun JourneyDao(): JourneyDao
@@ -18,6 +18,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun IdeaDao(): IdeaDao
     abstract fun UserDao(): UserDao
     abstract fun QueDao():QueDao
+    abstract fun ImageDao():ImageDao
 
     companion object {
         private var instance: AppDatabase? = null

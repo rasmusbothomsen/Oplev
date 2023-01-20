@@ -50,7 +50,8 @@ class DependencyController() {
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
         val queueDataService = QueueDataService(appDb)
         val categoryDataService = CategoryDataService(appDb.CategoryDao(), queueDataService )
-        return  AuthViewModel(userDataService, application, categoryDataService,queueDataService)
+        val imageDataService = ImageDataService(queueDataService,appDb.ImageDao())
+        return  AuthViewModel(userDataService, application, categoryDataService,queueDataService,imageDataService)
     }
 
     fun initOnboardingViewModel(context: android.content.Context, application: Application): OnboadringViewModel{

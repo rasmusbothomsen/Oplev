@@ -3,14 +3,19 @@ package com.example.oplev.ViewModel
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import com.example.oplev.Model.Category
+import com.example.oplev.Model.ImageInfo
 import com.example.oplev.Model.States
 import com.example.oplev.data.dataService.CategoryDataService
+import com.example.oplev.data.dataService.ImageDataService
 import com.example.oplev.data.dataService.QueueDataService
 import com.example.oplev.data.dataService.UserDataService
 import com.google.firebase.auth.FirebaseUser
@@ -22,10 +27,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.lang.Float.min
 import java.util.*
 
 
-class AuthViewModel(val userDataService: UserDataService, application: Application, val categoryDataService: CategoryDataService, val queueDataService: QueueDataService):
+class AuthViewModel(val userDataService: UserDataService, application: Application, val categoryDataService: CategoryDataService, val queueDataService: QueueDataService,
+val imageDataService: ImageDataService):
     BaseViewModel<Category>(
     application
 ) {
@@ -192,6 +201,29 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
 
     fun updateUI(user: FirebaseUser?, isSuccessful : Boolean) {
         _state.value = _state.value.copy(user = user, signInSuccessful = isSuccessful)
+    }
+
+    fun upLoadImage(bitmap: Bitmap){
+        val imageByteArray = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG,80, imageByteArray)
+        val imageInfo = ImageInfo(UUID.randomUUID().toString(),imageByteArray.toByteArray())
+        viewModelScope.launch(Dispatchers.IO) {
+        imageDataService.insertImage(imageInfo)
+        }.invokeOnCompletion {
+        }
+
+    }
+
+    fun getImage(width:Int,height:Int , imageId:String):Bitmap{
+        val imageInfo = imageDataService.getImageFromId(imageId)
+        val imageByteArray: ByteArray = imageInfo.image
+        val imageBitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
+        val scaleWidth = width.toFloat() / imageBitmap.width
+        val scaleHeight = height.toFloat() / imageBitmap.height
+        val scale = min(scaleWidth, scaleHeight)
+        val matrix = Matrix()
+        matrix.setScale(scale, scale)
+        return Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.width, imageBitmap.height, matrix, true)
     }
 
 

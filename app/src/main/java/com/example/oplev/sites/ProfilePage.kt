@@ -2,6 +2,7 @@ package com.example.oplev.sites
 
 
 import android.app.Activity
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -32,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.oplev.Model.States
@@ -42,6 +44,7 @@ import com.example.oplev.ui.theme.Farvekombi032
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 
 @Composable
@@ -55,10 +58,13 @@ fun ProfileView(authViewModel: AuthViewModel, navController: NavController) {
     )
 }
 
+
 var blur = mutableStateOf(0.dp)
 
 @Composable
 fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, states: States) {
+    val bitmap = remember { mutableStateOf<Bitmap?>(null) }
+
     Column(modifier = Modifier
         .fillMaxSize()
         .verticalScroll(rememberScrollState())
@@ -85,7 +91,6 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
             //https://www.youtube.com/watch?v=ec8YymnjQSE&ab_channel=KBCODER
             var imageUri by remember { mutableStateOf<Uri?>(null) }
             val context = LocalContext.current
-            val bitmap = remember { mutableStateOf<Bitmap?>(null) }
             val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()){uri: Uri? -> imageUri = uri}
                 Image(painter = painterResource(id = R.drawable.design_uden_navn__8_), contentDescription = null)
 
@@ -105,7 +110,8 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
                     modifier = Modifier.clip(RoundedCornerShape(15.dp)))
                 }
             }
-                IconButton(onClick = { launcher.launch("image/*") }, modifier = Modifier
+
+                IconButton(onClick ={ launcher.launch("image/*") }, modifier = Modifier
                     .align(Alignment.BottomEnd)) {
                     Icon(imageVector = Icons.Default.AddCircle, contentDescription = null, tint = Color.White)
                 }
@@ -258,6 +264,10 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
                 }
                 navController.navigate(Screen.FrontPageScreen.route)
             }
+            bitmap.value?.let {
+                authViewModel.upLoadImage(it)
+            }
+
         }, modifier = Modifier.align(Alignment.CenterHorizontally),
             colors = ButtonDefaults.buttonColors(backgroundColor = Color(hexCode.toColorInt()), contentColor = Color.White),
             shape = CircleShape

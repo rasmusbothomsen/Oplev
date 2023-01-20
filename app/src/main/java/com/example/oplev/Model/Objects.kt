@@ -52,7 +52,13 @@ data class UserInfo(
     val firstname: String,
     val lastname: String,
     var hasOnboarded:Boolean = false,
-    var phoneNum: String?
+    var phoneNum: String?,
+    var profileImage:String?,
+)
+@Entity
+data class ImageInfo(
+    @PrimaryKey val imageId:String,
+    val image:ByteArray
 )
 @Entity(tableName = "queue_table")
 data class QueueItem(
