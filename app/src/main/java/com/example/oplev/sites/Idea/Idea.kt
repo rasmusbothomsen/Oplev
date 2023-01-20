@@ -83,8 +83,7 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(
-                                        50
-                                            .dp
+                                        50.dp
                                     )
                                     .clip(RoundedCornerShape(30.dp))
                                     .background(Color.LightGray, RoundedCornerShape(30.dp))
@@ -112,7 +111,6 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
                         modifier = Modifier
                             .padding(10.dp)
                     ) {
-                        Spacer(modifier = Modifier.height(15.dp))
                         Row {
                             Icon(
                                 imageVector = Icons.Filled.Info,
@@ -162,30 +160,6 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
 
                         Spacer(modifier = Modifier.height(15.dp))
 
-                        /* IDEA LOCATION
-
-                        Row {
-                            Icon(
-                                imageVector = Icons.Filled.LocationOn,
-                                contentDescription = "",
-                                modifier = Modifier.padding(10.dp, 10.dp, 10.dp, 10.dp)
-                            )
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(50.dp)
-                                    .clip(RoundedCornerShape(30.dp))
-                                    .background(Color.LightGray, RoundedCornerShape(30.dp))
-                                    .padding(10.dp)
-                            )
-
-                        }
-                        Spacer(modifier = Modifier.height(100.dp))
-
-
-                         */
-                        // IDEA LINK
-
                         Row(
                             modifier = Modifier
                                 .padding(40.dp)
@@ -200,7 +174,9 @@ fun IdeaScreen(ideaViewModel: IdeaViewModel, navController: NavController) {
                             }
                             Button(
                                 onClick = {
-                                    context.startActivity(intent)
+                                    if (ideaViewModel.currentIdea.link != "") {
+                                        context.startActivity(intent)
+                                    }
                                 },
                                 colors = ButtonDefaults.buttonColors(
                                     backgroundColor = Farvekombi031,

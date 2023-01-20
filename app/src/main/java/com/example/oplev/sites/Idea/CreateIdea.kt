@@ -28,6 +28,7 @@ import com.example.oplev.Screen
 import com.example.oplev.ViewModel.*
 import com.example.oplev.sites.TopBar
 import com.example.oplev.ui.components.DateandTimePicker
+import com.example.oplev.ui.theme.Farvekombi031
 import com.example.oplev.ui.theme.Farvekombi032
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.Calendar
@@ -189,7 +190,7 @@ fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavContr
                         Button(
                             onClick = { navController.navigate(Screen.FrontPageScreen.route) },
                             colors = ButtonDefaults.buttonColors(
-                                backgroundColor = Color.Transparent,
+                                backgroundColor = Farvekombi031,
                                 contentColor = Color.Black
                             ),
                             modifier = Modifier.size(130.dp, 40.dp),
