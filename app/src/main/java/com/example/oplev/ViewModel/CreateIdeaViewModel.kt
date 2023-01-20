@@ -8,6 +8,7 @@ import com.example.oplev.Model.Idea
 import com.example.oplev.Model.Journey
 import com.example.oplev.Model.States
 import com.example.oplev.data.dataService.IdeaDataService
+import com.example.oplev.data.dataService.ImageDataService
 import com.example.oplev.data.dataService.QueueDataService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +18,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
 
-class CreateIdeaViewModel (val dataService: IdeaDataService, application: Application,val folderId:String): BaseViewModel<Idea>(
-    application) {
+class CreateIdeaViewModel (val dataService: IdeaDataService, application: Application, val folderId:String,
+                           imageDataService: ImageDataService
+): BaseViewModel(
+    application, imageDataService,) {
 
     fun createNewIdea(title: String, description: String, link: String, image: String, date: String) {
         val journeyId = dataService.getJourneyId(folderId)

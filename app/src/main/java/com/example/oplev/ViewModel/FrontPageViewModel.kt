@@ -10,10 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.os.bundleOf
 import androidx.lifecycle.viewModelScope
 import com.example.oplev.Model.*
-import com.example.oplev.data.dataService.CategoryDataService
-import com.example.oplev.data.dataService.JourneyDataService
-import com.example.oplev.data.dataService.QueueDataService
-import com.example.oplev.data.dataService.UserDataService
+import com.example.oplev.data.dataService.*
 import com.example.oplev.data.dto.CategoryDto
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -26,8 +23,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
-class FrontPageViewModel(application: Application, val categoryDataService: CategoryDataService, val journeyDataService: JourneyDataService ,val userDataService: UserDataService, val queueDataService: QueueDataService):BaseViewModel<Category>(
-    application
+class FrontPageViewModel(application: Application, val categoryDataService: CategoryDataService, val journeyDataService: JourneyDataService, val userDataService: UserDataService, val queueDataService: QueueDataService,
+                         imageDataService: ImageDataService
+):BaseViewModel(
+    application, imageDataService
 ) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val _state = mutableStateOf(States())

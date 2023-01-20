@@ -13,6 +13,7 @@ import com.example.oplev.Model.Idea
 import com.example.oplev.Model.Journey
 import com.example.oplev.Model.States
 import com.example.oplev.data.dataService.FolderDataService
+import com.example.oplev.data.dataService.ImageDataService
 import com.example.oplev.data.dataService.JourneyDataService
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,11 +29,13 @@ import kotlinx.coroutines.tasks.await
 import java.util.UUID
 
 
-class JourneyViewModel(val journeyDataService: JourneyDataService, val folderDataService: FolderDataService, application: Application, journeyID: String): BaseViewModel<Journey>(application) {
+class JourneyViewModel(val journeyDataService: JourneyDataService, val folderDataService: FolderDataService, application: Application, journeyID: String,
+                       imageDataService: ImageDataService
+): BaseViewModel(application, imageDataService) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val _state = MutableStateFlow(States())
     private val _uiState = MutableStateFlow(JourneyUiState())
-    private val currentJourney:Journey
+     val currentJourney:Journey
     private var folderStack:Stack<Folder?> = MutableList(0){null}
 
     val uiState:StateFlow<JourneyUiState> = _uiState.asStateFlow()

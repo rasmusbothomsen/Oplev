@@ -37,11 +37,11 @@ data class Category(
 data class Journey(
     @PrimaryKey val id:String= "",
     var tag: String= "",
-    var image: String?= "",
     val categoryID: String= "",
     var date: String?= "",
     var description: String= "",
     var title: String= "",
+    var imageId:String? =""
 
     )
 
@@ -52,7 +52,13 @@ data class UserInfo(
     val firstname: String,
     val lastname: String,
     var hasOnboarded:Boolean = false,
-    var phoneNum: String?
+    var phoneNum: String?,
+    var imageId:String?,
+)
+@Entity
+data class ImageInfo(
+    @PrimaryKey val imageId:String,
+    val image:ByteArray
 )
 @Entity(tableName = "queue_table")
 data class QueueItem(

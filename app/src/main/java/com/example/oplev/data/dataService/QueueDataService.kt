@@ -6,6 +6,7 @@ import com.example.oplev.data.AppDatabase
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.io.IOException
@@ -128,12 +129,33 @@ class QueueDataService(
            .collection(clazz.simpleName!!).get().addOnSuccessListener {  }.await()
        val items = dbCollection.documents
        for (item in items){
+           syncImages(item.data?.get("imageId").toString())
            returnItems.add(item.toObject(clazz.java)!!)
        }
        Log.d("TranslatedItem",returnItems.toString())
        Log.d("dataClassName",clazz.simpleName!!)
 
        return returnItems
+    }
+
+    suspend fun syncImages(imageId:String?) = coroutineScope{
+        if(imageId == null || imageId == "" || imageId == "null"){
+            return@coroutineScope
+        }
+        var imageIdFromRoom = appDatabase.ImageDao().getImageId(imageId)
+        if(imageIdFromRoom !=null){
+            return@coroutineScope
+        }
+        launch {
+            val maxValue:Long = 1024*1024
+            val userId = Firebase.auth.currentUser?.uid.toString()
+            val pathReference = Firebase.storage.reference.child("$imageId")
+            val imageInfo = ImageInfo(imageId,pathReference.getBytes(maxValue).await())
+            appDatabase.ImageDao().insert(imageInfo)
+        }.invokeOnCompletion {
+            Log.d("Downloaded Image from firebase",imageId)
+        }
+
     }
 
       fun  insertIntoFireBase(deconStructedItem: Pair<String?, HashMap<String, Any>>){

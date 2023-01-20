@@ -6,13 +6,17 @@ import androidx.lifecycle.viewModelScope
 import com.example.oplev.Model.Idea
 import com.example.oplev.Model.UserInfo
 import com.example.oplev.data.dataService.IdeaDataService
+import com.example.oplev.data.dataService.ImageDataService
 import com.example.oplev.data.dataService.UserDataService
 import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class OnboadringViewModel(val dataService: UserDataService, application: Application):BaseViewModel<UserInfo>(
-    application) {
+class OnboadringViewModel(val dataService: UserDataService, application: Application,
+                          imageDataService: ImageDataService
+):BaseViewModel(
+    application, imageDataService
+) {
 
     fun onboadringComplete(activity: Activity){
         viewModelScope.launch(Dispatchers.IO) {

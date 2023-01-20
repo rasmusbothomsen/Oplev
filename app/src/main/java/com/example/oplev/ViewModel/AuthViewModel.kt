@@ -3,36 +3,48 @@ package com.example.oplev.ViewModel
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import com.example.oplev.Model.Category
+import com.example.oplev.Model.ImageInfo
 import com.example.oplev.Model.States
 import com.example.oplev.data.dataService.CategoryDataService
+import com.example.oplev.data.dataService.ImageDataService
 import com.example.oplev.data.dataService.QueueDataService
 import com.example.oplev.data.dataService.UserDataService
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.lang.Float.min
 import java.util.*
 
 
-class AuthViewModel(val userDataService: UserDataService, application: Application, val categoryDataService: CategoryDataService, val queueDataService: QueueDataService):
-    BaseViewModel<Category>(
-    application
-) {
+class AuthViewModel(val userDataService: UserDataService, application: Application, val categoryDataService: CategoryDataService, val queueDataService: QueueDataService,
+                    imageDataService: ImageDataService,
+):
+    BaseViewModel(
+    application, imageDataService
+    ) {
     private val _state = mutableStateOf(States())
     val state: State<States> = _state
     val isLoading = mutableStateOf(false)
     val syncdone = mutableStateOf(false)
+    var storageRef = Firebase.storage.reference
 
 
     suspend fun deleteUser(){
@@ -74,7 +86,11 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
 
         userDataService.updateName(firstname,lastname, activity)
     }
-
+     fun upDateImage(imageId:String){
+         viewModelScope.launch(Dispatchers.IO) {
+        userDataService.updateUserImage(Firebase.auth.currentUser?.uid.toString(),imageId)
+         }
+    }
 
     fun changeDialogVal(){
         val currentValue = state.value.emailDialogState
@@ -193,6 +209,15 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
     fun updateUI(user: FirebaseUser?, isSuccessful : Boolean) {
         _state.value = _state.value.copy(user = user, signInSuccessful = isSuccessful)
     }
+
+    fun getUserImage():Bitmap?{
+        val user = userDataService.getUserFromId(Firebase.auth.currentUser?.uid.toString())
+        user?.imageId?.let {
+            return  getImage(1024,1024,it)
+        }
+        return null
+    }
+
 
 
 

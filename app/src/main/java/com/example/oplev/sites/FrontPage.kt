@@ -22,7 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -48,9 +51,6 @@ import com.example.oplev.Screen
 import com.example.oplev.ViewModel.FrontPageViewModel
 import com.example.oplev.ui.theme.*
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import com.example.oplev.ui.theme.OplevFarve2
 import com.example.oplev.ui.theme.Farvekombi033
 import com.example.oplev.ui.theme.OplevBlue
@@ -64,7 +64,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.StyledPlayerView
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 
 
 @Preview
@@ -541,31 +541,39 @@ fun CategoryRow(category: CategoryDto, navController: NavController, frontPageVi
 
 @Composable
 fun JourneyCard(journey: Journey, navController: NavController,frontPageViewModel: FrontPageViewModel) {
-    val img = journey.image
     val context = LocalContext.current
-    val drawableId = remember(img) {
+    val coroutineScope = rememberCoroutineScope()
+    val drawableId = remember("palmtree") {
         context.resources.getIdentifier(
-            img,
+            "palmtree",
             "drawable",
             context.packageName
         )
     }
+   val painter = mutableStateOf(painterResource(id = drawableId))
+    coroutineScope.launch {
+    val bitMappainter = (frontPageViewModel.getImage(500,300,journey.imageId!!))
+    if(bitMappainter !=null){
+    painter.value = BitmapPainter(bitMappainter.asImageBitmap())
+    }
+    }
 
-        Card(modifier = Modifier
-            .clickable {
-                val journeyId = journey.id
-                navController.navigate(Screen.JourneyScreen.route + "/$journeyId")
-            }
-            /** Tror at nedstående skal ændres. Vi vil gerne have default paddings på hele projektet. */
-            .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Farvekombi033) {
+    Card(modifier = Modifier
+        .clickable {
+            val journeyId = journey.id
+            navController.navigate(Screen.JourneyScreen.route + "/$journeyId")
+        }
+        /** Tror at nedstående skal ændres. Vi vil gerne have default paddings på hele projektet. */
+        .padding(5.dp, 1.3.dp, 5.5.dp, 15.dp), elevation = 5.dp, backgroundColor = Farvekombi033) {
             Column() {
                 Box(modifier = Modifier
                     .padding()
                     .fillMaxSize()) {
                     Image(
-                        painter = painterResource(id = drawableId),
+                        painter = painter.value,
                         contentDescription = "Image Denmark",
-                        contentScale = ContentScale.FillBounds
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.aspectRatio(painter.value.intrinsicSize.width / painter.value.intrinsicSize.height).fillMaxWidth()
                     )
                     Box(
                         modifier = Modifier

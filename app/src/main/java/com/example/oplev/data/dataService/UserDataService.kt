@@ -108,11 +108,14 @@ class UserDataService(
 
         return id
     }
+    fun getUserFromId(id:String):UserInfo{
+        return userDao.getUserFromId(id)
+    }
 
 
     fun addUserLocally(firstname: String, lastname: String, email: String) {
         val userInfoId = Firebase.auth.currentUser?.uid.toString()
-        var userInfo = UserInfo(userInfoId, email, firstname, lastname,false, "Intet nummer gemt.")
+        var userInfo = UserInfo(userInfoId, email, firstname, lastname,false, "Intet nummer gemt.",null)
 
         val existUser = userDao.getUserFromId(userInfoId)
         if (existUser == null){
@@ -289,6 +292,11 @@ class UserDataService(
 
             updateNameLocally(user?.uid.toString(), firstname, lastname)
 
+    }
+    suspend fun updateUserImage(userId:String, imageId:String){
+        var user = userDao.getUserFromId(userId)
+        user.imageId = imageId
+        userDao.update(user)
     }
 
     fun updatePhoneNumLocally(id : String, newPhoneNum: String) {
