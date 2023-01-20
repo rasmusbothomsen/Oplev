@@ -35,10 +35,11 @@ import java.util.*
 
 
 class AuthViewModel(val userDataService: UserDataService, application: Application, val categoryDataService: CategoryDataService, val queueDataService: QueueDataService,
-val imageDataService: ImageDataService):
-    BaseViewModel<Category>(
-    application
-) {
+                    imageDataService: ImageDataService,
+):
+    BaseViewModel(
+    application, imageDataService
+    ) {
     private val _state = mutableStateOf(States())
     val state: State<States> = _state
     val isLoading = mutableStateOf(false)
@@ -205,29 +206,7 @@ val imageDataService: ImageDataService):
         _state.value = _state.value.copy(user = user, signInSuccessful = isSuccessful)
     }
 
-    fun upLoadImage(bitmap: Bitmap){
-        val imageByteArray = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG,80, imageByteArray)
-        val imageInfo = ImageInfo(UUID.randomUUID().toString(),imageByteArray.toByteArray())
-        viewModelScope.launch(Dispatchers.IO) {
-        imageDataService.insertImage(imageInfo)
-        }
 
-
-
-    }
-
-    fun getImage(width:Int,height:Int , imageId:String):Bitmap{
-        val imageInfo = imageDataService.getImageFromId(imageId)
-        val imageByteArray: ByteArray = imageInfo.image
-        val imageBitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
-        val scaleWidth = width.toFloat() / imageBitmap.width
-        val scaleHeight = height.toFloat() / imageBitmap.height
-        val scale = min(scaleWidth, scaleHeight)
-        val matrix = Matrix()
-        matrix.setScale(scale, scale)
-        return Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.width, imageBitmap.height, matrix, true)
-    }
 
 
 

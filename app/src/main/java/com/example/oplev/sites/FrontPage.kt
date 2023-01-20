@@ -541,15 +541,17 @@ fun CategoryRow(category: CategoryDto, navController: NavController, frontPageVi
 
 @Composable
 fun JourneyCard(journey: Journey, navController: NavController,frontPageViewModel: FrontPageViewModel) {
-    val img = journey.image
+    //val img = journey
     val context = LocalContext.current
-    val drawableId = remember(img) {
+   /* val drawableId = remember(img) {
         context.resources.getIdentifier(
             img,
             "drawable",
             context.packageName
         )
     }
+
+    */
 
         Card(modifier = Modifier
             .clickable {
@@ -562,11 +564,13 @@ fun JourneyCard(journey: Journey, navController: NavController,frontPageViewMode
                 Box(modifier = Modifier
                     .padding()
                     .fillMaxSize()) {
-                    Image(
+                    /*Image(
                         painter = painterResource(id = drawableId),
                         contentDescription = "Image Denmark",
                         contentScale = ContentScale.FillBounds
                     )
+
+                     */
                     Box(
                         modifier = Modifier
                             .width(185.dp)

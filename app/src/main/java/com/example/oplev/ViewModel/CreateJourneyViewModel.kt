@@ -4,27 +4,30 @@ import com.example.oplev.ViewModel.BaseViewModel
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.oplev.Model.*
-import com.example.oplev.data.dataService.CategoryDataService
-import com.example.oplev.data.dataService.FolderDataService
-import com.example.oplev.data.dataService.JourneyDataService
-import com.example.oplev.data.dataService.UserDataService
+import com.example.oplev.data.dataService.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
 
-class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val categoryDataService:CategoryDataService, val userDataService: UserDataService, application: Application, val folderDataService: FolderDataService): BaseViewModel<Journey>(application) {
+class CreateJourneyViewModel(val journeydataService: JourneyDataService, val categoryDataService:CategoryDataService, val userDataService: UserDataService, application: Application, val folderDataService: FolderDataService,
+                             imageDataService: ImageDataService
+): BaseViewModel(application, imageDataService) {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-
+    var imageState:Bitmap? = null
 
         fun createNewJourney(
             tag: String,
@@ -34,17 +37,20 @@ class CreateJourneyViewModel(val journeydataService: JourneyDataService,  val ca
             Description: String,
             Title: String,
             collaboratorMail: MutableList<String>,
-            activity: Activity
+            activity: Activity,
         ) {
-            var img = "palmtree"
+            var imageId = ""
+            if (imageState != null){
+             imageId = upLoadImage(imageState!!)
+            }
             val tempJourney = Journey(
                 UUID.randomUUID().toString(),
                 tag,
-                img,
                 CategoryID,
                 Date,
                 Description,
-                Title
+                Title,
+                imageId
             )
             val baseFolderId = UUID.randomUUID().toString()
             val baseFolderOfJourney =

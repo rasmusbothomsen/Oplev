@@ -23,7 +23,9 @@ class DependencyController() {
         val categoryDataService = CategoryDataService(appDb.CategoryDao(), queueDataService)
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
         val journeyDataService = JourneyDataService(appDb.JourneyDao(), queueDataService)
-        return FrontPageViewModel(application, categoryDataService, journeyDataService ,userDataService,queueDataService)
+        val imageDataService = ImageDataService(queueDataService,appDb.ImageDao())
+
+        return FrontPageViewModel(application, categoryDataService, journeyDataService ,userDataService,queueDataService, imageDataService)
     }
 
     fun initCreateJourneyViewModel(context: android.content.Context,application: Application):CreateJourneyViewModel{
@@ -33,7 +35,8 @@ class DependencyController() {
         val categoryDataService = CategoryDataService(appDb.CategoryDao(), queueDataService)
         val folderDataService = FolderDataService(appDb.FolderDao(),queueDataService)
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
-        return CreateJourneyViewModel(journeyDataService, categoryDataService, userDataService, application, folderDataService)
+        val imageDataService = ImageDataService(queueDataService,appDb.ImageDao())
+        return CreateJourneyViewModel(journeyDataService, categoryDataService, userDataService, application, folderDataService, imageDataService)
 
 
     }
@@ -42,7 +45,8 @@ class DependencyController() {
         val queueDataService = QueueDataService(appDb)
         val folderDataService = FolderDataService(appDb.FolderDao(),queueDataService)
         val journeyDataService = JourneyDataService(appDb.JourneyDao(),queueDataService)
-        return JourneyViewModel(journeyDataService, folderDataService ,application,journeyId)
+        val imageDataService = ImageDataService(queueDataService,appDb.ImageDao())
+        return JourneyViewModel(journeyDataService, folderDataService ,application,journeyId,imageDataService)
     }
 
     fun initAuthViewModel(context: android.content.Context, application: Application):AuthViewModel{
@@ -57,22 +61,26 @@ class DependencyController() {
     fun initOnboardingViewModel(context: android.content.Context, application: Application): OnboadringViewModel{
         val appDb = AppDatabase.getInstance(context)
         val userDataService = UserDataService(Firebase.firestore,appDb.UserDao())
+        val queueDataService = QueueDataService(appDb)
+        val imageDataService = ImageDataService(queueDataService,appDb.ImageDao())
 
-        return OnboadringViewModel(userDataService, application)
+        return OnboadringViewModel(userDataService, application,imageDataService)
     }
 
     fun initIdeaViewModel(context: android.content.Context, application: Application, ideaId: String):IdeaViewModel{
         val appDb = AppDatabase.getInstance(context)
         val queueDataService = QueueDataService(appDb)
         val ideaDataService = IdeaDataService(appDb.IdeaDao(),queueDataService)
-        return IdeaViewModel(ideaDataService, application, ideaId)
+        val imageDataService = ImageDataService(queueDataService,appDb.ImageDao())
+        return IdeaViewModel(ideaDataService, application, ideaId, imageDataService)
     }
 
     fun initCreateIdeaViewModel(context: android.content.Context, application: Application,folderId:String):CreateIdeaViewModel{
         val appDb = AppDatabase.getInstance(context)
         val queueDataService = QueueDataService(appDb)
         val ideaDataService = IdeaDataService(appDb.IdeaDao(),queueDataService)
-        return CreateIdeaViewModel(ideaDataService, application,folderId)
+        val imageDataService = ImageDataService(queueDataService,appDb.ImageDao())
+        return CreateIdeaViewModel(ideaDataService, application,folderId,imageDataService)
 
     }
 

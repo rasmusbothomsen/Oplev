@@ -74,7 +74,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                       .verticalScroll(rememberScrollState())
                       .blur(blur.value)) {
 
-                      topScreenLayout(context)
+                      topScreenLayout(context, createJourneyViewModel)
 
                       OutlinedTextField(
                           value = Title,
@@ -544,7 +544,7 @@ fun datePicker(){
 }
 
 @Composable
-fun topScreenLayout(context: Context){
+fun topScreenLayout(context: Context, createJourneyViewModel: CreateJourneyViewModel){
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()){ uri: Uri? -> imageUri = uri}
@@ -574,6 +574,7 @@ fun topScreenLayout(context: Context){
                         modifier = Modifier
                             .fillMaxWidth()
                             .fillMaxHeight())
+                    createJourneyViewModel.imageState = btm
                 }
             }
         IconButton(onClick = { launcher.launch("image/*") }, modifier = Modifier

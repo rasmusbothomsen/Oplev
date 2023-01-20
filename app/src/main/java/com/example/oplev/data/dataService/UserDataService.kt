@@ -112,7 +112,7 @@ class UserDataService(
 
     fun addUserLocally(firstname: String, lastname: String, email: String) {
         val userInfoId = Firebase.auth.currentUser?.uid.toString()
-        var userInfo = UserInfo(userInfoId, email, firstname, lastname,false, "Intet nummer gemt.")
+        var userInfo = UserInfo(userInfoId, email, firstname, lastname,false, "Intet nummer gemt.",null)
 
         val existUser = userDao.getUserFromId(userInfoId)
         if (existUser == null){

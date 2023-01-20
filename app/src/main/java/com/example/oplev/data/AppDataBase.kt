@@ -10,7 +10,7 @@ import com.example.oplev.data.roomDao.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-@Database(entities = [Category::class, Journey::class, Folder::class, Idea::class, UserInfo::class,QueueItem::class, ImageInfo::class], version = 4)
+@Database(entities = [Category::class, Journey::class, Folder::class, Idea::class, UserInfo::class,QueueItem::class, ImageInfo::class], version = 5)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun CategoryDao(): CategoryDao
     abstract fun JourneyDao(): JourneyDao
@@ -31,7 +31,7 @@ abstract class AppDatabase : RoomDatabase() {
                 instance = Room.databaseBuilder(
                     ctx.applicationContext, AppDatabase::class.java,
                     "oplev_DataBase"
-                ).allowMainThreadQueries()
+                ).allowMainThreadQueries().fallbackToDestructiveMigration()
                     .addCallback(roomCallback)
                     .build()
             }
@@ -130,21 +130,21 @@ abstract class AppDatabase : RoomDatabase() {
             val journey1 = Journey(
                 id = "1",
                 tag = "journey1",
-                image = "img_japan",
                 categoryID = "1",
                 date = "2020-01-01",
                 description = "This is the description for Journey 1",
-                title = "Journey 1"
+                title = "Journey 1",
+                imageId = null
             )
 
             val journey2 = Journey(
                 id = "2",
                 tag = "journey2",
-                image = "img_india",
                 categoryID = "2",
                 date = "2022-01-01",
                 description = "This is the description for Journey 2",
-                title = "Journey 2"
+                title = "Journey 2",
+                imageId = null
             )
 
             instance?.CategoryDao()?.insertAll(category1,category2)

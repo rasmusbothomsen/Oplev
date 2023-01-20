@@ -7,4 +7,6 @@ import com.example.oplev.Model.ImageInfo
 interface ImageDao:BaseDao<ImageInfo> {
     @Query("Select * from ImageInfo where imageId == :id")
     fun getFromId(id:String):ImageInfo
+    @Query("select imageId from imageinfo where imageId == :id")
+    fun getImageId(id:String):String?
 }

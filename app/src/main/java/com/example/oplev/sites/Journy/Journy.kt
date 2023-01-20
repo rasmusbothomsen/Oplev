@@ -339,6 +339,6 @@ fun BottomBar(viewModel: JourneyViewModel, navController: NavController){
 @Preview(showBackground = true)
 @Composable
 fun JourneyPreview(){
-    var testJourney = Journey(tag = "test", image = null, date = null, description = "This is a test", title = "Danmark", id = "asd", categoryID = "1")
+    //var testJourney = Journey(tag = "test", image = null, date = null, description = "This is a test", title = "Danmark", id = "asd", categoryID = "1")
    // JourneyScreen(journeyViewModel = JourneyViewModel(testJourney))
 }

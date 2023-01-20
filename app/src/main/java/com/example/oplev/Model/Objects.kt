@@ -37,11 +37,11 @@ data class Category(
 data class Journey(
     @PrimaryKey val id:String= "",
     var tag: String= "",
-    var image: String?= "",
     val categoryID: String= "",
     var date: String?= "",
     var description: String= "",
     var title: String= "",
+    var imageId:String? =""
 
     )
 
@@ -53,7 +53,7 @@ data class UserInfo(
     val lastname: String,
     var hasOnboarded:Boolean = false,
     var phoneNum: String?,
-    var profileImage:String?,
+    var imageId:String?,
 )
 @Entity
 data class ImageInfo(
