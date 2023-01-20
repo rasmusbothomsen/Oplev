@@ -18,9 +18,8 @@ class ImageDataService(
     }
 
         fun insertIntoStorage(imageInfo: ImageInfo){
-        val userId = Firebase.auth.currentUser?.uid.toString()
         val imageId = imageInfo.imageId
-        val imageRef = storageRef.child("$userId/$imageId")
+        val imageRef = storageRef.child("$imageId")
         val imageBytes = imageInfo.image
         
         imageRef.putBytes(imageBytes)

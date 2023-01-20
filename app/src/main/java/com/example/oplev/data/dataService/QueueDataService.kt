@@ -149,7 +149,7 @@ class QueueDataService(
         launch {
             val maxValue:Long = 1024*1024
             val userId = Firebase.auth.currentUser?.uid.toString()
-            val pathReference = Firebase.storage.reference.child("$userId/$imageId")
+            val pathReference = Firebase.storage.reference.child("$imageId")
             val imageInfo = ImageInfo(imageId,pathReference.getBytes(maxValue).await())
             appDatabase.ImageDao().insert(imageInfo)
         }.invokeOnCompletion {

@@ -28,7 +28,7 @@ open class BaseViewModel(application: Application, val imageDataService: ImageDa
         return imageInfo.imageId
     }
 
-    fun getImage(width:Int,height:Int , imageId:String): Bitmap? {
+     fun getImage(width:Int,height:Int , imageId:String): Bitmap? {
         val imageInfo = imageDataService.getImageFromId(imageId)
         val imageByteArray: ByteArray = imageInfo.image
         val imageBitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
