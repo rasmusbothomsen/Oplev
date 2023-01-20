@@ -210,6 +210,13 @@ class AuthViewModel(val userDataService: UserDataService, application: Applicati
         _state.value = _state.value.copy(user = user, signInSuccessful = isSuccessful)
     }
 
+    fun getUserImage():Bitmap?{
+        val user = userDataService.getUserFromId(Firebase.auth.currentUser?.uid.toString())
+        user?.imageId?.let {
+            return  getImage(1024,1024,it)
+        }
+        return null
+    }
 
 
 

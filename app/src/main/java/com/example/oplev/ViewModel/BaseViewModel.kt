@@ -11,6 +11,7 @@ import com.example.oplev.data.dataService.ImageDataService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
+import java.io.IOException
 import java.lang.Float
 import java.util.*
 
@@ -27,7 +28,7 @@ open class BaseViewModel(application: Application, val imageDataService: ImageDa
         return imageInfo.imageId
     }
 
-    fun getImage(width:Int,height:Int , imageId:String): Bitmap {
+    fun getImage(width:Int,height:Int , imageId:String): Bitmap? {
         val imageInfo = imageDataService.getImageFromId(imageId)
         val imageByteArray: ByteArray = imageInfo.image
         val imageBitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
@@ -36,7 +37,11 @@ open class BaseViewModel(application: Application, val imageDataService: ImageDa
         val scale = Float.min(scaleWidth, scaleHeight)
         val matrix = Matrix()
         matrix.setScale(scale, scale)
-        return Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.width, imageBitmap.height, matrix, true)
+        try {
+           return Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.width, imageBitmap.height, matrix, true)
+        }catch (e:IOException){
+            return null
+        }
     }
 
 }

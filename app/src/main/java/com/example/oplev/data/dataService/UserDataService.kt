@@ -108,6 +108,9 @@ class UserDataService(
 
         return id
     }
+    fun getUserFromId(id:String):UserInfo{
+        return userDao.getUserFromId(id)
+    }
 
 
     fun addUserLocally(firstname: String, lastname: String, email: String) {

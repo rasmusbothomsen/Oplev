@@ -63,7 +63,7 @@ var blur = mutableStateOf(0.dp)
 
 @Composable
 fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, states: States) {
-    val bitmap = remember { mutableStateOf<Bitmap?>(null) }
+    val bitmap = remember { mutableStateOf<Bitmap?>(authViewModel.getUserImage()) }
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -104,12 +104,13 @@ fun ProfileContent(authViewModel: AuthViewModel, navController: NavController, s
                 }
 
                 //BTM SKAL GEMMES I EN VARIABEL SOM KAN SMIDES IND I DB!
+
+            }
                 bitmap.value?.let{ btm ->
                     Image(bitmap = btm.asImageBitmap(), contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.clip(RoundedCornerShape(15.dp)))
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.clip(RoundedCornerShape(15.dp)))
                 }
-            }
 
                 IconButton(onClick ={ launcher.launch("image/*") }, modifier = Modifier
                     .align(Alignment.BottomEnd)) {
