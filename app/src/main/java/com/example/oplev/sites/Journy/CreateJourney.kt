@@ -8,6 +8,7 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
@@ -51,7 +52,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
     var tag by remember { mutableStateOf("") }
     var Image by remember { mutableStateOf("") }
     var Date by remember { mutableStateOf("") }
-    var category by remember { mutableStateOf(createJourneyViewModel.getCategories()[1].title) }
+    var category by remember { mutableStateOf("") }
     var Description by remember { mutableStateOf("") }
     var Title by remember { mutableStateOf("") }
     var collaboratorIds = mutableListOf<String>()
@@ -264,9 +265,19 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                           Spacer(modifier = Modifier.width(40.dp))
                           Button(
                               onClick = {
-                                  createJourneyViewModel.createNewJourney(tag, Image, createJourneyViewModel.getCategoryIdFromTitle(category), Date, Description, Title, collaboratorIds, activity)
-                                  navController.navigate(Screen.FrontPageScreen.route)
-                              },
+                                  if (category != "") {
+                                      createJourneyViewModel.createNewJourney(tag, Image, createJourneyViewModel.getCategoryIdFromTitle(category), Date, Description, Title, collaboratorIds, activity)
+                                      navController.navigate(Screen.FrontPageScreen.route)
+                                  }
+                                  else {
+                                      Toast.makeText(
+                                          context,
+                                          "Vælg en kategori",
+                                          Toast.LENGTH_SHORT
+                                      ).show()
+                                  }
+
+                                  },
                               colors = ButtonDefaults.buttonColors(
                                   backgroundColor = Farvekombi032,
                                   contentColor = Color.White

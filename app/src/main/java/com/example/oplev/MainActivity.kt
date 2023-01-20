@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                 if(user != null && !database.UserDao().getOBStatus(user.userId)) {
                     startPage = Screen.Onboarding1.route
                 }
-                else if(user!=null) {
+                else {
                     startPage = Screen.FrontPageScreen.route
                 }
             }
