@@ -30,6 +30,9 @@ open class BaseViewModel(application: Application, val imageDataService: ImageDa
 
      fun getImage(width:Int,height:Int , imageId:String): Bitmap? {
         val imageInfo = imageDataService.getImageFromId(imageId)
+         if(imageInfo == null){
+             return null
+         }
         val imageByteArray: ByteArray = imageInfo.image
         val imageBitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
         val scaleWidth = width.toFloat() / imageBitmap.width

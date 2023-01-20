@@ -37,7 +37,9 @@ import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.example.oplev.Model.Idea
@@ -60,6 +62,7 @@ import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.ArrowAltCircleLeft
 import compose.icons.lineawesomeicons.Lightbulb
 import compose.icons.lineawesomeicons.PlusSolid
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 // make an alias
@@ -219,6 +222,24 @@ fun imageAndText(
     image: Image?,
     journeyViewModel: JourneyViewModel,
 navController: NavController) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val drawableId = remember("palmtree") {
+        context.resources.getIdentifier(
+            "palmtree",
+            "drawable",
+            context.packageName
+        )
+    }
+    val painter = mutableStateOf(painterResource(id = drawableId))
+
+            val bitMappainter = (journeyViewModel.getImage(500,300,journeyViewModel.currentJourney?.imageId!!))
+            if(bitMappainter !=null){
+                painter.value = BitmapPainter(bitMappainter.asImageBitmap())
+            }
+
+
+
     Box(modifier = Modifier.height(150.dp)){
     Column(
         modifier = Modifier
@@ -227,7 +248,7 @@ navController: NavController) {
     )
     {
         Image(
-            painter = painterResource(id = R.drawable.img_denmark),
+            painter = painter.value,
             contentDescription = "Placerholder image",
             modifier = Modifier
                 .fillMaxSize(),

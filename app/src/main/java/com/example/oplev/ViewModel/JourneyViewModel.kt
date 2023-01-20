@@ -35,7 +35,7 @@ class JourneyViewModel(val journeyDataService: JourneyDataService, val folderDat
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val _state = MutableStateFlow(States())
     private val _uiState = MutableStateFlow(JourneyUiState())
-    private val currentJourney:Journey
+     val currentJourney:Journey
     private var folderStack:Stack<Folder?> = MutableList(0){null}
 
     val uiState:StateFlow<JourneyUiState> = _uiState.asStateFlow()
