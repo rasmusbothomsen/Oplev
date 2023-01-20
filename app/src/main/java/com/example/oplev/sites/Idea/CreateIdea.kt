@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -35,10 +34,7 @@ import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import compose.icons.LineAwesomeIcons
-import compose.icons.lineawesomeicons.Calendar
-import compose.icons.lineawesomeicons.Comment
-import compose.icons.lineawesomeicons.Lightbulb
-import compose.icons.lineawesomeicons.LinkSolid
+import compose.icons.lineawesomeicons.*
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -136,7 +132,7 @@ fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavContr
                             .height(200.dp),
                         leadingIcon = {
                             Icon(
-                                imageVector = Icons.Default.Menu,
+                                imageVector = LineAwesomeIcons.PenSolid,
                                 contentDescription = "",
                                 tint = Farvekombi032,
                                 modifier = Modifier.padding(bottom = 135.dp)
@@ -193,7 +189,7 @@ fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavContr
                         ),
                         leadingIcon = {
                             Icon(
-                                imageVector = Icons.Default.DateRange,
+                                imageVector = LineAwesomeIcons.Calendar,
                                 contentDescription = "",
                                 tint = Farvekombi032
                             )

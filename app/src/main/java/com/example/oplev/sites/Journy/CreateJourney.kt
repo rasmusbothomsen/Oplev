@@ -41,6 +41,8 @@ import com.example.oplev.ui.theme.*
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import compose.icons.LineAwesomeIcons
+import compose.icons.lineawesomeicons.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -93,7 +95,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                           shape = CircleShape,
                           leadingIcon = {
                               Icon(
-                                  imageVector = Icons.Default.PushPin,
+                                  imageVector = LineAwesomeIcons.MapMarkerSolid,
                                   contentDescription = "",
                                   tint = Farvekombi032
                               )
@@ -135,7 +137,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                           shape = CircleShape,
                           leadingIcon = {
                               Icon(
-                                  painterResource(id = R.drawable.ic_baseline_group_add_24),
+                                  imageVector = LineAwesomeIcons.UserPlusSolid,
                                   contentDescription = "",
                                   tint = Farvekombi032
                               )
@@ -167,7 +169,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                           ),
                           leadingIcon = {
                               Icon(
-                                  imageVector = Icons.Default.DateRange,
+                                  imageVector = LineAwesomeIcons.Calendar,
                                   contentDescription = "",
                                   tint = Farvekombi032
                               )
@@ -228,7 +230,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                                   .height(200.dp),
                               leadingIcon = {
                                   Icon(
-                                      imageVector = Icons.Default.Menu,
+                                      LineAwesomeIcons.PenSolid,
                                       contentDescription = "",
                                       tint = Farvekombi032,
                                       modifier = Modifier.padding(bottom = 135.dp)
@@ -351,7 +353,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                                 shape = CircleShape,
                                 leadingIcon = {
                                     Icon(
-                                        painterResource(id = R.drawable.ic_baseline_group_add_24),
+                                        imageVector = LineAwesomeIcons.UserPlusSolid,
                                         contentDescription = "",
                                         tint = Farvekombi032
                                     )
@@ -376,7 +378,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                                 shape = CircleShape,
                                 leadingIcon = {
                                     Icon(
-                                        painterResource(id = R.drawable.ic_baseline_group_add_24),
+                                        imageVector = LineAwesomeIcons.UserPlusSolid,
                                         contentDescription = "",
                                         tint = Farvekombi032
                                     )
@@ -401,7 +403,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                                 shape = CircleShape,
                                 leadingIcon = {
                                     Icon(
-                                        painterResource(id = R.drawable.ic_baseline_group_add_24),
+                                        imageVector = LineAwesomeIcons.UserPlusSolid,
                                         contentDescription = "",
                                         tint = Farvekombi032
                                     )
@@ -426,7 +428,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                                 shape = CircleShape,
                                 leadingIcon = {
                                     Icon(
-                                        painterResource(id = R.drawable.ic_baseline_group_add_24),
+                                        imageVector = LineAwesomeIcons.UserPlusSolid,
                                         contentDescription = "",
                                         tint = Farvekombi032
                                     )
@@ -451,7 +453,7 @@ fun createJourneyComp(createJourneyViewModel: CreateJourneyViewModel, navControl
                                 shape = CircleShape,
                                 leadingIcon = {
                                     Icon(
-                                        painterResource(id = R.drawable.ic_baseline_group_add_24),
+                                        imageVector = LineAwesomeIcons.UserPlusSolid,
                                         contentDescription = "",
                                         tint = Farvekombi032
                                     )
@@ -623,7 +625,7 @@ fun ExposedDropdownMenu(list: List<Category>, selectedOption:String, upDateValue
                 },
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.Default.TravelExplore,
+                        imageVector = LineAwesomeIcons.TagSolid,
                         contentDescription = "",
                         tint = Farvekombi032
                     )
@@ -698,7 +700,7 @@ fun InviteDialog() {
                     shape = CircleShape,
                     leadingIcon = {
                         Icon(
-                            painterResource(id = R.drawable.ic_baseline_group_add_24),
+                            imageVector = LineAwesomeIcons.UserPlusSolid,
                             contentDescription = "",
                             tint = Farvekombi032
                         )
@@ -726,7 +728,7 @@ fun InviteDialog() {
                             shape = CircleShape,
                             leadingIcon = {
                                 Icon(
-                                    painterResource(id = R.drawable.ic_baseline_group_add_24),
+                                    imageVector = LineAwesomeIcons.UserPlusSolid,
                                     contentDescription = "",
                                     tint = Farvekombi032
                                 )
@@ -916,7 +918,7 @@ fun createJourneyPreview(){
                     shape = CircleShape,
                     leadingIcon = {
                         Icon(
-                            painterResource(id = R.drawable.ic_baseline_group_add_24),
+                            imageVector = LineAwesomeIcons.UserPlusSolid,
                             contentDescription = "",
                             tint = Farvekombi032
                         )
@@ -990,7 +992,7 @@ fun createJourneyPreview(){
                             .height(200.dp),
                         leadingIcon = {
                             Icon(
-                                imageVector = Icons.Default.Menu,
+                                imageVector = LineAwesomeIcons.Comment,
                                 contentDescription = "",
                                 tint = Farvekombi032,
                                 modifier = Modifier.padding(bottom = 135.dp)
