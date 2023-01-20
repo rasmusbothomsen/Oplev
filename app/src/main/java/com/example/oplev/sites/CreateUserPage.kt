@@ -243,14 +243,14 @@ fun CreateUserContent(authViewModel: AuthViewModel, navController: NavController
 
         val context = LocalContext.current
         val activity = LocalContext.current as Activity
+        if (states.signInSuccessful) {
+            navController.navigate(Screen.Onboarding1.route)
+        }
         Button(
                 onClick = {
                     if (password.equals(confPassword)){
                     runBlocking {
                         authViewModel.createNewUser(fullname, email, password, context, activity)
-                    }
-                    if (FirebaseAuth.getInstance().currentUser != null) {
-                        navController.navigate(Screen.Onboarding1.route)
                     }
                     } else {
                         val toast = Toast.makeText(context, "Adgangskoderne er ikke ens. Prøv igen.", Toast.LENGTH_LONG)

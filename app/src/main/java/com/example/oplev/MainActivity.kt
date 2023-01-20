@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
             val currentUser = auth.currentUser
             if(currentUser != null){
                 val user = database.UserDao().getUserFromId(currentUser.uid.toString())
-                if(!database.UserDao().getOBStatus(user.userId)) {
+                if(user != null && !database.UserDao().getOBStatus(user.userId)) {
                     startPage = Screen.Onboarding1.route
                 }
                 else {
