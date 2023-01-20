@@ -3,6 +3,7 @@ package com.example.oplev.sites.Idea
 import android.annotation.SuppressLint
 import android.util.EventLogTags
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -30,6 +31,9 @@ import com.example.oplev.sites.TopBar
 import com.example.oplev.ui.components.DateandTimePicker
 import com.example.oplev.ui.theme.Farvekombi031
 import com.example.oplev.ui.theme.Farvekombi032
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.datetime.date.datepicker
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.Calendar
 import compose.icons.lineawesomeicons.Comment
@@ -46,7 +50,9 @@ fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavContr
     var link by remember { mutableStateOf("") }
     var image by remember { mutableStateOf("") }
     var folderId by remember { mutableStateOf("") }
-    var date by remember { mutableStateOf("") }
+    var Date by remember { mutableStateOf("") }
+    var dstate = mutableStateOf(false)
+
 
 
 
@@ -161,29 +167,63 @@ fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavContr
                             )
                         },
                     )
+
+                    // INDSÆT CREDIT TIL DATEPICKER
+                    val dialogState = rememberMaterialDialogState(false)
+
                     OutlinedTextField(
-                        value = date,
+                        value = Date,
                         label = { Text(text = "Dato") },
-                        modifier = Modifier
+                        onValueChange = {
+                            Date = it
+                            dialogState.show()
+                        }, modifier = Modifier
                             .width(300.dp)
+                            .clickable(onClick = { dstate.value = true })
                             .align(Alignment.CenterHorizontally),
-                        onValueChange = { date = it },
+                        enabled = false,
                         colors = TextFieldDefaults.textFieldColors(
                             textColor = Color.Black,
                             backgroundColor = Color.White,
                             focusedIndicatorColor = Color.Black,
-                            unfocusedIndicatorColor = Color.DarkGray,
-                            disabledIndicatorColor = Color.DarkGray
+                            unfocusedIndicatorColor = Color.Black,
+                            disabledIndicatorColor = Color.Black,
+                            disabledTextColor = Color.DarkGray,
+                            disabledLabelColor = Color.Gray
                         ),
-                        shape = CircleShape,
                         leadingIcon = {
                             Icon(
-                                imageVector = LineAwesomeIcons.Calendar,
+                                imageVector = Icons.Default.DateRange,
                                 contentDescription = "",
                                 tint = Farvekombi032
                             )
                         },
+                        shape = CircleShape
                     )
+                    Spacer(modifier = Modifier.width(20.dp))
+
+
+                    if (dstate.value) {
+                        dialogState.show()
+                    }
+
+                    MaterialDialog(
+                        dialogState = dialogState,
+                        buttons = {
+                            positiveButton(text = "Ok", onClick = {
+                                dstate.value = false
+                            })
+                            negativeButton(text = "Annuller", onClick = { dstate.value = false })
+                        }
+                    ) {
+                        datepicker { date ->
+                            val year = date.year
+                            val month = date.month
+                            val day = date.dayOfMonth
+                            Date = "$day/$month/$year"
+
+                        }
+                    }
 
 
                     Row(modifier = Modifier.padding(20.dp, 20.dp, 30.dp, 80.dp)) {
@@ -208,7 +248,7 @@ fun CreateIdea(createIdeaViewModel: CreateIdeaViewModel, navController: NavContr
                                     beskrivelse,
                                     link,
                                     image,
-                                    date
+                                    Date
                                 )
                                 navController.navigate(Screen.FrontPageScreen.route)
                             },
